@@ -1,0 +1,2 @@
+# The bundled SDK contains intentional whitespace in embedded literals.
+app.js -whitespace

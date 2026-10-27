@@ -12,7 +12,7 @@ export function checkinPayload(form){
   if(weight===null&&!Object.values(body).some(value=>value!==null)&&!photos.length)throw Error('Bitte mindestens Gewicht, ein Körpermaß oder ein Foto für den Check-in ergänzen.');
   return {p_recorded_on:dateValue(form.get('recorded_on')),p_weight:weight,p_height:height,p_body:body,p_note:noteValue(form.get('note')),p_photos:[]};
 }
-export async function saveCheckin(client,diaryId,form,{active=()=>true,compress=compressPhoto}={}){
+export async function saveCheckin(client,diaryId,form,{active=()=>true,compress=compressPhoto,expectedRevision}={}){
   const payload=checkinPayload(form),staged=[];let rpcAttempted=false,definiteFailure=false;
   try{
     for(const view of photoViews){
@@ -24,8 +24,9 @@ export async function saveCheckin(client,diaryId,form,{active=()=>true,compress=
     }
     if(!active())throw Error('Die Anmeldung wurde unterbrochen.');
     payload.p_photos=staged.map(({id,view})=>({id,view}));rpcAttempted=true;
-    const result=await client.rpc('ab_save_checkin',payload);
-    if(result.error){definiteFailure=/^(?:22|23|42|PGRST)/.test(result.error.code||'');fail(result.error);}
+    if(Number.isSafeInteger(expectedRevision))payload.p_expected_revision=expectedRevision;
+    const result=await client.rpc(Number.isSafeInteger(expectedRevision)?'ab_save_checkin_checked':'ab_save_checkin',payload);
+    if(result.error){definiteFailure=/^(?:22|23|40|42|PGRST)/.test(result.error.code||'');fail(result.error);}
     return result.data;
   }catch(error){
     // A definite failed transaction can be compensated. A lost response may

@@ -9,7 +9,7 @@
 - Die KI-Edge-Function prüft Konto und Datenbankfreigabe vor jedem Anbieteraufruf und nochmals vor einer Speicherung/Antwort. Schlüssel, Rohantworten des Anbieters und Gesundheitsdaten werden nicht protokolliert.
 - Die privaten Tabellen `ab_private.ai_settings` und `ab_private.ai_usage` haben RLS ohne Browser-Policies: Das ist beabsichtigtes Default-Deny. Der Supabase-Advisor meldet diesen geschlossenen Zustand als Information. Zugriff erfolgt ausschließlich durch die eng begrenzten privaten Serverfunktionen.
 
-Die Rollback-Tests unter `supabase/tests/` wurden gegen das geteilte Projekt ausgeführt. Browserabläufe wurden mit Testkonten und Testdaten geprüft; reale Benutzerpasswörter und Fotos wurden dafür nicht benötigt. Der echte OpenAI-Aufruf ist erst nach Hinterlegen eines Schlüssels prüfbar.
+Die Rollback-Tests unter `supabase/tests/` wurden gegen das geteilte Projekt ausgeführt. Browserabläufe wurden mit Testkonten und Testdaten geprüft; reale Benutzerpasswörter und Fotos wurden dafür nicht benötigt. Der echte OpenAI-Aufruf mit dem hinterlegten Benutzerschlüssel wurde nicht für Tests ausgelöst; der Schlüssel wurde nicht ausgelesen. Anbieterfehler wurden kontrolliert simuliert.
 
 ## Bereits bestehende projektweite Meldung
 
@@ -20,3 +20,9 @@ Projektadministratoren und serverseitige Service-Schlüssel sind privilegiert. G
 ## Gemeinsame Anmeldung
 
 Nur die Supabase-Anmeldung wird zwischen den drei Apps auf derselben Browser-Origin geteilt. Die Abnehmen-Freigabeliste bleibt unverändert. Gemeinsame Abmeldung löscht auch alte Anmeldekopien dieses Tabs; ein Marker verhindert deren spätere erneute Übernahme. Die Zehn-Minuten-Frist basiert auf Bedienung in einer der Apps, nicht auf Hintergrundabfragen. Passwort-Reset verwendet PKCE, doppelte Passwort-Eingabe und Rückkehr in die Ausgangs-App. Ungültige Links geben keine Tagebuchdaten frei. Die Browserabläufe verwenden ausschließlich simulierte Konten; echte E-Mails und Passwortänderungen wurden durch diese Tests nicht ausgelöst.
+
+## Automatische Einträge und Speicherstand
+
+Neue Profil-, Trainings-, Zyklus- und Speicherstandtabellen verwenden dieselbe Tagebuchfreigabe. Browser können weder den serverseitigen Speicherzeitpunkt bzw. die Revision ändern noch die ausschließlich serverseitig zugelassene atomare KI-Speicherung aufrufen. Check-in und Chat-Messwerte prüfen den gelesenen Datenstand vor der Änderung. Klare Chat-Angaben werden über begrenzte Funktionen mit aktuellen Benutzerrechten gespeichert; Modelltext erhält keinen freien Datenbankzugriff. Entwürfe bei Tabwechsel bleiben nur im Arbeitsspeicher und werden nach Abmeldung, Zeitablauf oder Benutzerwechsel verworfen.
+
+Der [Prüfbericht](docs/pruefung-2026-10-27.md) beschreibt die behobenen Fehler und verbleibenden Grenzen.

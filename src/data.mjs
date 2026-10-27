@@ -2,6 +2,7 @@ import { photoPath } from './domain.mjs';
 export const bucket = 'ab-progress-photos';
 export function fail(error) {
   if (error) {
+    if (error.code === '40001') throw new Error('Der Datenstand wurde inzwischen geändert. Bitte den aktuellen Eintrag neu laden und deine Eingaben prüfen.');
     if (error.code === '23505') throw new Error('Für diesen Tag besteht bereits ein Eintrag. Bitte neu laden und erneut speichern.');
     if (['42501', 'PGRST301', 'PGRST116'].includes(error.code)) throw new Error('Kein Zugriff. Bitte melde dich erneut an.');
     throw new Error('Die Änderung konnte nicht gespeichert werden. Bitte prüfe deine Verbindung und versuche es erneut.');

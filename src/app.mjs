@@ -7,6 +7,9 @@ import { shareContent, makeShareCard } from './share.mjs';
 import { DailyRecipes } from './daily-recipes.mjs';
 import { setupThemes } from './themes.mjs';
 import { setupDialogScrollLock } from './dialogs.mjs';
+import { WellbeingUI } from './wellbeing-ui.mjs';
+import { profilePayload, trainingPayload, cyclePayload, savedStateLabel, weightTrend } from './wellbeing.mjs';
+import { Motivation } from './motivation.mjs';
 import { createSharedAuth } from './shared-auth.mjs';
 import { recoveryLinkState, recoveryRedirect, newPassword, clearRecoveryURL } from './password-recovery.mjs';
 
@@ -15,6 +18,15 @@ const formatNumber = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }
 const dateLabel = value => new Date(value + 'T12:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 let client;
 let sharedAuth;
+let wellbeing;
+let motivation;
+let preferences={};
+let saveState=null;
+let formRevision=0;
+let analysisDay=null;
+let pausedDraft=null;
+let currentPage='checkin';
+const pages={checkin:'Check-in',progress:'Auswertung',calendar:'Kalender & Einträge',gallery:'Fotogalerie',training:'Training',nutrition:'Essen & Rezepte',profile:'Profil & Zyklus'};
 let recoveryPending = false;
 let resetOpen = false;
 let user = null;
@@ -30,7 +42,7 @@ let shareBlob = null;
 let shareUrl = null;
 let shareRevision = 0;
 let epoch = 0;
-let snapshot = { weights: [], measurements: [], photos: [] };
+let snapshot = { weights: [], measurements: [], photos: [], training: [], cycles: [] };
 let shownPhotos = 0;
 const photoUrls = new Set();
 const photoGroups = new Map();
@@ -53,10 +65,13 @@ function message(text, error = false) {
 }
 function resetForms() {
   for (const form of document.querySelectorAll('form')) form.reset();
-  for (const input of document.querySelectorAll('input[type=date]')) input.value = localDate();
+  for(const input of document.querySelectorAll('input[type=date]'))input.value=['recorded_on','asOf'].includes(input.name)?localDate():'';
 }
 function clearPrivate() {
-  snapshot = { weights: [], measurements: [], photos: [] };
+  for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
+  snapshot = { weights: [], measurements: [], photos: [], training: [], cycles: [] };
+  preferences={};saveState=null;analysisDay=null;document.body.classList.remove('app-signed-in');wellbeing?.clear();motivation?.clear();
+  $('save-state').textContent='Speicherstand wird geprüft …';
   for (const url of photoUrls) URL.revokeObjectURL(url);
   photoUrls.clear();
   photoGroups.clear();
@@ -71,7 +86,7 @@ function clearPrivate() {
   for (const id of ['day-summary', 'calendar-grid', 'analysis']) $(id).replaceChildren();
   for (const id of ['floating-weight','floating-bmi','floating-date']) $(id).textContent = '';
   heightCm = null; latestAnalysis = null; diaryId = null;
-  for (const id of ['checkin-form','height-form']) $(id).reset();
+  for (const id of ['checkin-form','height-form','training-form','cycle-form','profile-form','import-chat-form']) {$(id).reset();delete $(id).dataset.dirty;}
   $('selected-date-label').textContent = ''; $('jump-date').value = ''; $('calendar-month').value = '';
   assistant?.clear();
   dailyRecipes?.clear();
@@ -92,22 +107,31 @@ async function busy(control, callback) {
   catch (error) { if (generation === epoch) message(error.message || 'Bitte versuche es erneut.', true); }
   finally { control.disabled = false; }
 }
-async function loadSnapshot(generation = epoch) {
+async function loadSnapshot(generation = epoch,attempt = 0) {
   const identity = await client.rpc('ab_current_diary');
   fail(identity.error);
   if (generation !== epoch || !user) return false;
   if (!identity.data || identity.data !== diaryId) throw new Error('Der private Zugriff ist nicht mehr verfügbar. Bitte melde dich erneut an.');
-  const [weights, body, photos, profile] = await Promise.all([
+  const initialState=await client.from('ab_diary_state').select('revision').maybeSingle();fail(initialState.error);
+  const [weights, body, photos, profile, training, cycles, prefs, state] = await Promise.all([
     allRows(client, 'ab_weights'), allRows(client, 'ab_measurements'), allRows(client, 'ab_progress_photos'),
-    client.from('ab_profile').select('height_cm').maybeSingle()
+    client.from('ab_profile').select('height_cm').maybeSingle(),
+    allRows(client,'ab_training_sessions'),allRows(client,'ab_cycle_entries'),
+    client.from('ab_preferences').select('*').maybeSingle(),client.from('ab_diary_state').select('*').maybeSingle()
   ]);
-  fail(profile.error);
+  fail(profile.error);fail(prefs.error);fail(state.error);
+  const finalState=await client.from('ab_diary_state').select('*').maybeSingle();fail(finalState.error);
   if (generation !== epoch || !user) return false;
-  const unchanged = JSON.stringify(snapshot) === JSON.stringify({ weights, measurements: body, photos }) && heightCm === (profile.data?.height_cm ?? null);
+  if(Number(initialState.data?.revision||0)!==Number(finalState.data?.revision||0)){if(attempt<2)return loadSnapshot(generation,attempt+1);throw Error('Die Daten ändern sich gerade. Bitte den aktuellen Stand erneut laden.');}
+  const unchanged = JSON.stringify(snapshot) === JSON.stringify({ weights, measurements: body, photos,training,cycles }) && heightCm === (profile.data?.height_cm ?? null) && JSON.stringify(preferences)===JSON.stringify(prefs.data||{});
+  const dayChanged=analysisDay!==localDate();
   const photosChanged = JSON.stringify(snapshot.photos) !== JSON.stringify(photos);
-  snapshot = { weights, measurements: body, photos };
+  snapshot = { weights, measurements: body, photos, training, cycles };
+  preferences=prefs.data||{};saveState=finalState.data;
   heightCm = profile.data?.height_cm ?? null;
-  if (!unchanged || !latestAnalysis) { render({photosChanged}); assistant?.schedule(); }
+  if (!unchanged || !latestAnalysis || dayChanged) { render({photosChanged}); assistant?.schedule(); }
+  updateSaveState();
+  if(!unchanged&&!$('checkin-form').dataset.dirty&&!$('checkin-form').dataset.busy&&!$('dashboard').hidden)selectDay(selectedDay,false,true);
   return true;
 }
 function renderChart() {
@@ -178,7 +202,7 @@ function renderHistory(table, container, rows, fields, formId) {
   }
 }
 function render({photosChanged=true}={}) {
-  latestAnalysis = analyze(snapshot, heightCm);
+  latestAnalysis = analyze(snapshot, heightCm);analysisDay=localDate();
   const { latest, first } = latestAnalysis;
   $('first-weight').textContent = first ? `${formatNumber.format(first.weight_kg)} kg` : '–';
   $('latest-weight').textContent = latest ? `${formatNumber.format(latest.weight_kg)} kg` : '–';
@@ -192,6 +216,7 @@ function render({photosChanged=true}={}) {
   renderAnalysis();
   renderCalendar();
   if (photosChanged || !$('photo-gallery').childElementCount) renderPhotos();
+  wellbeing?.render({snapshot,preferences,height:heightCm});
 }
 function renderPhotos() {
   for (const url of photoUrls) URL.revokeObjectURL(url);
@@ -306,15 +331,17 @@ function renderCalendar() {
   buttons.append(action('Diesen Check-in bearbeiten',()=>selectDay(selectedDay,true)));
   summary.append(buttons);
 }
-function selectDay(day, scrollToForm = false) {
-  selectedDay = dateValue(day); visibleMonth = selectedDay.slice(0, 7);
+function selectDay(day, scrollToForm = false, force = false) {
+  const next=dateValue(day);
+  if(next!==selectedDay&&$('checkin-form').dataset.dirty&&!force&&!confirm('Du hast ungespeicherte Eingaben für '+dateLabel(selectedDay)+'. Zum anderen Tag wechseln und diese Eingaben verwerfen?')){renderCalendar();$('checkin-form').elements.recorded_on.value=selectedDay;return;}
+  selectedDay = next; visibleMonth = selectedDay.slice(0, 7);
   const form=$('checkin-form'),weight=snapshot.weights.find(row=>row.recorded_on===selectedDay),body=snapshot.measurements.find(row=>row.recorded_on===selectedDay);
-  form.reset();form.elements.recorded_on.value=selectedDay;form.elements.weight_kg.value=weight?.weight_kg??'';form.elements.height_cm.value=heightCm??'';
+  form.reset();delete form.dataset.dirty;formRevision=Number(saveState?.revision||0);form.elements.recorded_on.value=selectedDay;form.elements.weight_kg.value=weight?.weight_kg??'';form.elements.height_cm.value=heightCm??'';
   for(const [field]of measurements)form.elements[field].value=body?.[field]??'';
   form.elements.note.value=weight?.note||body?.note||'';
-  updateCheckinPreview();renderCalendar();
+  updateCheckinPreview();renderCalendar();updateSaveState();
   if($('photo-filter').value==='day')renderPhotos();
-  if(scrollToForm)$('checkin-card').scrollIntoView({behavior:'smooth',block:'start'});
+  if(scrollToForm){showPage('checkin');$('checkin-card').scrollIntoView({behavior:'smooth',block:'start'});}
 }
 function updateCheckinPreview(){
   const form=$('checkin-form');
@@ -336,7 +363,7 @@ function downloadShare() {
   document.body.append(link); link.click(); link.remove();
 }
 async function lockDiary(text = 'Nach 10 Minuten ohne Bedienung wurdest du abgemeldet.') {
-  ++epoch; clearPrivate();  resetForms();
+  ++epoch; pausedDraft=null;clearPrivate();resetForms();
   user = null;
  $('denied-panel').hidden = true;
   $('login-panel').hidden = false; $('logout').hidden = true;
@@ -349,15 +376,16 @@ function bindAdditionalFeatures() {
   $('calendar-month').addEventListener('change', event => { try { monthGrid(event.target.value); visibleMonth = event.target.value; renderCalendar(); } catch (error) { message(error.message, true); } });
   $('jump-date').addEventListener('change', event => { try { selectDay(event.target.value); } catch (error) { message(error.message, true); } });
   $('jump-today').addEventListener('click', () => selectDay(localDate()));
-  $('checkin-form').elements.recorded_on.addEventListener('change', event=>{try{selectedDay=dateValue(event.target.value);visibleMonth=selectedDay.slice(0,7);renderCalendar();}catch(error){message(error.message,true);}});
-  $('checkin-form').addEventListener('input',updateCheckinPreview);
+  $('checkin-form').elements.recorded_on.addEventListener('change',event=>{try{selectDay(event.target.value);}catch(error){message(error.message,true);event.target.value=selectedDay;}});
+  $('checkin-form').addEventListener('input',event=>{if(event.target.name!=='recorded_on'){$('checkin-form').dataset.dirty='true';updateSaveState();}updateCheckinPreview();});
   $('checkin-form').addEventListener('change',updateCheckinPreview);
   $('photo-filter').addEventListener('change', renderPhotos);
   $('photo-order').addEventListener('change',renderPhotos);
   $('show-gallery').addEventListener('click',()=>{
-    $('photo-filter').value='all';renderPhotos();$('photos').scrollIntoView({behavior:'smooth',block:'start'});
+    $('photo-filter').value='all';renderPhotos();showPage('gallery');
   });
-  $('floating-summary').addEventListener('click', () => document.querySelector('.analysis-card').scrollIntoView({ behavior: 'smooth' }));
+  $('floating-summary').addEventListener('click',()=>showPage('progress'));
+  $('reload-checkin').addEventListener('click',()=>busy($('reload-checkin'),async()=>{if($('checkin-form').dataset.dirty&&!confirm('Ungespeicherte Eingaben verwerfen und den gespeicherten Stand laden?'))return;await loadSnapshot();selectDay(selectedDay,false,true);}));
   $('open-share').addEventListener('click', () => {
     $('share-form').reset(); clearSharePreview(); $('share-form').elements.asOf.value = selectedDay;
     $('share-photo').replaceChildren(node('option', 'Kein Foto teilen'));
@@ -399,6 +427,7 @@ function bindAdditionalFeatures() {
     const existing = await client.from('ab_profile').select('user_id').maybeSingle(); fail(existing.error);
     const query = existing.data ? client.from('ab_profile').update({ height_cm: height }).eq('user_id', existing.data.user_id) : client.from('ab_profile').insert({ height_cm: height });
     const result = await query.select('height_cm').single(); fail(result.error);
+    delete $('height-form').dataset.dirty;
     await loadSnapshot(generation);
     if (generation === epoch) message('Körpergröße und BMI aktualisiert.');
   });
@@ -414,7 +443,7 @@ function bindAdditionalFeatures() {
   document.addEventListener('visibilitychange', async () => {
     if (!user) return;
     if (document.hidden) {
-      ++epoch; clearPrivate();  resetForms();
+      pausedDraft=captureDraft();++epoch;clearPrivate();resetForms();
     } else if (sharedAuth.isIdle()) {
       await sharedAuth.expire().catch(() => {});
     } else {
@@ -438,20 +467,20 @@ async function sessionChanged(session) {
     recoveryPending = false; resetOpen = true;
   }
   if (resetOpen) { $('login-panel').hidden = true; $('reset-panel').hidden = false; return; }
-  if (!user) { resetForms(); return; }
+  if (!user) { pausedDraft=null;resetForms();return; }
   try {
     const access = await client.from('ab_access').select('enabled,diary_user_id').eq('user_id', user.id).maybeSingle();
     fail(access.error);
     if (generation !== epoch) return;
-    if (!access.data?.enabled) { $('denied-panel').hidden = false; return; }
+    if (!access.data?.enabled) {pausedDraft=null;$('denied-panel').hidden=false;return;}
     diaryId = access.data.diary_user_id;
     await loadSnapshot(generation);
     if (generation !== epoch) return;
-    $('dashboard').hidden = false;
-    renderChart();
+    $('dashboard').hidden=false;document.body.classList.add('app-signed-in');showPage(currentPage,false);renderChart();
     $('floating-summary').hidden = false;
     $('height-form').elements.height_cm.value = heightCm ?? '';
-    selectDay(selectedDay);
+    for(const id of ['training-form','cycle-form'])$(id).elements.recorded_on.value=localDate();
+    selectDay(selectedDay,false,true);restoreDraft();
     await assistant?.load({ generate: true }).catch(() => {});
     await dailyRecipes?.load();
   } catch (error) {
@@ -464,11 +493,57 @@ function bindForm(id, callback) {
   const form = $(id);
   form.addEventListener('submit', event => {
     event.preventDefault();
-    busy(form.querySelector('[type=submit]'), async generation => {
-      const data = new FormData(form);
-      await callback(data, generation, form);
-    });
+    if(form.dataset.busy)return;form.dataset.busy='true';
+    busy(form.querySelector('[type=submit]'),async generation=>{try{const data=new FormData(form);await callback(data,generation,form);}finally{delete form.dataset.busy;}});
   });
+}
+function showPage(name,updateURL=true){
+  if(!(name in pages))name='checkin';currentPage=name;
+  for(const page of document.querySelectorAll('[data-page]'))page.hidden=page.dataset.page!==name;
+  $('current-page-label').textContent=pages[name];
+  for(const b of $('menu-choices').querySelectorAll('[data-destination]'))b.setAttribute('aria-current',b.dataset.destination===name?'page':'false');
+  if(updateURL&&!$('dashboard').hidden){history.pushState(null,'','#'+name);$('main').scrollTo({top:0,behavior:'instant'});}
+  if($('menu-dialog').open)$('menu-dialog').close();
+  if(name==='progress')requestAnimationFrame(renderChart);
+}
+function setupNavigation(){
+  for(const [id,label]of Object.entries(pages)){const b=node('button',label,'quiet');b.type='button';b.dataset.destination=id;b.addEventListener('click',()=>showPage(id));$('menu-choices').append(b);}
+  $('open-menu').addEventListener('click',()=>$('menu-dialog').showModal());$('close-menu').addEventListener('click',()=>$('menu-dialog').close());
+  $('open-assistant-page').addEventListener('click',()=>$('open-ai').click());
+  window.addEventListener('popstate',()=>{const name=location.hash.slice(1);if(name in pages&&!$('dashboard').hidden)showPage(name,false);});
+  const updateHeight=()=>document.documentElement.style.setProperty('--app-height',(window.visualViewport?.height||innerHeight)+'px');
+  window.visualViewport?.addEventListener('resize',updateHeight);updateHeight();
+  const initial=location.hash.slice(1);if(initial in pages)currentPage=initial;
+}
+function updateSaveState(){
+ const box=$('save-state');box.textContent=savedStateLabel(saveState)+($('checkin-form').dataset.dirty?' · Deine aktuellen Eingaben sind noch nicht gespeichert.':'');box.classList.toggle('draft',Boolean($('checkin-form').dataset.dirty));
+}
+function captureDraft(){
+ if(!user||!diaryId)return null;const forms={};
+ for(const id of ['checkin-form','height-form','training-form','cycle-form','profile-form','import-chat-form','ai-form']){
+  const form=$(id);forms[id]={data:[...new FormData(form)],dirty:form.dataset.dirty||'',busy:Boolean(form.dataset.busy)};
+ }
+ return{actor:user.id,diary:diaryId,forms,day:selectedDay,page:currentPage,scroll:$('main').scrollTop,revision:formRevision};
+}
+function restoreDraft(){
+ const draft=pausedDraft;pausedDraft=null;if(!draft||draft.actor!==user?.id||draft.diary!==diaryId||sharedAuth.isIdle())return;
+ selectedDay=draft.day;visibleMonth=selectedDay.slice(0,7);formRevision=draft.revision;
+ for(const [id,record]of Object.entries(draft.forms)){
+  const form=$(id);if(record.busy)continue;
+  form.reset();for(const control of form.elements)if(control.type==='checkbox')control.checked=false;for(const [name,value]of record.data){const control=form.elements[name];if(!control)continue;
+   if(value instanceof File){if(value.size){try{const transfer=new DataTransfer();transfer.items.add(value);control.files=transfer.files;}catch{message('Bitte das Foto erneut auswählen. Deine übrigen Eingaben sind wieder da.',true);}}}
+   else if(control.type==='checkbox')control.checked=true;else control.value=value;
+  }
+  if(record.dirty)form.dataset.dirty='true';
+ }
+ showPage(draft.page,false);renderCalendar();updateCheckinPreview();updateSaveState();requestAnimationFrame(()=>$('main').scrollTop=draft.scroll);
+}
+function bindWellbeingForms(){
+ for(const id of ['profile-form','height-form'])$(id).addEventListener('input',()=>{$(id).dataset.dirty='true';});
+ bindForm('profile-form',async(data,generation,form)=>{const payload=profilePayload(data),existing=await client.from('ab_preferences').select('user_id').maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_preferences').update(payload).eq('user_id',existing.data.user_id):await client.from('ab_preferences').insert(payload);fail(result.error);delete form.dataset.dirty;await loadSnapshot(generation);if(generation===epoch)message('Deine bestätigten Angaben wurden gespeichert.');});
+ bindForm('training-form',async(data,generation,form)=>{const result=await client.from('ab_training_sessions').insert(trainingPayload(data));fail(result.error);if(generation!==epoch)return;form.reset();form.elements.recorded_on.value=localDate();await loadSnapshot(generation);message('Dein Training ist gespeichert.');});
+ bindForm('cycle-form',async(data,generation,form)=>{const payload=cyclePayload(data),existing=await client.from('ab_cycle_entries').select('id').eq('recorded_on',payload.recorded_on).maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_cycle_entries').update(payload).eq('id',existing.data.id):await client.from('ab_cycle_entries').insert(payload);fail(result.error);if(generation!==epoch)return;form.reset();form.elements.recorded_on.value=localDate();await loadSnapshot(generation);message('Dein Zykluseintrag ist gespeichert.');});
+ bindForm('import-chat-form',async(data,generation,form)=>{const sourceDate=String(data.get('source_date')||'').trim();await assistant.run('chat',String(data.get('message')).trim(),{source:'import',sourceDate:sourceDate||null});if(generation===epoch){form.reset();$('ai-dialog').showModal();}});
 }
 async function start() {
   if (window.self !== window.top) {
@@ -477,7 +552,7 @@ async function start() {
     return;
   }
   setupThemes();
-  setupDialogScrollLock();
+  setupDialogScrollLock();setupNavigation();
   resetForms();
   const config = await fetch('./config.json', { cache: 'no-store' }).then(response => {
     if (!response.ok) throw new Error('Die App-Konfiguration konnte nicht geladen werden.');
@@ -538,14 +613,16 @@ async function start() {
   });
   bindForm('checkin-form',async(data,generation,form)=>{
     const uid=diaryId;if(!uid)throw Error('Bitte melde dich erneut an.');
+    const before=latestAnalysis;
     const controls=[...form.querySelectorAll('input,textarea')];for(const control of controls)control.disabled=true;
     const button=form.querySelector('[type=submit]'),label=button.textContent;button.textContent='Dein Check-in wird gespeichert …';
     try{
-      const result=await saveCheckin(client,uid,data,{active:()=>generation===epoch&&Boolean(user&&diaryId)});
+      const result=await saveCheckin(client,uid,data,{expectedRevision:formRevision,active:()=>generation===epoch&&Boolean(user&&diaryId)});
       if(generation!==epoch)return;
       await loadSnapshot(generation);
       if(generation!==epoch)return;
-      selectDay(String(data.get('recorded_on')));
+      selectDay(String(data.get('recorded_on')),false,true);
+      motivation?.show(before,latestAnalysis,{day:String(data.get('recorded_on')),enabled:preferences.motivation_enabled!==false,rapidLoss:weightTrend(snapshot.weights)?.rapidLoss});
       message('Wochenstand vom '+dateLabel(String(data.get('recorded_on')))+' gespeichert'+(result?.photo_count?' · '+result.photo_count+' Fotos':'')+'.');
     }finally{for(const control of controls)control.disabled=false;button.textContent=label;}
   });
@@ -556,7 +633,10 @@ async function start() {
   bindAdditionalFeatures();
   let resizeTimer;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer=setTimeout(() => { if(user&&!$('dashboard').hidden)renderChart(); },120); });
-  assistant = new Assistant({ client, active: () => Boolean(user && diaryId && !$('dashboard').hidden), error: message });
+  assistant = new Assistant({client,active:()=>Boolean(user&&diaryId&&!$('dashboard').hidden),error:message,onDataSaved:async saved=>{const before=latestAnalysis;await loadSnapshot();motivation?.show(before,latestAnalysis,{day:saved.recorded_on,enabled:preferences.motivation_enabled!==false,rapidLoss:weightTrend(snapshot.weights)?.rapidLoss});}});
+  motivation=new Motivation({active:()=>Boolean(user&&diaryId&&!$('dashboard').hidden)});
+  wellbeing=new WellbeingUI({onDelete:async(table,id)=>{const result=await client.from(table).delete().eq('id',id).select('id').single();fail(result.error);await loadSnapshot();},onError:message});
+  bindWellbeingForms();
   dailyRecipes = new DailyRecipes({client,container:$('daily-recipes')});
   const initialized=await client.auth.initialize();
   if(linkState.failed||(initialized.error&&(linkState.requested||hadAuthCode))){

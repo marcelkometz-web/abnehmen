@@ -16,3 +16,10 @@ test('an ambiguous response never removes a possibly committed photo',async()=>{
  const client={rpc:async()=>({error:{code:'',message:'network'}}),storage:{from:()=>({upload:async()=>({}),remove:async()=>{removed=true;return {};}})}};
  await assert.rejects(saveCheckin(client,'11111111-1111-4111-8111-111111111111',f,{compress:async file=>file}),/Speicherbestätigung/);assert.equal(removed,false);
 });
+
+test('a stale checked save cannot silently overwrite data and rejected staged photos are removed',async()=>{
+ const f=form();f.set('photo_front',new File(['x'],'test.jpg',{type:'image/jpeg'}));const calls=[];
+ const client={rpc:async(name,payload)=>{calls.push({name,payload});return{error:{code:'40001'}};},storage:{from:()=>({upload:async path=>{calls.push({upload:path});return{};},remove:async paths=>{calls.push({remove:paths});return{};}})}};
+ await assert.rejects(saveCheckin(client,'11111111-1111-4111-8111-111111111111',f,{expectedRevision:7,compress:async f=>f}),/Datenstand/);
+ assert.equal(calls[1].name,'ab_save_checkin_checked');assert.equal(calls[1].payload.p_expected_revision,7);assert.equal(calls[2].remove[0],calls[0].upload);
+});

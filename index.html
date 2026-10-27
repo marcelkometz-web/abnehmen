@@ -1,131 +1,132 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="referrer" content="no-referrer">
-  <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://wwybkswpyoyowciumxda.supabase.co https://kzxzhpebugvzyqfjqedx.supabase.co; font-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'">
-  <meta name="theme-color" content="#f4f0f8">
-  <title>Ramonas Fortschritt</title>
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="./daily-recipes.css">
-  <link rel="stylesheet" href="./themes.css">
-  <script type="module" src="./app.js"></script>
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="no-referrer" name="referrer"/>
+<meta content="noindex, nofollow" name="robots"/>
+<meta content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://wwybkswpyoyowciumxda.supabase.co https://kzxzhpebugvzyqfjqedx.supabase.co; font-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'" http-equiv="Content-Security-Policy"/>
+<meta content="#f4f0f8" name="theme-color"/>
+<title>Ramonas Fortschritt</title>
+<link href="./icon.svg" rel="icon" type="image/svg+xml"/>
+<link href="./style.css" rel="stylesheet"/>
+<link href="./daily-recipes.css" rel="stylesheet"/>
+<link href="./themes.css" rel="stylesheet"/>
+<script src="./app.js" type="module"></script>
+<link href="./layout.css" rel="stylesheet"/></head>
 <body>
-  <div id="theme-ambient" aria-hidden="true"></div>
-  <a class="skip" href="#main">Zum Inhalt</a>
-  <header class="topbar">
-    <a class="brand" href="./"><span class="brand-icon" aria-hidden="true">✦</span> Ramonas Fortschritt</a>
-    <div class="topbar-actions"><button id="open-themes" class="quiet" type="button" aria-label="Design auswählen">✿ Design</button><button id="logout" class="quiet" hidden>Abmelden</button></div>
-  </header>
-  <main id="main">
-    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
-    <section id="login-panel" class="login card">
-      <p class="eyebrow">Ein Moment für dich</p>
-      <h1>Dein Weg.<br>Dein Tempo.</h1>
-      <p>Gewicht, Körpermaße und Fotos – dein persönlicher Blick auf deinen Fortschritt.</p>
-      <form id="login-form">
-        <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
-        <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
-        <button type="submit">Anmelden</button>
-      </form>
-      <button id="forgot-password" type="button" class="quiet auth-back">Passwort vergessen?</button>
-      <p class="hint">Nur Marcel und Ramona haben Zugriff. Eure Anmeldung gilt gemeinsam für Garten, Rezepte und Abnehmen in diesem Browser. Eine öffentliche Registrierung ist nicht möglich. Nach 10 Minuten ohne Bedienung dieser Apps werdet ihr gemeinsam abgemeldet.</p>
-    </section>
-    <section id="reset-panel" class="login card" hidden>
-      <p class="eyebrow">Wieder Zugang finden</p><h1>Passwort vergessen?</h1>
-      <p>Fordere einen Link an. Er führt dich hierher zurück, damit du ein neues Passwort festlegen kannst.</p>
-      <form id="reset-form"><label>Deine E-Mail-Adresse<input name="email" type="email" autocomplete="email" required maxlength="254"></label><button type="submit">Passwort-Link anfordern</button></form>
-      <p class="hint">Den neuesten Link bitte im selben Browser auf diesem Gerät öffnen. Schau auch im Spamordner nach. Das neue Passwort gilt für alle drei Apps.</p>
-      <button id="cancel-reset" class="quiet auth-back" type="button">Zurück zur Anmeldung</button>
-    </section>
-    <section id="password-panel" class="login card" hidden>
-      <p class="eyebrow">Dein Zugang</p><h1>Ein neues Passwort.</h1>
-      <p>Lege dein neues Passwort für Garten, Rezepte und Abnehmen fest.</p>
-      <form id="password-form"><label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label><label>Neues Passwort wiederholen<input name="confirm_password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label><p class="hint">Mindestens 12 Zeichen. Eine lange Wortfolge ist eine gute Wahl.</p><button type="submit">Neues Passwort speichern</button></form>
-      <button id="cancel-password" class="quiet auth-back" type="button">Abbrechen und zur Anmeldung</button>
-    </section>
-    <section id="denied-panel" class="card" hidden>
-      <h1>Dein Konto ist hier nicht freigeschaltet.</h1>
-      <p>Nur die beiden fest freigegebenen Konten von Marcel und Ramona erhalten Zugriff.</p>
-    </section>
-    <button id="floating-summary" class="floating-summary" type="button" hidden aria-label="Aktuelles Gewicht und BMI, Analyse öffnen">
-      <span id="floating-weight">Gewicht: –</span><span id="floating-bmi">BMI: –</span><small id="floating-date"></small>
-    </button>
-    <div id="dashboard" hidden>
-      <nav class="app-switches" aria-label="App-Verknüpfungen"><a href="/rezepte/" target="_blank" rel="noopener noreferrer">🍲 Rezepte öffnen</a><a href="/garten/" target="_blank" rel="noopener noreferrer">🌿 Garten öffnen</a></nav>
-      <section class="intro checkin-intro"><p class="eyebrow">Ein Moment für Ramona</p><h1>Dein Wochen-Check-in.</h1><p>Ein Datum. Alle Werte. Ganz in deinem Tempo.</p></section>
-      <section class="card checkin-card" id="checkin-card">
-        <div class="checkin-heading"><div><p class="eyebrow">Dein Fortschritt zum Eintragen</p><h2>Alles an einem Platz.</h2></div><button id="open-share" type="button" class="quiet">✧ Teilen</button></div>
-        <form id="checkin-form">
-          <label class="checkin-date">Datum des Check-ins<input name="recorded_on" type="date" min="2000-01-01" max="2100-12-31" required></label>
-          <div class="form-grid"><label>Gewicht <span class="optional">in kg</span><input name="weight_kg" type="text" inputmode="decimal" placeholder="z. B. 72,5"></label><label>Körpergröße <span class="optional">in cm · einmalig</span><input name="height_cm" type="text" inputmode="decimal" placeholder="z. B. 168"></label></div>
-          <output id="checkin-bmi-preview" class="hint"></output>
-          <fieldset class="checkin-measurements"><legend>Körpermaße <span class="optional">optional · in cm</span></legend><div class="form-grid">
-            <label>Brust<input name="chest_cm" type="text" inputmode="decimal" placeholder="–"></label><label>Taille<input name="waist_cm" type="text" inputmode="decimal" placeholder="–"></label><label>Hüfte<input name="hip_cm" type="text" inputmode="decimal" placeholder="–"></label><label>Oberarm<input name="upper_arm_cm" type="text" inputmode="decimal" placeholder="–"></label><label>Oberschenkel<input name="thigh_cm" type="text" inputmode="decimal" placeholder="–"></label>
-          </div></fieldset>
-          <fieldset class="checkin-photos"><legend>Deine Fortschrittsfotos <span class="optional">optional</span></legend><div class="photo-picks">
-            <label class="photo-pick"><span aria-hidden="true">＋</span><strong>Vorne</strong><small data-file-label="photo_front">Foto hinzufügen</small><input name="photo_front" type="file" accept="image/jpeg,image/png,image/webp"></label>
-            <label class="photo-pick"><span aria-hidden="true">＋</span><strong>Seite</strong><small data-file-label="photo_side">Foto hinzufügen</small><input name="photo_side" type="file" accept="image/jpeg,image/png,image/webp"></label>
-            <label class="photo-pick"><span aria-hidden="true">＋</span><strong>Hinten</strong><small data-file-label="photo_back">Foto hinzufügen</small><input name="photo_back" type="file" accept="image/jpeg,image/png,image/webp"></label>
-          </div><p class="hint">Privat für eure zwei Konten. Jedes Foto wird vor dem Upload verkleinert; Standort- und Kamerametadaten werden entfernt.</p><button id="show-gallery" class="quiet" type="button">Alle Fotos in deiner Galerie ansehen</button></fieldset>
-          <label>Deine Notiz <span class="optional">optional</span><textarea name="note" maxlength="1000" rows="2" placeholder="Wie ging es dir diese Woche?"></textarea></label>
-          <button type="submit" class="checkin-save">Wochenstand speichern</button>
-          <p class="hint">Es müssen nicht alle Felder ausgefüllt sein. Leere Messfelder verändern vorhandene Werte nicht. Das Datum gilt für alle Werte und Fotos dieses Check-ins – auch rückwirkend.</p>
-        </form>
-      </section>
-      <section id="overview">
-        <div class="stats"><article class="card stat"><p>Erster Eintrag</p><strong id="first-weight">–</strong><small id="first-date">Noch kein Gewicht erfasst</small></article><article class="card stat"><p>Zuletzt erfasst</p><strong id="latest-weight">–</strong><small id="latest-date">Dein Tagebuch wartet auf dich</small></article><article class="card stat"><p>Veränderung seit Beginn</p><strong id="weight-change">–</strong><small>Jeder Verlauf ist individuell</small></article></div>
-        <article class="card chart-card"><h2>Dein Gewichtsverlauf</h2><div id="chart"></div></article>
-        <article class="card analysis-card"><h2>Laufende Auswertung</h2><div id="analysis"></div><details><summary>Körpergröße separat ändern</summary><form id="height-form"><label>Ramonas Körpergröße in cm<input name="height_cm" type="text" inputmode="decimal" required></label><button type="submit">Körpergröße speichern</button></form></details><p class="hint">BMI = Gewicht ÷ Körpergröße² in Metern. Er ist ein grober Orientierungswert und beschreibt nicht allein Gesundheit oder Körperzusammensetzung.</p></article>
-      <details class="card calendar-panel" id="calendar-panel" open>
-        <summary>Kalender &amp; frühere Check-ins · <span id="selected-date-label"></span></summary>
-        <div class="calendar-layout"><div><div class="calendar-controls"><button id="previous-month" type="button" class="quiet" aria-label="Voriger Monat">‹</button><label>Monat<input id="calendar-month" type="month" min="2000-01" max="2100-12"></label><button id="next-month" type="button" class="quiet" aria-label="Nächster Monat">›</button></div><div class="weekdays" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div><div id="calendar-grid" class="calendar-grid" aria-label="Kalendertage"></div><p class="hint">G = Gewicht · M = Maße · F = Foto</p></div><div><label>Direkt zu einem Tag springen<input id="jump-date" type="date" min="2000-01-01" max="2100-12-31"></label><button id="jump-today" type="button" class="quiet">Heute</button><div id="day-summary" class="day-summary"></div><p class="hint">Ein Klick auf einen Tag lädt den gemeinsamen Check-in zum Bearbeiten.</p></div></div>
-      </details>
-        <section id="daily-recipes" class="daily-suggestions" hidden></section>
-      </section>
-      <section class="split history-section"><article class="card"><h2>Deine Gewichtseinträge</h2><div id="weight-history" class="history"></div></article><article class="card"><h2>Deine Körpermaße</h2><div id="measurements-history" class="history"></div></article></section>
-      <section id="photos" class="card photo-section"><h2>Deine Fotogalerie</h2><p id="photo-count" class="hint"></p><div class="form-grid"><label>Fotos anzeigen<select id="photo-filter"><option value="all">Alle Tage</option><option value="day">Ausgewählter Tag</option></select></label><label>Nach Aufnahmedatum sortieren<select id="photo-order"><option value="desc">Neueste zuerst</option><option value="asc">Älteste zuerst</option></select></label></div><p class="hint">Nur für eure beiden Konten. Das Aufnahmedatum zählt, auch bei später hochgeladenen Fotos. Zum Vergrößern ein Bild auswählen.</p><div id="photo-gallery" class="photo-dates"></div><button id="more-photos" type="button" class="quiet" hidden>Weitere Fotos laden</button></section>
-    </div>
-    <noscript><p>Bitte aktiviere JavaScript, um dein Tagebuch zu verwenden.</p></noscript>
-  </main>
-  <footer>Ramonas Fortschritt · Ein Platz für deinen Weg<nav aria-label="Weitere Apps"><a href="/garten/">Zum Garten</a> · <a href="/rezepte/">Zu den Rezepten</a></nav></footer>
-  <dialog id="theme-dialog" class="theme-dialog"><button id="close-themes" type="button" class="quiet">Fertig</button><p class="eyebrow">Dein Tagebuch, dein Stil</p><h2>Drei Designs für dich.</h2><p>Gerade ausgewählt: <strong id="theme-name"></strong></p><div id="theme-choices" class="theme-choices"></div><p class="hint">Das Design wird nur auf diesem Gerät gemerkt. Deine privaten Einträge bleiben davon unabhängig.</p></dialog>
-  <dialog id="photo-dialog"><button id="close-photo" class="quiet" type="button">Schließen</button><img id="large-photo" alt="Vergrößertes Fortschrittsfoto"></dialog>
-  <aside id="ai-companion" class="ai-companion" hidden>
-    <button id="open-ai" class="ai-preview" type="button"><strong>✦ Dein ChatGPT-Begleiter</strong><span id="ai-tip-preview">Ein kleiner Impuls für deinen Tag.</span></button>
-  </aside>
-  <dialog id="ai-dialog" class="ai-dialog">
-    <button id="close-ai" class="quiet" type="button">Schließen</button><h2>Dein ChatGPT-Begleiter</h2>
-    <p id="ai-current-tip" class="ai-current-tip"></p>
-    <p class="hint">Der Begleiter erhält deine Messwerte, Notizen und den App-Chat über die OpenAI-API. Fotos werden nicht übertragen. Beide freigegebenen Konten können den gemeinsamen Chat lesen. KI-Tipps ersetzen keine medizinische Beratung.</p>
-    <div id="ai-history" class="ai-history" aria-live="polite"></div>
-    <form id="ai-form"><label>Deine Nachricht<textarea name="message" rows="3" maxlength="4000" required placeholder="Was beschäftigt dich heute?"></textarea></label><button type="submit">Nachricht senden</button></form>
-    <p id="ai-error" class="hint" role="status"></p>
-    <div class="actions"><button id="refresh-tip" class="quiet" type="button">Tipp aktualisieren</button><button id="clear-ai" class="danger" type="button">Chat und KI-Merkliste löschen</button></div>
-    <details id="ai-settings"><summary>OpenAI-Schlüssel verwalten</summary><p id="ai-key-status" class="hint"></p><p class="hint">Die API wird unabhängig vom ChatGPT-Abo berechnet. App-Limit: 5 Anfragen pro Minute und 100 pro Tag. Zusätzlich im OpenAI-Projekt ein Budget festlegen. Der Schlüssel wird verschlüsselt gespeichert und nicht wieder angezeigt.</p>
-      <form id="ai-key-form"><label>OpenAI-API-Schlüssel<input name="api_key" type="password" autocomplete="off" spellcheck="false" required placeholder="sk-…"></label><button type="submit">Schlüssel verschlüsselt speichern</button></form><button id="remove-ai-key" type="button" class="danger">Schlüssel entfernen und KI deaktivieren</button>
-    </details>
-  </dialog>
-  <dialog id="share-dialog" class="share-dialog">
-    <button id="close-share" type="button" class="quiet">Schließen</button><h2>Deinen Fortschritt teilen</h2>
-    <p>Wähle genau aus, was auf deiner Karte erscheinen soll. Erst die Vorschau erstellen, dann teilen.</p>
-    <form id="share-form">
-      <label>Stand bis zum Tag<input name="asOf" type="date" required></label>
-      <fieldset><legend>Diese Werte zeigen</legend>
-        <label class="check"><input type="checkbox" name="date"> Datum</label><label class="check"><input type="checkbox" name="weight"> Gewicht</label><label class="check"><input type="checkbox" name="change"> Gewichtsveränderung seit Beginn</label><label class="check"><input type="checkbox" name="bmi"> BMI</label>
-        <label class="check"><input type="checkbox" name="chest_cm"> Brustmaß</label><label class="check"><input type="checkbox" name="waist_cm"> Taillenumfang</label><label class="check"><input type="checkbox" name="hip_cm"> Hüftumfang</label><label class="check"><input type="checkbox" name="upper_arm_cm"> Oberarmumfang</label><label class="check"><input type="checkbox" name="thigh_cm"> Oberschenkelumfang</label>
-      </fieldset>
-      <label>Foto <span class="optional">optional, zunächst ohne Foto</span><select name="photoId" id="share-photo"><option value="">Kein Foto teilen</option></select></label>
-      <p class="hint">Ein ausgewähltes Foto wird Teil der exportierten Bilddatei. Außerhalb dieser App gelten deren private Zugriffsregeln nicht mehr.</p>
-      <label>Dein Text <span class="optional">optional</span><input name="caption" maxlength="120" placeholder="Ein Schritt nach dem anderen."></label>
-      <label>Format<select name="format"><option value="story">Story / TikTok · 9:16</option><option value="portrait">Instagram-Beitrag · 4:5</option><option value="square">Quadratisch · 1:1</option></select></label>
-      <button type="submit">Vorschau erstellen</button>
-    </form>
-    <div id="share-preview-panel" hidden><h3>Genau dieses Bild wird weitergegeben</h3><img id="share-preview" alt="Vorschau der ausgewählten Daten auf der Fortschrittskarte"><div class="actions"><button id="share-file" type="button">Bild teilen</button><button id="download-share" type="button" class="quiet">Bild herunterladen</button></div><p class="hint">Welche Apps im Teilen-Menü erscheinen, entscheidet dein Gerät. Wenn Instagram oder TikTok dort fehlt, das Bild herunterladen und dort selbst hochladen. Es wird nichts automatisch veröffentlicht.</p></div>
-  </dialog>
-</body>
+<div aria-hidden="true" id="theme-ambient"></div>
+<a class="skip" href="#main">Zum Inhalt</a>
+<header class="topbar">
+<a class="brand" href="./"><span aria-hidden="true" class="brand-icon">✦</span> Ramonas Fortschritt</a>
+<div class="topbar-actions"><button aria-label="Design auswählen" class="quiet" id="open-themes" type="button">✿ Design</button><button class="quiet" hidden="" id="logout">Abmelden</button></div>
+<button aria-label="Aktuelles Gewicht und BMI, Analyse öffnen" class="floating-summary" hidden="" id="floating-summary" type="button">
+<span id="floating-weight">Gewicht: –</span><span id="floating-bmi">BMI: –</span><small id="floating-date"></small>
+</button></header>
+<main id="main">
+<div aria-live="polite" class="message" hidden="" id="message" role="status"></div>
+<section class="login card" id="login-panel">
+<p class="eyebrow">Ein Moment für dich</p>
+<h1>Dein Weg.<br/>Dein Tempo.</h1>
+<p>Gewicht, Körpermaße und Fotos – dein persönlicher Blick auf deinen Fortschritt.</p>
+<form id="login-form">
+<label>E-Mail<input autocomplete="username" name="email" required="" type="email"/></label>
+<label>Passwort<input autocomplete="current-password" name="password" required="" type="password"/></label>
+<button type="submit">Anmelden</button>
+</form>
+<button class="quiet auth-back" id="forgot-password" type="button">Passwort vergessen?</button>
+<p class="hint">Nur Marcel und Ramona haben Zugriff. Eure Anmeldung gilt gemeinsam für Garten, Rezepte und Abnehmen in diesem Browser. Eine öffentliche Registrierung ist nicht möglich. Nach 10 Minuten ohne Bedienung dieser Apps werdet ihr gemeinsam abgemeldet.</p>
+</section>
+<section class="login card" hidden="" id="reset-panel">
+<p class="eyebrow">Wieder Zugang finden</p><h1>Passwort vergessen?</h1>
+<p>Fordere einen Link an. Er führt dich hierher zurück, damit du ein neues Passwort festlegen kannst.</p>
+<form id="reset-form"><label>Deine E-Mail-Adresse<input autocomplete="email" maxlength="254" name="email" required="" type="email"/></label><button type="submit">Passwort-Link anfordern</button></form>
+<p class="hint">Den neuesten Link bitte im selben Browser auf diesem Gerät öffnen. Schau auch im Spamordner nach. Das neue Passwort gilt für alle drei Apps.</p>
+<button class="quiet auth-back" id="cancel-reset" type="button">Zurück zur Anmeldung</button>
+</section>
+<section class="login card" hidden="" id="password-panel">
+<p class="eyebrow">Dein Zugang</p><h1>Ein neues Passwort.</h1>
+<p>Lege dein neues Passwort für Garten, Rezepte und Abnehmen fest.</p>
+<form id="password-form"><label>Neues Passwort<input autocomplete="new-password" maxlength="128" minlength="12" name="password" required="" type="password"/></label><label>Neues Passwort wiederholen<input autocomplete="new-password" maxlength="128" minlength="12" name="confirm_password" required="" type="password"/></label><p class="hint">Mindestens 12 Zeichen. Eine lange Wortfolge ist eine gute Wahl.</p><button type="submit">Neues Passwort speichern</button></form>
+<button class="quiet auth-back" id="cancel-password" type="button">Abbrechen und zur Anmeldung</button>
+</section>
+<section class="card" hidden="" id="denied-panel">
+<h1>Dein Konto ist hier nicht freigeschaltet.</h1>
+<p>Nur die beiden fest freigegebenen Konten von Marcel und Ramona erhalten Zugriff.</p>
+</section>
+
+<div hidden="" id="dashboard"><div class="page-navigation"><button aria-haspopup="dialog" class="quiet" id="open-menu" type="button">☰ Menü</button><span id="current-page-label">Check-in</span><button class="quiet" id="open-assistant-page" type="button">✦ ChatGPT</button></div><section class="app-page" data-page="checkin" id="page-checkin"><h1 class="page-heading">Dein Wochen-Check-in</h1><section class="card checkin-card" id="checkin-card">
+<div class="checkin-heading"><div><p class="eyebrow">Dein Fortschritt zum Eintragen</p><h2>Alles an einem Platz.</h2></div><button class="quiet" id="open-share" type="button">✧ Teilen</button></div>
+<form id="checkin-form">
+<label class="checkin-date">Datum des Check-ins<input max="2100-12-31" min="2000-01-01" name="recorded_on" required="" type="date"/></label>
+<div class="form-grid"><label>Gewicht <span class="optional">in kg</span><input inputmode="decimal" name="weight_kg" placeholder="z. B. 72,5" type="text"/></label><label>Körpergröße <span class="optional">in cm · einmalig</span><input inputmode="decimal" name="height_cm" placeholder="z. B. 168" type="text"/></label></div>
+<output class="hint" id="checkin-bmi-preview"></output>
+<fieldset class="checkin-measurements"><legend>Körpermaße <span class="optional">optional · in cm</span></legend><div class="form-grid">
+<label>Brust<input inputmode="decimal" name="chest_cm" placeholder="–" type="text"/></label><label>Taille<input inputmode="decimal" name="waist_cm" placeholder="–" type="text"/></label><label>Hüfte<input inputmode="decimal" name="hip_cm" placeholder="–" type="text"/></label><label>Oberarm<input inputmode="decimal" name="upper_arm_cm" placeholder="–" type="text"/></label><label>Oberschenkel<input inputmode="decimal" name="thigh_cm" placeholder="–" type="text"/></label>
+</div></fieldset>
+<fieldset class="checkin-photos"><legend>Deine Fortschrittsfotos <span class="optional">optional</span></legend><div class="photo-picks">
+<label class="photo-pick"><span aria-hidden="true">＋</span><strong>Vorne</strong><small data-file-label="photo_front">Foto hinzufügen</small><input accept="image/jpeg,image/png,image/webp" name="photo_front" type="file"/></label>
+<label class="photo-pick"><span aria-hidden="true">＋</span><strong>Seite</strong><small data-file-label="photo_side">Foto hinzufügen</small><input accept="image/jpeg,image/png,image/webp" name="photo_side" type="file"/></label>
+<label class="photo-pick"><span aria-hidden="true">＋</span><strong>Hinten</strong><small data-file-label="photo_back">Foto hinzufügen</small><input accept="image/jpeg,image/png,image/webp" name="photo_back" type="file"/></label>
+</div><p class="hint">Privat für eure zwei Konten. Jedes Foto wird vor dem Upload verkleinert; Standort- und Kamerametadaten werden entfernt.</p><button class="quiet" id="show-gallery" type="button">Alle Fotos in deiner Galerie ansehen</button></fieldset>
+<label>Deine Notiz <span class="optional">optional</span><textarea maxlength="1000" name="note" placeholder="Wie ging es dir diese Woche?" rows="2"></textarea></label>
+<button class="quiet" id="reload-checkin" type="button">Aktuellen Eintrag neu laden</button><p aria-live="polite" class="save-state" id="save-state" role="status">Speicherstand wird geprüft …</p><button class="checkin-save" type="submit">Wochenstand speichern</button>
+<p class="hint">Es müssen nicht alle Felder ausgefüllt sein. Leere Messfelder verändern vorhandene Werte nicht. Das Datum gilt für alle Werte und Fotos dieses Check-ins – auch rückwirkend.</p>
+</form>
+</section></section><section class="app-page" data-page="progress" hidden="" id="page-progress"><h1 class="page-heading">Deine Auswertung</h1><section id="overview">
+<div class="stats"><article class="card stat"><p>Erster Eintrag</p><strong id="first-weight">–</strong><small id="first-date">Noch kein Gewicht erfasst</small></article><article class="card stat"><p>Zuletzt erfasst</p><strong id="latest-weight">–</strong><small id="latest-date">Dein Tagebuch wartet auf dich</small></article><article class="card stat"><p>Veränderung seit Beginn</p><strong id="weight-change">–</strong><small>Jeder Verlauf ist individuell</small></article></div>
+<article class="card chart-card"><h2>Dein Gewichtsverlauf</h2><div id="chart"></div></article>
+<article class="card analysis-card"><h2>Laufende Auswertung</h2><div id="analysis"></div><p class="hint">BMI = Gewicht ÷ Körpergröße² in Metern. Er ist ein grober Orientierungswert und beschreibt nicht allein Gesundheit oder Körperzusammensetzung.</p></article>
+
+
+</section><article class="card" id="wellbeing-summary"></article></section><section class="app-page" data-page="calendar" hidden="" id="page-calendar"><h1 class="page-heading">Kalender &amp; Einträge</h1><details class="card calendar-panel" id="calendar-panel" open="">
+<summary>Kalender &amp; frühere Check-ins · <span id="selected-date-label"></span></summary>
+<div class="calendar-layout"><div><div class="calendar-controls"><button aria-label="Voriger Monat" class="quiet" id="previous-month" type="button">‹</button><label>Monat<input id="calendar-month" max="2100-12" min="2000-01" type="month"/></label><button aria-label="Nächster Monat" class="quiet" id="next-month" type="button">›</button></div><div aria-hidden="true" class="weekdays"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div><div aria-label="Kalendertage" class="calendar-grid" id="calendar-grid"></div><p class="hint">G = Gewicht · M = Maße · F = Foto</p></div><div><label>Direkt zu einem Tag springen<input id="jump-date" max="2100-12-31" min="2000-01-01" type="date"/></label><button class="quiet" id="jump-today" type="button">Heute</button><div class="day-summary" id="day-summary"></div><p class="hint">Ein Klick auf einen Tag lädt den gemeinsamen Check-in zum Bearbeiten.</p></div></div>
+</details><section class="split history-section"><article class="card"><h2>Deine Gewichtseinträge</h2><div class="history" id="weight-history"></div></article><article class="card"><h2>Deine Körpermaße</h2><div class="history" id="measurements-history"></div></article></section></section><section class="app-page" data-page="gallery" hidden="" id="page-gallery"><h1 class="page-heading">Deine private Fotogalerie</h1><section class="card photo-section" id="photos"><h2>Deine Fotogalerie</h2><p class="hint" id="photo-count"></p><div class="form-grid"><label>Fotos anzeigen<select id="photo-filter"><option value="all">Alle Tage</option><option value="day">Ausgewählter Tag</option></select></label><label>Nach Aufnahmedatum sortieren<select id="photo-order"><option value="desc">Neueste zuerst</option><option value="asc">Älteste zuerst</option></select></label></div><p class="hint">Nur für eure beiden Konten. Das Aufnahmedatum zählt, auch bei später hochgeladenen Fotos. Zum Vergrößern ein Bild auswählen.</p><div class="photo-dates" id="photo-gallery"></div><button class="quiet" hidden="" id="more-photos" type="button">Weitere Fotos laden</button></section></section><section class="app-page" data-page="training" hidden="" id="page-training"><h1 class="page-heading">Dein Training zu Hause</h1><article class="card"><p id="training-personal-context"></p><p>Ausdauer, Kraft und Erholung gehören zusammen. Du wählst Tempo und Band so, dass jede Bewegung kontrolliert und beschwerdefrei bleibt.</p><div class="form-grid"><label>Planstufe<select id="training-level"><option value="active">Regelmäßig aktiv</option><option value="gentle">Sanfter Einstieg</option></select></label><label>Aufbauwoche<select id="training-week"><option value="1">Woche 1</option><option value="2">Woche 2</option><option value="3">Woche 3</option><option value="4">Woche 4</option></select></label></div><div id="training-week-plan"></div><p class="hint">Der Wochenplan ist ein veränderbarer Trainingsvorschlag. Baue nur auf, wenn du die vorherige Stufe gut verträgst. Für bereits Aktive führt der Aufbau zu etwa 150 Minuten moderater Ausdauer pro Woche und zwei Krafteinheiten. Die Krafttage liegen auseinander.</p></article>
+<article class="card"><h2>Deine Übungen</h2><label>Übungen auswählen<select id="exercise-filter"><option value="all">Alle Übungen</option><option value="treadmill">Laufband</option><option value="bands">Gummibänder · Bauch, Beine &amp; Po</option><option value="bodyweight">Ohne Fitnessgeräte</option></select></label><div class="exercise-cards" id="exercise-cards"></div><details><summary>Bandstärken richtig wählen</summary><img alt="Drei beispielhafte Trainingsbänder in unterschiedlichen Farben und Materialstärken" loading="lazy" src="./assets/training/band-strengths.png"/><p>Leicht, mittel und kräftig sind relative Angaben des jeweiligen Herstellers. Farben sind nicht genormt. Wähle den Widerstand so, dass am Satzende noch etwa zwei bis drei saubere Wiederholungen möglich wären. Beim Einstieg in eine neue Übung zunächst das leichtere Band nutzen.</p></details></article>
+<article class="card"><h2>Dein Training dokumentieren</h2><form id="training-form"><div class="form-grid"><label>Trainingstag<input max="2100-12-31" min="2000-01-01" name="recorded_on" required="" type="date"/></label><label>Einheit<select name="kind"><option value="treadmill">Laufband</option><option value="strength-a">Krafteinheit A</option><option value="strength-b">Krafteinheit B</option><option value="bands">Gummibänder</option><option value="bodyweight">Ohne Fitnessgeräte</option><option value="mobility">Beweglichkeit</option></select></label><label>Dauer in Minuten<input inputmode="numeric" max="300" min="1" name="minutes" required="" type="number"/></label><label>Anstrengung von 1 bis 10 <span class="optional">optional</span><input inputmode="numeric" max="10" min="1" name="effort" type="number"/></label></div><label>Verwendetes Band<select name="band_level"><option value="none">Ohne Band</option><option value="light">Leicht</option><option value="medium">Mittel</option><option value="firm">Kräftig</option></select></label><label>Notiz<textarea maxlength="1000" name="note" placeholder="Was hat sich heute gut angefühlt?" rows="2"></textarea></label><button type="submit">Training speichern</button></form><div id="training-history"></div></article>
+<article class="card"><h2>Gut und sicher trainieren</h2><p>Vor jeder Einheit 3–5 Minuten locker aufwärmen. Zwischen Kraftsätzen 45–90 Sekunden pausieren, ruhig weiteratmen und Belastung schrittweise erhöhen. Krafttraining stärkt die Muskulatur; eine gezielte Fettabnahme nur an Bauch, Beinen oder Po lässt sich damit nicht festlegen. Hautstraffung lässt sich nicht versprechen.</p><p>Bei Schmerzen die Übung abbrechen. Bei Brustschmerz, starker ungewohnter Atemnot oder Schwindel pausieren und medizinische Hilfe suchen. Ärztliche Vorgaben, Schwangerschaft oder bestehende Beschwerden gehen diesem allgemeinen Vorschlag vor.</p><p class="hint">Orientierung: <a href="https://www.who.int/initiatives/behealthy/physical-activity" rel="noopener noreferrer" target="_blank">WHO-Bewegungsempfehlungen</a> · <a href="https://www.nhs.uk/live-well/exercise/how-to-improve-strength-flexibility/" rel="noopener noreferrer" target="_blank">Krafttraining und Beweglichkeit</a>. Die Übungsbilder sind KI-generierte Demonstrationen einer fiktiven erwachsenen Trainingsperson.</p></article></section><section class="app-page" data-page="nutrition" hidden="" id="page-nutrition"><h1 class="page-heading">Essen, das zu deinem Alltag passt</h1><section class="daily-suggestions" hidden="" id="daily-recipes"></section><article class="card"><h2>Sättigend und ausgewogen</h2><p>Plane regelmäßige Mahlzeiten mit einer Eiweißquelle, Gemüse oder Obst und sättigenden Ballaststoffen. Low-Carb ist eine mögliche Auswahlhilfe; entscheidend sind ein passender Energiehaushalt und eine Ernährung, die du langfristig gut verträgst.</p><p>Die Rezeptwerte sind aus Zutaten und Referenzdaten berechnet. Für genaue Markenwerte kannst du in der Rezepte-App die Packungsangaben verwenden. Die App kennt deine tatsächlich gegessenen Mengen nur, wenn du sie mitteilst.</p><p>Einzelne Wiegetage zeigen auch Flüssigkeit, Salz, Verdauung und Zykluseinflüsse. Bewerte mehrere Wochen gemeinsam. Dein Wohlbefinden, Kraft und Alltagstauglichkeit zählen mit.</p><p class="hint">Ohne vollständige persönliche Angaben werden keine individuellen Kalorienvorgaben erfunden. Bei anhaltend sehr schneller Abnahme, Beschwerden oder Unsicherheit über das Ziel ist fachliche Begleitung sinnvoll. <a href="https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/tips-to-help-you-lose-weight/" rel="noopener noreferrer" target="_blank">Hinweise zum nachhaltigen Abnehmen</a></p></article><nav aria-label="App-Verknüpfungen" class="app-switches"><a href="/rezepte/" rel="noopener noreferrer" target="_blank">🍲 Rezepte öffnen</a><a href="/garten/" rel="noopener noreferrer" target="_blank">🌿 Garten öffnen</a></nav></section><section class="app-page" data-page="profile" hidden="" id="page-profile"><h1 class="page-heading">Deine Angaben &amp; Ziele</h1><article class="card"><h2>Deine bestätigte Körpergröße</h2><p>Dieser Wert wird für BMI und Auswertungen wiederverwendet. Bitte die gemessene Größe eintragen.</p><form id="height-form"><label>Ramonas Körpergröße in cm<input inputmode="decimal" name="height_cm" required="" type="text"/></label><button type="submit">Körpergröße speichern</button></form></article><article class="card"><h2>Was der Begleiter wissen darf</h2><form id="profile-form"><div class="form-grid"><label>Geburtsjahr <span class="optional">freiwillig</span><input max="2100" min="1900" name="birth_year" type="number"/></label><label>Aktivität<select name="activity_level"><option value="">Noch nicht angegeben</option><option value="active">Regelmäßig aktiv</option><option value="gentle">Sanfter Einstieg</option></select></label><label>Bereits abgenommen in kg <span class="optional">eigene Angabe vor dem App-Start</span><input inputmode="decimal" name="reported_loss_kg" type="text"/></label><label class="check"><input name="reported_loss_approx" type="checkbox"/> Diese frühere Abnahme ist ungefähr angegeben</label><label>Weitere gewünschte Abnahme ab Zielstart, mindestens kg<input inputmode="decimal" name="remaining_goal_min" type="text"/></label><label>Weitere gewünschte Abnahme ab Zielstart, höchstens kg<input inputmode="decimal" name="remaining_goal_max" type="text"/></label></div><p class="hint" id="goal-baseline-note"></p><label>Bekannte übliche Zykluslänge in Tagen <span class="optional">leer lassen, wenn unbekannt</span><input max="45" min="18" name="cycle_length_days" type="number"/></label><label class="check"><input checked="" name="motivation_enabled" type="checkbox"/> Aufmunterungen nach Gewichtseinträgen anzeigen</label><details><summary>Deine Social-Media-Profile verlinken</summary><p class="hint">Hier später die bestätigten eigenen Nutzernamen oder Profil-Links eintragen. Die App rät keine Profile.</p><label>Instagram<input autocomplete="off" name="instagram_url" placeholder="@dein_profil oder Profil-Link" type="text"/></label><label>TikTok<input autocomplete="off" name="tiktok_url" placeholder="@dein_profil oder Profil-Link" type="text"/></label><label>YouTube<input autocomplete="off" name="youtube_url" placeholder="@dein_kanal oder Profil-Link" type="text"/></label></details><button type="submit">Angaben speichern</button></form><nav aria-label="Deine Kanäle" class="app-switches" id="social-links"></nav></article>
+<article class="card"><h2>Zyklus freiwillig dokumentieren</h2><p>Periodentage können helfen, Gewichtsschwankungen einzuordnen. Daraus berechnen wir keinen vermeintlichen Fettanteil und ziehen keine geschätzten Wasserkilos vom BMI ab.</p><form id="cycle-form"><div class="form-grid"><label>Erster Periodentag<input max="2100-12-31" min="2000-01-01" name="recorded_on" required="" type="date"/></label><label>Letzter Periodentag <span class="optional">falls schon bekannt</span><input max="2100-12-31" min="2000-01-01" name="end_on" type="date"/></label></div><label>Notiz <span class="optional">z. B. persönliches Befinden</span><textarea maxlength="1000" name="note" rows="2"></textarea></label><button type="submit">Zykluseintrag speichern</button></form><div id="cycle-history"></div><p class="hint">Diese Angaben bleiben in eurem privaten Tagebuch. Es werden keine fruchtbaren Tage oder sicheren Verhütungszeiträume vorhergesagt. <a href="https://www.nhs.uk/conditions/pre-menstrual-syndrome/" rel="noopener noreferrer" target="_blank">Informationen zu Zyklusbeschwerden</a></p></article>
+<article class="card"><h2>Aus einem anderen Chat übernehmen</h2><p>Andere ChatGPT-Unterhaltungen sind nicht automatisch verbunden. Du kannst einen relevanten Text hier einfügen. Für relative Angaben wie „heute“ brauchen wir das tatsächliche Datum des ursprünglichen Gesprächs.</p><form id="import-chat-form"><label>Datum des ursprünglichen Chats <span class="optional">bei relativen Datumsangaben erforderlich</span><input max="2100-12-31" min="2000-01-01" name="source_date" type="date"/></label><label>Relevanter Text<textarea maxlength="4000" name="message" required="" rows="4"></textarea></label><button type="submit">Text prüfen und klare Angaben übernehmen</button></form></article></section></div>
+<noscript><p>Bitte aktiviere JavaScript, um dein Tagebuch zu verwenden.</p></noscript>
+</main>
+<footer><div class="footer-brand">Ramonas Fortschritt · Ein Platz für deinen Weg<nav aria-label="Weitere Apps"><a href="/garten/">Zum Garten</a> · <a href="/rezepte/">Zu den Rezepten</a></nav></div><aside class="ai-companion" hidden="" id="ai-companion">
+<button class="ai-preview" id="open-ai" type="button"><strong>✦ Dein ChatGPT-Begleiter</strong><span id="ai-tip-preview">Ein kleiner Impuls für deinen Tag.</span></button>
+</aside></footer>
+<dialog class="theme-dialog" id="theme-dialog"><div class="dialog-toolbar"><button class="quiet" id="close-themes" type="button">Fertig</button></div><p class="eyebrow">Dein Tagebuch, dein Stil</p><h2>Drei Designs für dich.</h2><p>Gerade ausgewählt: <strong id="theme-name"></strong></p><div class="theme-choices" id="theme-choices"></div><p class="hint">Das Design wird nur auf diesem Gerät gemerkt. Deine privaten Einträge bleiben davon unabhängig.</p></dialog>
+<dialog id="photo-dialog"><div class="dialog-toolbar"><button class="quiet" id="close-photo" type="button">Schließen</button></div><img alt="Vergrößertes Fortschrittsfoto" id="large-photo"/></dialog>
+
+<dialog class="ai-dialog" id="ai-dialog">
+<div class="dialog-toolbar"><button class="quiet" id="close-ai" type="button">Schließen</button></div><h2>Dein ChatGPT-Begleiter</h2>
+<p class="ai-current-tip" id="ai-current-tip"></p>
+<p class="hint">Der Begleiter erhält deine Messwerte, Notizen und den App-Chat über die OpenAI-API. Fotos werden nicht übertragen. Beide freigegebenen Konten können den gemeinsamen Chat lesen. KI-Tipps ersetzen keine medizinische Beratung.</p>
+<p class="hint">Eindeutige Messwerte, abgeschlossene Trainings und Periodenbeginn mit tatsächlichem Datum kann die App direkt speichern. Bei Unklarheiten fragt sie nach. Beispiel: „Ramona wiegt heute 82 kg.“ Der BMI wird aus den gespeicherten Werten berechnet.</p><div aria-live="polite" class="ai-history" id="ai-history"></div>
+<form id="ai-form"><label>Deine Nachricht<textarea maxlength="4000" name="message" placeholder="Was beschäftigt dich heute?" required="" rows="3"></textarea></label><button type="submit">Nachricht senden</button></form>
+<p class="hint" id="ai-error" role="status"></p>
+<div class="actions"><button class="quiet" id="refresh-tip" type="button">Tipp aktualisieren</button><button class="danger" id="clear-ai" type="button">Chat und KI-Merkliste löschen</button></div>
+<details id="ai-settings"><summary>OpenAI-Schlüssel verwalten</summary><p class="hint" id="ai-key-status"></p><p class="hint">Die API wird unabhängig vom ChatGPT-Abo berechnet. App-Limit: 5 Anfragen pro Minute und 100 pro Tag. Zusätzlich im OpenAI-Projekt ein Budget festlegen. Der Schlüssel wird verschlüsselt gespeichert und nicht wieder angezeigt.</p>
+<form id="ai-key-form"><label>OpenAI-API-Schlüssel<input autocomplete="off" name="api_key" placeholder="sk-…" required="" spellcheck="false" type="password"/></label><button type="submit">Schlüssel verschlüsselt speichern</button></form><button class="danger" id="remove-ai-key" type="button">Schlüssel entfernen und KI deaktivieren</button>
+</details>
+</dialog>
+<dialog class="share-dialog" id="share-dialog">
+<div class="dialog-toolbar"><button class="quiet" id="close-share" type="button">Schließen</button></div><h2>Deinen Fortschritt teilen</h2>
+<p>Wähle genau aus, was auf deiner Karte erscheinen soll. Erst die Vorschau erstellen, dann teilen.</p>
+<form id="share-form">
+<label>Stand bis zum Tag<input name="asOf" required="" type="date"/></label>
+<fieldset><legend>Diese Werte zeigen</legend>
+<label class="check"><input name="date" type="checkbox"/> Datum</label><label class="check"><input name="weight" type="checkbox"/> Gewicht</label><label class="check"><input name="change" type="checkbox"/> Gewichtsveränderung seit Beginn</label><label class="check"><input name="bmi" type="checkbox"/> BMI</label>
+<label class="check"><input name="chest_cm" type="checkbox"/> Brustmaß</label><label class="check"><input name="waist_cm" type="checkbox"/> Taillenumfang</label><label class="check"><input name="hip_cm" type="checkbox"/> Hüftumfang</label><label class="check"><input name="upper_arm_cm" type="checkbox"/> Oberarmumfang</label><label class="check"><input name="thigh_cm" type="checkbox"/> Oberschenkelumfang</label>
+</fieldset>
+<label>Foto <span class="optional">optional, zunächst ohne Foto</span><select id="share-photo" name="photoId"><option value="">Kein Foto teilen</option></select></label>
+<p class="hint">Ein ausgewähltes Foto wird Teil der exportierten Bilddatei. Außerhalb dieser App gelten deren private Zugriffsregeln nicht mehr.</p>
+<label>Dein Text <span class="optional">optional</span><input maxlength="120" name="caption" placeholder="Ein Schritt nach dem anderen."/></label>
+<label>Format<select name="format"><option value="story">Story / TikTok · 9:16</option><option value="portrait">Instagram-Beitrag · 4:5</option><option value="square">Quadratisch · 1:1</option></select></label>
+<button type="submit">Vorschau erstellen</button>
+</form>
+<div hidden="" id="share-preview-panel"><h3>Genau dieses Bild wird weitergegeben</h3><img alt="Vorschau der ausgewählten Daten auf der Fortschrittskarte" id="share-preview"/><div class="actions"><button id="share-file" type="button">Bild teilen</button><button class="quiet" id="download-share" type="button">Bild herunterladen</button></div><p class="hint">Welche Apps im Teilen-Menü erscheinen, entscheidet dein Gerät. Wenn Instagram oder TikTok dort fehlt, das Bild herunterladen und dort selbst hochladen. Es wird nichts automatisch veröffentlicht.</p></div>
+</dialog>
+<dialog class="menu-dialog" id="menu-dialog"><div class="dialog-toolbar"><button class="quiet" id="close-menu" type="button">Schließen</button></div><h2>Wohin möchtest du?</h2><nav aria-label="Bereiche" class="menu-choices" id="menu-choices"></nav><nav aria-label="Weitere Apps" class="app-switches"><a href="/rezepte/" rel="noopener noreferrer" target="_blank">🍲 Rezepte öffnen</a><a href="/garten/" rel="noopener noreferrer" target="_blank">🌿 Garten öffnen</a></nav></dialog>
+<dialog class="exercise-dialog" id="exercise-dialog"><div class="dialog-toolbar"><button class="quiet" id="close-exercise" type="button">Schließen</button></div><div id="exercise-detail"></div></dialog>
+<dialog class="motivation-dialog" id="motivation-dialog"><div class="dialog-toolbar"><button class="quiet" id="close-motivation" type="button">Weiter auf meinem Weg</button></div><p class="eyebrow">Ein Moment für dich</p><h2 id="motivation-title"></h2><p id="motivation-text"></p><p class="hint" id="motivation-context"></p></dialog></body>
 </html>
