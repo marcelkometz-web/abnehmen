@@ -6,3 +6,54 @@
 .ai-companion{position:fixed;bottom:16px;right:16px;z-index:9;width:300px;border-radius:18px;box-shadow:0 8px 35px #302b3526;border:1px solid #dbcde5;background:#fff}.ai-preview{background:#fff;color:#493951;border:0;padding:1rem;width:100%;text-align:left;display:grid;gap:.4rem;font-weight:400;border-radius:18px}.ai-preview strong{font-size:.8rem;color:#715385}.ai-preview span{font-size:.8rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}.ai-dialog,.share-dialog{width:min(94vw,650px);padding:1.5rem;max-height:90vh;overflow:auto}.ai-dialog h2,.share-dialog h2{margin-top:1rem}.ai-current-tip{background:#f2edf7;padding:1rem;border-radius:12px;white-space:pre-wrap}.ai-current-tip:empty{display:none}.ai-history{max-height:35vh;overflow:auto;margin:1rem 0;display:grid;gap:.65rem}.chat-bubble{border-radius:14px;padding:.8rem 1rem;background:#f4f0f8;white-space:pre-wrap;overflow-wrap:anywhere}.chat-bubble.user{background:#eee7f3;margin-left:2rem}.chat-bubble.assistant{margin-right:1rem}.chat-bubble small{font-size:.65rem;font-weight:700;color:#715385}.chat-bubble p{font-size:.88rem;margin:.2rem 0}.ai-dialog .actions,.share-dialog .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0}.ai-dialog details{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--line)}.ai-dialog details summary{cursor:pointer}.share-dialog fieldset{border:1px solid var(--line);border-radius:12px;padding:1rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}.share-dialog legend{font-weight:650;padding:0 .3rem}.check{flex-direction:row;align-items:center;font-size:.82rem}.check input{width:20px;min-height:20px;height:20px;margin:0 .4rem 0 0;accent-color:#715385}.share-dialog form{margin-top:1.2rem}#share-preview{display:block;max-width:100%;max-height:58vh;margin:auto;border:1px solid var(--line);border-radius:12px}body:has(#ai-companion:not([hidden])) main{padding-bottom:150px}
 @media(max-width:760px){.ai-companion{width:230px;right:8px;bottom:8px}.ai-preview{padding:.7rem}.ai-preview span{font-size:.75rem;-webkit-line-clamp:2}.ai-dialog,.share-dialog{padding:1rem}.share-dialog fieldset{grid-template-columns:1fr}}
 body:has(#floating-summary:not([hidden])) .message{top:110px}
+
+/* One complete check-in, with a stable layout on small Safari screens. */
+html,body{max-width:100%;overflow-x:clip}
+main,.topbar,#dashboard,#overview,.card,form,fieldset,label,.form-grid>*,.calendar-controls>*{min-width:0}
+input,select,textarea{min-width:0;max-width:100%;font-size:16px}
+input[type=date],input[type=month]{display:block;width:100%;min-inline-size:0;appearance:none;-webkit-appearance:none}
+input::-webkit-date-and-time-value{text-align:left;min-height:1.5em}
+button,summary,.brand{overflow-wrap:anywhere}
+.checkin-intro{padding-top:.7rem;padding-bottom:1rem}
+.checkin-intro h1{font-size:clamp(2.15rem,6vw,3.6rem);max-width:100%;overflow-wrap:break-word}
+.checkin-card{margin-bottom:1.5rem;scroll-margin-top:1rem}
+.checkin-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;margin-bottom:1.2rem}
+.checkin-heading h2{font-family:Georgia,serif;font-size:1.7rem;font-weight:400;margin:.2rem 0 0}
+.checkin-heading button{flex-shrink:0}
+.checkin-date{max-width:360px}
+.checkin-card fieldset{margin:0;border:0;border-top:1px solid var(--line);padding:1.2rem 0 0}
+.checkin-card legend{padding:0 .5rem 0 0;font-weight:650;font-size:.95rem}
+.checkin-card legend .optional{display:inline-block;margin-left:.3rem}
+.checkin-measurements .form-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.85rem}
+.photo-picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
+.photo-pick{position:relative;display:grid;justify-items:center;text-align:center;align-content:center;gap:.2rem;min-height:135px;border:1px dashed var(--accent);border-radius:18px;padding:.7rem;cursor:pointer;overflow:hidden}
+.photo-pick>span{font-size:1.65rem;font-weight:400;line-height:1.2;color:var(--accent)}
+.photo-pick strong{font-size:.85rem}.photo-pick small{font-size:.7rem;font-weight:400;overflow-wrap:anywhere}
+.photo-pick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;padding:0}
+.photo-pick:focus-within{outline:3px solid var(--accent);outline-offset:3px}.photo-pick.has-file{border-style:solid}
+.checkin-save{width:100%;justify-self:stretch;min-height:52px}
+#checkin-bmi-preview:empty{display:none}
+.calendar-panel{margin-top:1.4rem;margin-bottom:1.4rem}
+.calendar-controls{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.5rem}
+.history-section,.photo-section{margin-top:1.5rem}
+.analysis-card{scroll-margin-top:1rem}
+dialog{overscroll-behavior:contain;overflow:auto;max-height:90dvh;max-width:calc(100% - 1rem)}
+html.dialog-open{overflow:hidden;overscroll-behavior:none}
+html.dialog-open body{position:fixed;left:0;right:0;width:100%;overflow:hidden;overscroll-behavior:none}
+html.dialog-open .floating-summary,html.dialog-open .ai-companion{visibility:hidden}
+@media(max-width:760px){
+  body:has(#floating-summary:not([hidden])) .topbar{padding:1rem 176px 1rem 1rem;display:flex;flex-direction:column;align-items:flex-start;gap:.55rem;min-height:126px}
+  .brand{min-width:0;font-size:.83rem;line-height:1.4;gap:.45rem}
+  .brand-icon{width:30px;height:34px;flex-shrink:0}
+  .topbar-actions{min-width:0}
+  .checkin-heading{gap:.5rem}.checkin-heading h2{font-size:1.45rem}
+  .checkin-measurements .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .checkin-card>.checkin-heading .eyebrow{font-size:.57rem;letter-spacing:.1em}
+  .checkin-card .form-grid{gap:.8rem}
+  .photo-picks{gap:.5rem}.photo-pick{min-height:115px;padding:.5rem .3rem}.photo-pick small{font-size:.65rem}
+  .checkin-date{max-width:none}.floating-summary{max-width:160px;min-width:0;width:158px}
+  .calendar-panel{padding:1rem}.calendar-panel summary{font-size:.9rem}
+  .calendar-controls button{padding:.45rem .65rem}
+  .ai-companion{width:min(230px,calc(100vw - 16px))}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

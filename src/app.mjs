@@ -1,11 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
-import { localDate, dateValue, noteValue, numberValue, weightPayload, measurementsPayload, measurements, views, monthGrid, shiftMonth, analyze } from './domain.mjs';
-import { allRows, saveDaily, uploadPhoto, deletePhoto, fail, bucket } from './data.mjs';
-import { compressPhoto } from './photos.mjs';
+import { localDate, dateValue, numberValue, measurements, views, monthGrid, shiftMonth, analyze } from './domain.mjs';
+import { allRows, deletePhoto, fail, bucket } from './data.mjs';
+import { saveCheckin } from './checkin.mjs';
 import { Assistant } from './assistant.mjs';
 import { shareContent, makeShareCard } from './share.mjs';
 import { DailyRecipes } from './daily-recipes.mjs';
-import { qrImageSource } from './mfa.mjs';
+import { setupThemes } from './themes.mjs';
+import { setupDialogScrollLock } from './dialogs.mjs';
 
 const $ = id => document.getElementById(id);
 const formatNumber = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 });
@@ -16,8 +17,6 @@ let diaryId = null;
 let heightCm = null;
 let selectedDay = localDate();
 let visibleMonth = selectedDay.slice(0, 7);
-let activeFactors = [];
-let enrollmentId = null;
 let lastActivity = Date.now();
 let refreshPending = false;
 let latestAnalysis = null;
@@ -65,19 +64,12 @@ function clearPrivate() {
   for (const id of ['day-summary', 'calendar-grid', 'analysis']) $(id).replaceChildren();
   for (const id of ['floating-weight','floating-bmi','floating-date']) $(id).textContent = '';
   heightCm = null; latestAnalysis = null; diaryId = null;
-  for (const id of ['weight-form','measurements-form','photo-form','height-form']) $(id).reset();
+  for (const id of ['checkin-form','height-form']) $(id).reset();
   $('selected-date-label').textContent = ''; $('jump-date').value = ''; $('calendar-month').value = '';
   assistant?.clear();
   dailyRecipes?.clear();
   if ($('share-dialog').open) $('share-dialog').close();
   $('share-form').reset(); clearSharePreview();
-}
-function tab(name) {
-  for (const section of document.querySelectorAll('.page')) section.hidden = section.id !== name;
-  for (const button of document.querySelectorAll('[data-tab]')) {
-    if (button.dataset.tab === name) button.setAttribute('aria-current', 'page');
-    else button.removeAttribute('aria-current');
-  }
 }
 function empty(container, text) { container.append(node('p', text, 'empty')); }
 function action(text, callback, className = 'quiet small') {
@@ -149,11 +141,9 @@ function renderChart() {
   container.append(svg, labels);
 }
 function editDaily(formId, row) {
-  selectDay(row.recorded_on);
-  const form = $(formId);
-  for (const input of form.querySelectorAll('input,textarea')) input.value = row[input.name] ?? '';
-  form.elements.recorded_on.focus();
-  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  selectDay(row.recorded_on, true);
+  const form=$('checkin-form');
+  (row.weight_kg!==undefined?form.elements.weight_kg:form.elements.waist_cm).focus({preventScroll:true});
 }
 function renderHistory(table, container, rows, fields, formId) {
   container.replaceChildren();
@@ -189,8 +179,8 @@ function render() {
   const change = latest && first ? Math.round((Number(latest.weight_kg) - Number(first.weight_kg)) * 100) / 100 : null;
   $('weight-change').textContent = change === null ? '–' : `${change > 0 ? '+' : ''}${formatNumber.format(change)} kg`;
   renderChart();
-  renderHistory('ab_weights', $('weight-history'), snapshot.weights, null, 'weight-form');
-  renderHistory('ab_measurements', $('measurements-history'), snapshot.measurements, measurements, 'measurements-form');
+  renderHistory('ab_weights', $('weight-history'), snapshot.weights, null, 'checkin-form');
+  renderHistory('ab_measurements', $('measurements-history'), snapshot.measurements, measurements, 'checkin-form');
   renderAnalysis();
   renderCalendar();
   renderPhotos();
@@ -256,8 +246,8 @@ function signed(value) {
 function renderAnalysis() {
   const a = latestAnalysis;
   $('floating-weight').textContent = a.latest ? `${formatNumber.format(a.latest.weight_kg)} kg` : 'Gewicht: –';
-  $('floating-bmi').textContent = a.bmi === null ? 'BMI: Größe/Gewicht fehlt' : `BMI ${a.bmi.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`;
-  $('floating-date').textContent = a.latest ? `Stand ${dateLabel(a.latest.recorded_on)}` : 'Noch kein Gewicht erfasst';
+  $('floating-bmi').textContent = a.bmi === null ? 'BMI –' : `BMI ${a.bmi.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`;
+  $('floating-date').textContent = a.latest ? `Stand ${dateLabel(a.latest.recorded_on)}` : 'Noch kein Check-in';
   const box = $('analysis'); box.replaceChildren();
   box.append(node('p', `${a.weightCount} Gewichtseinträge · ${snapshot.measurements.length} Messtage · ${a.photoCount} Fotos`));
   box.append(node('p', a.weeklyAverage === null ? 'Für die letzten 7 Tage sind noch keine Gewichte erfasst.' : `Durchschnitt der letzten 7 Tage: ${formatNumber.format(a.weeklyAverage)} kg (${a.recentCount} erfasste Tage).`));
@@ -295,31 +285,27 @@ function renderCalendar() {
   if (body) summary.append(node('p', measurements.filter(([field]) => body[field] !== null).map(([field, label]) => `${label}: ${formatNumber.format(body[field])} cm`).join(' · '), 'hint'));
   summary.append(node('p', `${photos.length} Fotos an diesem Tag.`));
   const buttons = node('div', undefined, 'actions');
-  buttons.append(action('Gewicht', () => { tab('weight'); $('weight-form').scrollIntoView({ block: 'start' }); }),
-    action('Maße', () => { tab('measurements'); $('measurements-form').scrollIntoView({ block: 'start' }); }),
-    action('Fotos', () => { $('photo-filter').value = 'day'; renderPhotos(); tab('photos'); $('photo-form').scrollIntoView({ block: 'start' }); }));
+  buttons.append(action('Diesen Check-in bearbeiten',()=>selectDay(selectedDay,true)));
   summary.append(buttons);
 }
-function selectDay(day, preserveForm = '') {
-  selectedDay = dateValue(day);
-  visibleMonth = selectedDay.slice(0, 7);
-  for (const [id, data] of [['weight-form', snapshot.weights], ['measurements-form', snapshot.measurements]]) {
-    if (id === preserveForm) continue;
-    const form = $(id), row = data.find(item => item.recorded_on === selectedDay);
-    form.reset();
-    for (const input of form.querySelectorAll('input,textarea')) input.value = input.name === 'recorded_on' ? selectedDay : row?.[input.name] ?? '';
-  }
-  if (preserveForm !== 'photo-form') { $('photo-form').reset(); $('photo-form').elements.recorded_on.value = selectedDay; }
-  renderCalendar();
-  if ($('photo-filter').value === 'day') renderPhotos();
+function selectDay(day, scrollToForm = false) {
+  selectedDay = dateValue(day); visibleMonth = selectedDay.slice(0, 7);
+  const form=$('checkin-form'),weight=snapshot.weights.find(row=>row.recorded_on===selectedDay),body=snapshot.measurements.find(row=>row.recorded_on===selectedDay);
+  form.reset();form.elements.recorded_on.value=selectedDay;form.elements.weight_kg.value=weight?.weight_kg??'';form.elements.height_cm.value=heightCm??'';
+  for(const [field]of measurements)form.elements[field].value=body?.[field]??'';
+  form.elements.note.value=weight?.note||body?.note||'';
+  updateCheckinPreview();renderCalendar();
+  if($('photo-filter').value==='day')renderPhotos();
+  if(scrollToForm)$('checkin-card').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function clearMfa() {
-  activeFactors = []; enrollmentId = null;
-  $('mfa-secret').textContent = '';
-  $('mfa-qr').removeAttribute('src');
-  $('mfa-qr-panel').hidden = true;
-  $('mfa-form').reset();
-  $('mfa-factor').replaceChildren();
+function updateCheckinPreview(){
+  const form=$('checkin-form');
+  for(const view of ['front','side','back']){
+    const file=form.elements['photo_'+view].files?.[0],label=document.querySelector('[data-file-label="photo_'+view+'"]');
+    label.textContent=file?file.name:'Foto hinzufügen';label.closest('.photo-pick').classList.toggle('has-file',Boolean(file));
+  }
+  const weight=Number(form.elements.weight_kg.value.replace(',','.')),height=Number(form.elements.height_cm.value.replace(',','.'));
+  $('checkin-bmi-preview').textContent=weight>=1&&weight<=700&&height>=50&&height<=260?'BMI-Vorschau für diesen Check-in: '+(weight/(height/100)**2).toLocaleString('de-DE',{maximumFractionDigits:1})+' · noch nicht gespeichert':'';
 }
 function clearSharePreview() {
   ++shareRevision; shareBlob = null;
@@ -332,9 +318,9 @@ function downloadShare() {
   document.body.append(link); link.click(); link.remove();
 }
 async function lockDiary(text = 'Nach 10 Minuten ohne Bedienung wurdest du abgemeldet.') {
-  ++epoch; clearPrivate(); clearMfa(); resetForms();
+  ++epoch; clearPrivate();  resetForms();
   user = null;
-  $('mfa-panel').hidden = true; $('denied-panel').hidden = true;
+ $('denied-panel').hidden = true;
   $('login-panel').hidden = false; $('logout').hidden = true;
   try { await client.auth.signOut({ scope: 'local' }); }
   finally { sessionStorage.removeItem('abnehmen-auth'); message(text); }
@@ -345,11 +331,11 @@ function bindAdditionalFeatures() {
   $('calendar-month').addEventListener('change', event => { try { monthGrid(event.target.value); visibleMonth = event.target.value; renderCalendar(); } catch (error) { message(error.message, true); } });
   $('jump-date').addEventListener('change', event => { try { selectDay(event.target.value); } catch (error) { message(error.message, true); } });
   $('jump-today').addEventListener('click', () => selectDay(localDate()));
-  for (const id of ['weight-form', 'measurements-form', 'photo-form']) $(id).elements.recorded_on.addEventListener('change', event => {
-    try { selectDay(event.target.value, id); } catch (error) { message(error.message, true); }
-  });
+  $('checkin-form').elements.recorded_on.addEventListener('change', event=>{try{selectedDay=dateValue(event.target.value);visibleMonth=selectedDay.slice(0,7);renderCalendar();}catch(error){message(error.message,true);}});
+  $('checkin-form').addEventListener('input',updateCheckinPreview);
+  $('checkin-form').addEventListener('change',updateCheckinPreview);
   $('photo-filter').addEventListener('change', renderPhotos);
-  $('floating-summary').addEventListener('click', () => { tab('overview'); document.querySelector('.analysis-card').scrollIntoView({ behavior: 'smooth' }); });
+  $('floating-summary').addEventListener('click', () => document.querySelector('.analysis-card').scrollIntoView({ behavior: 'smooth' }));
   $('open-share').addEventListener('click', () => {
     $('share-form').reset(); clearSharePreview(); $('share-form').elements.asOf.value = selectedDay;
     $('share-photo').replaceChildren(node('option', 'Kein Foto teilen'));
@@ -394,31 +380,6 @@ function bindAdditionalFeatures() {
     await loadSnapshot(generation);
     if (generation === epoch) message('Körpergröße und BMI aktualisiert.');
   });
-  $('enroll-mfa').addEventListener('click', () => busy($('enroll-mfa'), async generation => {
-    const factors = await client.auth.mfa.listFactors(); fail(factors.error);
-    for (const factor of factors.data.all || []) {
-      if (factor.status === 'unverified' && factor.friendly_name?.startsWith('Abnehmen ')) {
-        const removed = await client.auth.mfa.unenroll({ factorId: factor.id }); fail(removed.error);
-      }
-    }
-    const enrolled = await client.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Abnehmen ${new Date().toISOString()}` }); fail(enrolled.error);
-    if (generation !== epoch) return;
-    enrollmentId = enrolled.data.id;
-    $('mfa-qr').src = qrImageSource(enrolled.data.totp.qr_code);
-    $('mfa-secret').textContent = enrolled.data.totp.secret;
-    $('mfa-qr-panel').hidden = false; $('mfa-form').hidden = false; $('mfa-factor-label').hidden = true;
-    $('mfa-instructions').textContent = 'Diesen aktuellen QR-Code in deiner Authenticator-App als neuen Eintrag hinzufügen. Alternativ den Einrichtungsschlüssel manuell übernehmen. Danach den gerade angezeigten sechsstelligen Code eingeben.';
-  }));
-  bindForm('mfa-form', async (data, generation, form) => {
-    const factorId = enrollmentId || $('mfa-factor').value;
-    if (!factorId) throw new Error('Bitte zuerst deinen Authenticator einrichten.');
-    const challenge = await client.auth.mfa.challenge({ factorId }); fail(challenge.error);
-    const verified = await client.auth.mfa.verify({ factorId, challengeId: challenge.data.id, code: String(data.get('code')).trim() });
-    form.elements.code.value = '';
-    if (verified.error) throw new Error('Der Code ist ungültig oder abgelaufen. Bitte den nächsten Code aus deinem Authenticator versuchen.');
-    $('mfa-secret').textContent = ''; $('mfa-qr').removeAttribute('src'); $('mfa-qr-panel').hidden = true;
-    if (generation === epoch) $('message').hidden = true;
-  });
   for (const event of ['pointerdown','keydown','touchstart','wheel']) document.addEventListener(event, () => { lastActivity = Date.now(); }, { passive: true, capture: true });
   setInterval(async () => {
     if (!user || document.hidden || refreshPending) return;
@@ -432,7 +393,7 @@ function bindAdditionalFeatures() {
   document.addEventListener('visibilitychange', async () => {
     if (!user) return;
     if (document.hidden) {
-      ++epoch; clearPrivate(); clearMfa(); resetForms(); $('mfa-panel').hidden = true;
+      ++epoch; clearPrivate();  resetForms();
     } else if (Date.now() - lastActivity >= 10 * 60 * 1000) {
       await lockDiary().catch(() => {});
     } else {
@@ -449,8 +410,8 @@ async function sessionChanged(session) {
   $('login-panel').hidden = Boolean(user);
   $('logout').hidden = !user;
   $('denied-panel').hidden = true;
-  $('mfa-panel').hidden = true;
-  clearMfa();
+
+
   if (!user) { resetForms(); return; }
   lastActivity = Date.now();
   try {
@@ -458,22 +419,6 @@ async function sessionChanged(session) {
     fail(access.error);
     if (generation !== epoch) return;
     if (!access.data?.enabled) { $('denied-panel').hidden = false; return; }
-    const [assurance, factors] = await Promise.all([client.auth.mfa.getAuthenticatorAssuranceLevel(), client.auth.mfa.listFactors()]);
-    fail(assurance.error); fail(factors.error);
-    if (generation !== epoch) return;
-    activeFactors = (factors.data.totp || []).filter(factor => factor.status === 'verified');
-    if (assurance.data.currentLevel !== 'aal2' || !activeFactors.length) {
-      enrollmentId = (factors.data.all || []).find(factor => factor.status === 'unverified' && factor.friendly_name?.startsWith('Abnehmen '))?.id || null;
-      $('mfa-panel').hidden = false;
-      $('mfa-enrollment').hidden = activeFactors.length > 0;
-      $('mfa-form').hidden = activeFactors.length === 0 && !enrollmentId;
-      $('mfa-instructions').textContent = enrollmentId ? 'Wenn du den Authenticator bereits hinzugefügt hast, gib seinen aktuellen Code ein. Andernfalls „Authenticator einrichten“ wählen und einen neuen QR-Code scannen.' : 'Bestätige die Anmeldung mit deinem Authenticator. Falls noch keiner hinterlegt ist, richte ihn hier ein.';
-      $('mfa-factor').replaceChildren(...activeFactors.map(factor => {
-        const option = node('option', factor.friendly_name || 'Authenticator'); option.value = factor.id; return option;
-      }));
-      $('mfa-factor-label').hidden = activeFactors.length < 2;
-      return;
-    }
     diaryId = access.data.diary_user_id;
     await loadSnapshot(generation);
     if (generation !== epoch) return;
@@ -506,6 +451,8 @@ async function start() {
     document.body.replaceChildren(node('p','Der private Bereich wird in eingebetteten Fenstern nicht geöffnet.'),link);
     return;
   }
+  setupThemes();
+  setupDialogScrollLock();
   resetForms();
   const config = await fetch('./config.json', { cache: 'no-store' }).then(response => {
     if (!response.ok) throw new Error('Die App-Konfiguration konnte nicht geladen werden.');
@@ -517,7 +464,14 @@ async function start() {
   });
   client.auth.onAuthStateChange((_event, session) => {
     // Leave the SDK's auth lock before making further API requests.
-    setTimeout(() => sessionChanged(session), 0);
+    setTimeout(() => {
+      // A token refresh must preserve an in-progress check-in and its scroll.
+      if (session && user?.id === session.user.id && diaryId && !$('dashboard').hidden) {
+        user = session.user;
+        return;
+      }
+      sessionChanged(session);
+    }, 0);
   });
   bindForm('login-form', async (data, generation, form) => {
     const result = await client.auth.signInWithPassword({ email: String(data.get('email')).trim(), password: String(data.get('password')) });
@@ -525,28 +479,20 @@ async function start() {
     if (result.error) throw new Error('Anmeldung fehlgeschlagen. Bitte prüfe E-Mail und Passwort oder versuche es später erneut.');
     $('message').hidden = true;
   });
-  bindForm('weight-form', async (data, generation) => {
-    await saveDaily(client, 'ab_weights', weightPayload(data));
-    await loadSnapshot(generation);
-    if (generation === epoch) message('Gewicht gespeichert.');
-  });
-  bindForm('measurements-form', async (data, generation) => {
-    await saveDaily(client, 'ab_measurements', measurementsPayload(data));
-    await loadSnapshot(generation);
-    if (generation === epoch) message('Körpermaße gespeichert.');
-  });
-  bindForm('photo-form', async (data, generation, form) => {
-    const uid = diaryId;
-    if (!uid) throw new Error('Bitte melde dich erneut an.');
-    const payload = { recorded_on: dateValue(data.get('recorded_on')), view: data.get('view'), note: noteValue(data.get('note')) };
-    const jpeg = await compressPhoto(data.get('photo'));
-    if (generation !== epoch) return;
-    await uploadPhoto(client, uid, payload, jpeg);
-    await loadSnapshot(generation);
-    if (generation === epoch) { form.elements.photo.value = ''; form.elements.note.value = ''; message('Foto privat gespeichert.'); }
+  bindForm('checkin-form',async(data,generation,form)=>{
+    const uid=diaryId;if(!uid)throw Error('Bitte melde dich erneut an.');
+    const controls=[...form.querySelectorAll('input,textarea')];for(const control of controls)control.disabled=true;
+    const button=form.querySelector('[type=submit]'),label=button.textContent;button.textContent='Dein Check-in wird gespeichert …';
+    try{
+      const result=await saveCheckin(client,uid,data,{active:()=>generation===epoch&&Boolean(user&&diaryId)});
+      if(generation!==epoch)return;
+      await loadSnapshot(generation);
+      if(generation!==epoch)return;
+      selectDay(String(data.get('recorded_on')));
+      message('Wochenstand vom '+dateLabel(String(data.get('recorded_on')))+' gespeichert'+(result?.photo_count?' · '+result.photo_count+' Fotos':'')+'.');
+    }finally{for(const control of controls)control.disabled=false;button.textContent=label;}
   });
   $('logout').addEventListener('click', () => busy($('logout'), () => lockDiary('Du bist abgemeldet.')));
-  for (const button of document.querySelectorAll('[data-tab]')) button.addEventListener('click', () => tab(button.dataset.tab));
   $('more-photos').addEventListener('click', appendPhotos);
   $('close-photo').addEventListener('click', () => $('photo-dialog').close());
   $('photo-dialog').addEventListener('close', () => $('large-photo').removeAttribute('src'));

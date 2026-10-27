@@ -44,7 +44,7 @@ export function createHandler({ createClient, env, fetchImpl = fetch }) {
       const identity = await caller.auth.getUser(authorization.slice(7));
       if (identity.error || !identity.data?.user) return reply(401, { error: 'Anmeldung abgelaufen.' });
       const assignment = await caller.rpc('ab_current_diary');
-      if (assignment.error || !assignment.data) return reply(403, { error: 'Freigabe und bestätigter Authenticator erforderlich.' });
+      if (assignment.error || !assignment.data) return reply(403, { error: 'Ein freigegebenes Konto mit gültiger Sitzung ist erforderlich.' });
       const diary = assignment.data, actor = identity.data.user.id;
       const raw = await request.text();
       if (raw.length > 16000) return reply(413, { error: 'Die Nachricht ist zu lang.' });

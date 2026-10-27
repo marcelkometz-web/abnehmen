@@ -2,7 +2,7 @@
 
 - Genau zwei administrativ zugeordnete Konten teilen ein Tagebuch. Garten-/Rezept-Rollen allein verleihen keine Abnehmen-Berechtigung.
 - Alle App-Datentabellen erzwingen RLS. Die Freigabeliste ist vom Browser nur für das eigene Konto lesbar und nicht änderbar.
-- Datenzugriff erfordert eine gültige, nicht abgelaufene Auth-Sitzung, ein freigegebenes Garten-Konto, eine aktive App-Zuordnung, `aal2` und einen weiterhin bestätigten TOTP-Faktor.
+- Datenzugriff erfordert eine gültige, nicht abgelaufene Auth-Sitzung, ein freigegebenes Garten-Konto, eine aktive App-Zuordnung. Die App verlangt auf ausdrücklichen Benutzerwunsch keinen zusätzlichen TOTP-Code. Vorhandene Auth-Faktoren anderer Apps bleiben unverändert.
 - Der Fotobucket ist privat. Authentifizierte Downloads und Uploads sind auf den zugeordneten Tagebuchordner begrenzt. Es werden keine öffentlich zugänglichen Bildlinks erzeugt.
 - Neue Uploads erhalten zufällige Dateinamen. Original-Metadaten werden nicht übernommen. Beim Teilen wird ausschließlich die sichtbare, ausdrücklich zusammengestellte Vorschau exportiert.
 - API-Schlüssel werden in Supabase Vault verschlüsselt. Die neue Lesefunktion für den Schlüssel ist ausschließlich für `service_role` freigegeben und prüft die Serverrolle zusätzlich. Öffentliche RPCs liefern niemals den Schlüssel zurück.
@@ -13,6 +13,6 @@ Die Rollback-Tests unter `supabase/tests/` wurden gegen das geteilte Projekt aus
 
 ## Bereits bestehende projektweite Meldung
 
-Supabase meldet im geteilten Garten-Projekt **Leaked Password Protection Disabled**. Das ist eine bereits vor dieser Einrichtung vorhandene globale Auth-Einstellung. Sie wurde nicht für die anderen Apps verändert. Anleitung: [Password strength and leaked password protection](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection). Abnehmen verlangt zusätzlich zum Passwort einen bestätigten Authenticator.
+Supabase meldet im geteilten Garten-Projekt **Leaked Password Protection Disabled**. Das ist eine bereits vor dieser Einrichtung vorhandene globale Auth-Einstellung. Sie wurde nicht für die anderen Apps verändert. Anleitung: [Password strength and leaked password protection](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
 
 Projektadministratoren und serverseitige Service-Schlüssel sind privilegiert. Gewollt exportierte Bilder verlassen den Zugriffsschutz dieser App. Weder dieser Stand noch die Tests sind eine Zusage absoluter Sicherheit oder Ende-zu-Ende-Verschlüsselung.

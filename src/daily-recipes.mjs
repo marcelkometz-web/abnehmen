@@ -26,7 +26,7 @@ export class DailyRecipes {
     this.container.hidden=false;
     this.container.replaceChildren(element('p','Aus eurer Rezeptsammlung','eyebrow'),element('h2','Wie wäre es heute mit …?'));
     const cards=element('div',undefined,'daily-recipe-grid');
-    for(const recipe of this.data||[]){const link=element('a',undefined,'daily-recipe-card');link.href=`/rezepte/?recipe=${encodeURIComponent(recipe.id)}`;
+    for(const recipe of this.data||[]){const link=element('a',undefined,'daily-recipe-card');link.href=`/rezepte/?recipe=${encodeURIComponent(recipe.id)}`;link.target='_blank';link.rel='noopener noreferrer';
       link.append(element('span',recipe.emoji||'🍲','daily-recipe-icon'),element('strong',recipe.title),element('small',recipe.kcal==null?'Rezept öffnen':`${Number(recipe.kcal).toLocaleString('de-DE')} kcal pro Portion · Rezept öffnen`));cards.append(link);}
     if(!(this.data||[]).length)cards.append(element('p','In eurer Rezeptsammlung sind noch keine Gerichte vorhanden.'));
     this.container.append(cards,element('p','Jeden Tag zwei neue Ideen. Eure gespeicherten Rezeptangaben bleiben unverändert.','hint'));

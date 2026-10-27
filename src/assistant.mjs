@@ -18,7 +18,7 @@ export class Assistant {
       const revision = this.revision, button = form.querySelector('button'); button.disabled = true;
       try {
         const result = await this.client.rpc('ab_ai_config', { action: 'set', new_key: key });
-        if (result.error) throw new Error('Der Schlüssel konnte nicht gespeichert werden. Bitte Anmeldung, Authenticator und Schlüsselformat prüfen.');
+        if (result.error) throw new Error('Der Schlüssel konnte nicht gespeichert werden. Bitte Anmeldung und Schlüsselformat prüfen.');
         if (revision !== this.revision || !this.active()) return;
         this.setError('Schlüssel verschlüsselt gespeichert.');
         await this.load(); this.schedule();
