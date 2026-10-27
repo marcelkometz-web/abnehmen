@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://wwybkswpyoyowciumxda.supabase.co https://kzxzhpebugvzyqfjqedx.supabase.co; font-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="theme-color" content="#f4f0f8">
+  <title>Ramonas Fortschritt</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./daily-recipes.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt</a>
+  <header class="topbar">
+    <a class="brand" href="./"><span class="brand-icon" aria-hidden="true">✦</span> Ramonas Fortschritt</a>
+    <button id="logout" class="quiet" hidden>Abmelden</button>
+  </header>
+  <main id="main">
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    <section id="login-panel" class="login card">
+      <p class="eyebrow">Ein Moment für dich</p>
+      <h1>Dein Weg.<br>Dein Tempo.</h1>
+      <p>Gewicht, Körpermaße und Fotos – dein persönlicher Blick auf deinen Fortschritt.</p>
+      <form id="login-form">
+        <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+        <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
+        <button type="submit">Anmelden</button>
+      </form>
+      <p class="hint">Nur Marcel und Ramona haben Zugriff. Verwendet eure bestehenden Garten-Konten und euren Authenticator. Nach 10 Minuten ohne Bedienung meldet sich die App automatisch ab.</p>
+    </section>
+    <section id="denied-panel" class="card" hidden>
+      <h1>Dein Konto ist hier nicht freigeschaltet.</h1>
+      <p>Nur die beiden fest freigegebenen Konten von Marcel und Ramona erhalten Zugriff.</p>
+    </section>
+    <section id="mfa-panel" class="login card" hidden>
+      <p class="eyebrow">Dein privater Bereich</p><h1>Zweiter Schritt.</h1>
+      <p id="mfa-instructions">Bestätige die Anmeldung mit deinem Authenticator.</p>
+      <div id="mfa-enrollment" hidden>
+        <p class="hint">Die erstmalige Einrichtung kann andere Garten- und Rezepte-Sitzungen abmelden. Dort könnt ihr euch anschließend erneut anmelden. Bewahre den Authenticator-Zugang sicher auf; bei Verlust muss der Kontoinhaber den Zugang über Supabase wiederherstellen.</p>
+        <button id="enroll-mfa" type="button">Authenticator einrichten</button>
+        <div id="mfa-qr-panel" hidden><img id="mfa-qr" alt="QR-Code für deinen Authenticator" width="240" height="240"><details><summary>Manuell einrichten</summary><code id="mfa-secret"></code></details></div>
+      </div>
+      <form id="mfa-form" hidden>
+        <label id="mfa-factor-label">Authenticator<select id="mfa-factor"></select></label>
+        <label>Sechsstelliger Code<input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
+        <button type="submit">Privates Tagebuch öffnen</button>
+      </form>
+    </section>
+    <button id="floating-summary" class="floating-summary" type="button" hidden aria-label="Aktuelles Gewicht und BMI, Analyse öffnen">
+      <span id="floating-weight">Gewicht: –</span><span id="floating-bmi">BMI: –</span><small id="floating-date"></small>
+    </button>
+    <div id="dashboard" hidden>
+      <section class="intro">
+        <p class="eyebrow">Dein persönliches Tagebuch</p>
+        <h1>Kleine Schritte.<br>Dein eigener Weg.</h1>
+        <p>Halte fest, was sich verändert. Ganz in deinem Tempo.</p>
+      </section>
+      <nav class="tabs" aria-label="Bereiche">
+        <button type="button" data-tab="overview" aria-current="page">Überblick</button>
+        <button type="button" data-tab="weight">Gewicht</button>
+        <button type="button" data-tab="measurements">Körpermaße</button>
+        <button type="button" data-tab="photos">Fotos</button>
+        <button id="open-share" type="button">Teilen</button>
+      </nav>
+      <details class="card calendar-panel" open>
+        <summary>Kalender &amp; Tagesansicht · <span id="selected-date-label"></span></summary>
+        <div class="calendar-layout">
+          <div><div class="calendar-controls"><button id="previous-month" type="button" class="quiet" aria-label="Voriger Monat">‹</button><label>Monat<input id="calendar-month" type="month" min="2000-01" max="2100-12"></label><button id="next-month" type="button" class="quiet" aria-label="Nächster Monat">›</button></div>
+            <div class="weekdays" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div><div id="calendar-grid" class="calendar-grid" aria-label="Kalendertage"></div>
+            <p class="hint">Markierungen: G = Gewicht, M = Maße, F = Foto</p>
+          </div>
+          <div><label>Direkt zu einem Tag springen<input id="jump-date" type="date" min="2000-01-01" max="2100-12-31"></label><button id="jump-today" type="button" class="quiet">Heute</button><div id="day-summary" class="day-summary"></div><p class="hint">Auch vergangene Tage lassen sich vollständig nachtragen. Das Aufnahmedatum zählt, nicht der Zeitpunkt des Uploads.</p></div>
+        </div>
+      </details>
+      <section id="overview" class="page">
+        <section id="daily-recipes" class="daily-suggestions" hidden></section>
+        <div class="stats">
+          <article class="card stat"><p>Erster Eintrag</p><strong id="first-weight">–</strong><small id="first-date">Noch kein Gewicht erfasst</small></article>
+          <article class="card stat"><p>Zuletzt erfasst</p><strong id="latest-weight">–</strong><small id="latest-date">Dein Tagebuch wartet auf dich</small></article>
+          <article class="card stat"><p>Veränderung seit Beginn</p><strong id="weight-change">–</strong><small>Jeder Verlauf ist individuell</small></article>
+        </div>
+        <article class="card chart-card"><h2>Dein Gewichtsverlauf</h2><div id="chart"></div></article>
+        <article class="card analysis-card"><h2>Deine laufende Auswertung</h2><div id="analysis"></div><form id="height-form"><label>Ramonas Körpergröße in cm<input name="height_cm" type="text" inputmode="decimal" placeholder="z. B. 168" required></label><button type="submit">Körpergröße speichern</button></form><p class="hint">BMI = Gewicht ÷ Körpergröße² in Metern. Der BMI ist ein grober Orientierungswert und beschreibt nicht allein die Gesundheit oder Körperzusammensetzung.</p></article>
+        <div class="card privacy"><span aria-hidden="true">✦</span><p><strong>Euer privater Raum.</strong> Nur Marcel und Ramona können dieses Tagebuch mit bestätigtem Authenticator in der App öffnen.</p></div>
+      </section>
+      <section id="weight" class="page" hidden>
+        <div class="split">
+          <article class="card"><h2>Gewicht festhalten</h2>
+            <form id="weight-form">
+              <label>Datum<input name="recorded_on" type="date" required></label>
+              <label>Gewicht in kg<input name="weight_kg" type="text" inputmode="decimal" placeholder="z. B. 72,5" required></label>
+              <label>Notiz <span class="optional">optional</span><textarea name="note" maxlength="1000" rows="3"></textarea></label>
+              <button type="submit">Gewicht speichern</button>
+              <p class="hint">Ein Wert pro Tag. Erneutes Speichern aktualisiert den Wert für das gewählte Datum.</p>
+            </form>
+          </article>
+          <article class="card"><h2>Deine Einträge</h2><div id="weight-history" class="history"></div></article>
+        </div>
+      </section>
+      <section id="measurements" class="page" hidden>
+        <div class="split">
+          <article class="card"><h2>Körpermaße festhalten</h2>
+            <form id="measurements-form">
+              <label>Datum<input name="recorded_on" type="date" required></label>
+              <div class="form-grid">
+                <label>Brust in cm<input name="chest_cm" type="text" inputmode="decimal"></label>
+                <label>Taille in cm<input name="waist_cm" type="text" inputmode="decimal"></label>
+                <label>Hüfte in cm<input name="hip_cm" type="text" inputmode="decimal"></label>
+                <label>Oberarm in cm<input name="upper_arm_cm" type="text" inputmode="decimal"></label>
+                <label>Oberschenkel in cm<input name="thigh_cm" type="text" inputmode="decimal"></label>
+              </div>
+              <label>Notiz <span class="optional">optional</span><textarea name="note" maxlength="1000" rows="3"></textarea></label>
+              <button type="submit">Maße speichern</button>
+              <p class="hint">Mindestens ein Maß genügt. Erneutes Speichern ersetzt die Maße für das gewählte Datum; leere Felder werden dabei entfernt.</p>
+            </form>
+          </article>
+          <article class="card"><h2>Deine Maße</h2><div id="measurements-history" class="history"></div></article>
+        </div>
+      </section>
+      <section id="photos" class="page" hidden>
+        <article class="card"><h2>Ein Bild deines Weges</h2>
+          <form id="photo-form">
+            <div class="form-grid">
+              <label>Datum<input name="recorded_on" type="date" required></label>
+              <label>Ansicht<select name="view"><option value="front">Vorne</option><option value="side">Seite</option><option value="back">Hinten</option><option value="other">Sonstige</option></select></label>
+            </div>
+            <label>Foto auswählen<input name="photo" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+            <label>Notiz <span class="optional">optional</span><textarea name="note" maxlength="1000" rows="2"></textarea></label>
+            <button type="submit">Foto privat speichern</button>
+            <p class="hint">Fotos werden vor dem Upload verkleinert und als JPG gespeichert. Standort- und Kamerametadaten werden dabei entfernt.</p>
+          </form>
+        </article>
+        <h2 class="gallery-title">Deine Fortschrittsfotos</h2>
+        <label>Fotos anzeigen<select id="photo-filter"><option value="all">Alle Tage</option><option value="day">Ausgewählter Tag</option></select></label>
+        <p class="hint">Zum Vergrößern ein Foto auswählen.</p>
+        <div id="photo-gallery" class="gallery"></div>
+        <button id="more-photos" type="button" class="quiet" hidden>Weitere Fotos laden</button>
+      </section>
+    </div>
+    <noscript><p>Bitte aktiviere JavaScript, um dein Tagebuch zu verwenden.</p></noscript>
+  </main>
+  <footer>Ramonas Fortschritt · Ein Platz für deinen Weg</footer>
+  <dialog id="photo-dialog"><button id="close-photo" class="quiet" type="button">Schließen</button><img id="large-photo" alt="Vergrößertes Fortschrittsfoto"></dialog>
+  <aside id="ai-companion" class="ai-companion" hidden>
+    <button id="open-ai" class="ai-preview" type="button"><strong>✦ Dein ChatGPT-Begleiter</strong><span id="ai-tip-preview">Ein kleiner Impuls für deinen Tag.</span></button>
+  </aside>
+  <dialog id="ai-dialog" class="ai-dialog">
+    <button id="close-ai" class="quiet" type="button">Schließen</button><h2>Dein ChatGPT-Begleiter</h2>
+    <p id="ai-current-tip" class="ai-current-tip"></p>
+    <p class="hint">Der Begleiter erhält deine Messwerte, Notizen und den App-Chat über die OpenAI-API. Fotos werden nicht übertragen. Beide freigegebenen Konten können den gemeinsamen Chat lesen. KI-Tipps ersetzen keine medizinische Beratung.</p>
+    <div id="ai-history" class="ai-history" aria-live="polite"></div>
+    <form id="ai-form"><label>Deine Nachricht<textarea name="message" rows="3" maxlength="4000" required placeholder="Was beschäftigt dich heute?"></textarea></label><button type="submit">Nachricht senden</button></form>
+    <p id="ai-error" class="hint" role="status"></p>
+    <div class="actions"><button id="refresh-tip" class="quiet" type="button">Tipp aktualisieren</button><button id="clear-ai" class="danger" type="button">Chat und KI-Merkliste löschen</button></div>
+    <details id="ai-settings"><summary>OpenAI-Schlüssel verwalten</summary><p id="ai-key-status" class="hint"></p><p class="hint">Die API wird unabhängig vom ChatGPT-Abo berechnet. App-Limit: 5 Anfragen pro Minute und 100 pro Tag. Zusätzlich im OpenAI-Projekt ein Budget festlegen. Der Schlüssel wird verschlüsselt gespeichert und nicht wieder angezeigt.</p>
+      <form id="ai-key-form"><label>OpenAI-API-Schlüssel<input name="api_key" type="password" autocomplete="off" spellcheck="false" required placeholder="sk-…"></label><button type="submit">Schlüssel verschlüsselt speichern</button></form><button id="remove-ai-key" type="button" class="danger">Schlüssel entfernen und KI deaktivieren</button>
+    </details>
+  </dialog>
+  <dialog id="share-dialog" class="share-dialog">
+    <button id="close-share" type="button" class="quiet">Schließen</button><h2>Deinen Fortschritt teilen</h2>
+    <p>Wähle genau aus, was auf deiner Karte erscheinen soll. Erst die Vorschau erstellen, dann teilen.</p>
+    <form id="share-form">
+      <label>Stand bis zum Tag<input name="asOf" type="date" required></label>
+      <fieldset><legend>Diese Werte zeigen</legend>
+        <label class="check"><input type="checkbox" name="date"> Datum</label><label class="check"><input type="checkbox" name="weight"> Gewicht</label><label class="check"><input type="checkbox" name="change"> Gewichtsveränderung seit Beginn</label><label class="check"><input type="checkbox" name="bmi"> BMI</label>
+        <label class="check"><input type="checkbox" name="chest_cm"> Brustmaß</label><label class="check"><input type="checkbox" name="waist_cm"> Taillenumfang</label><label class="check"><input type="checkbox" name="hip_cm"> Hüftumfang</label><label class="check"><input type="checkbox" name="upper_arm_cm"> Oberarmumfang</label><label class="check"><input type="checkbox" name="thigh_cm"> Oberschenkelumfang</label>
+      </fieldset>
+      <label>Foto <span class="optional">optional, zunächst ohne Foto</span><select name="photoId" id="share-photo"><option value="">Kein Foto teilen</option></select></label>
+      <p class="hint">Ein ausgewähltes Foto wird Teil der exportierten Bilddatei. Außerhalb dieser App gelten deren private Zugriffsregeln nicht mehr.</p>
+      <label>Dein Text <span class="optional">optional</span><input name="caption" maxlength="120" placeholder="Ein Schritt nach dem anderen."></label>
+      <label>Format<select name="format"><option value="story">Story / TikTok · 9:16</option><option value="portrait">Instagram-Beitrag · 4:5</option><option value="square">Quadratisch · 1:1</option></select></label>
+      <button type="submit">Vorschau erstellen</button>
+    </form>
+    <div id="share-preview-panel" hidden><h3>Genau dieses Bild wird weitergegeben</h3><img id="share-preview" alt="Vorschau der ausgewählten Daten auf der Fortschrittskarte"><div class="actions"><button id="share-file" type="button">Bild teilen</button><button id="download-share" type="button" class="quiet">Bild herunterladen</button></div><p class="hint">Welche Apps im Teilen-Menü erscheinen, entscheidet dein Gerät. Wenn Instagram oder TikTok dort fehlt, das Bild herunterladen und dort selbst hochladen. Es wird nichts automatisch veröffentlicht.</p></div>
+  </dialog>
+</body>
+</html>
