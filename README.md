@@ -22,7 +22,7 @@ Die beiden bestehenden Garten-Konten wurden ausdrücklich demselben Tagebuch zug
 
 Die Anmeldung erfolgt auf ausdrücklichen Wunsch mit E-Mail und Passwort, ohne zusätzliche Authenticator-Abfrage. Die serverseitige Freigabeliste bleibt auf die beiden bestehenden Konten beschränkt. Bereits im gemeinsamen Supabase-Konto hinterlegte Authenticator-Faktoren werden dadurch nicht gelöscht oder für andere Apps verändert.
 
-Die Regeln werden serverseitig über RLS, eine administrativ verwaltete Freigabeliste, aktuelle Auth-Sitzungen durchgesetzt. Das gilt für Tabellen, KI-Verlauf und Fotos. Ein Link gewährt keinen Datenzugriff. Die App legt keine Daten- oder Foto-Offlinekopie an. Die Anmeldung liegt ausschließlich im Sitzungsspeicher dieses Tabs. Nach zehn Minuten ohne Bedienung wird abgemeldet; beim Verlassen des Tabs wird die private Ansicht geleert und beim Zurückkehren neu geprüft.
+Die Regeln werden serverseitig über RLS, eine administrativ verwaltete Freigabeliste und aktuelle Auth-Sitzungen durchgesetzt. Das gilt für Tabellen, KI-Verlauf und Fotos. Ein Link gewährt keinen Datenzugriff. Die App legt keine Daten- oder Foto-Offlinekopie an. Die gemeinsame Anmeldung für Garten, Rezepte und Abnehmen wird im lokalen Browserspeicher dieses Geräts verwaltet. Nach zehn Minuten ohne Bedienung in diesen Apps endet sie; Abmelden gilt für alle drei Apps. Private Fotos und App-Inhalte werden dafür nicht lokal gespeichert. Beim Verlassen des Tabs wird die private Ansicht geleert und beim Zurückkehren neu geprüft.
 
 Projektadministratoren mit Datenbank-/Service-Zugriff bleiben technisch privilegiert. Die Daten sind nicht Ende-zu-Ende verschlüsselt. Programmcode und öffentliche Publishable-Keys dürfen öffentlich sein; reale Messdaten, Fotos, Tokens, private Backups und Anbieter-Schlüssel gehören niemals ins Repository.
 
@@ -58,3 +58,11 @@ Die Node-Tests prüfen Datums-/BMI-Berechnung, Kalender, ausschließlich ausgew�
 ## Verbundene Apps
 
 Garten verwendet einen kleinen Zusatzbaustein `daily-recipes.js`; Rezepte bietet den Tab **Heute**, eine vorbereitete Anfrage für ein ausgewogenes Abnehm-Menü und Rezept-Links mit `?recipe=ID`. Die neue, ausschließlich lesende Funktion `recipes-daily` liefert nur die beiden Vorschläge, keine Einkaufsliste und keinen vollständigen Rezeptdatenbestand. Er verwendet unverändert die bestehenden Familien-, Konten- und Sitzungsprüfungen.
+
+## Gemeinsame Anmeldung und Passwort vergessen
+
+Alle drei Apps verwenden dasselbe Supabase-Konto und denselben Anmeldespeicher auf dieser Browser-Origin. Neue Tabs können die Anmeldung übernehmen. Die Bedienung in jeder der drei Apps hält die gemeinsame Zehn-Minuten-Frist aktiv; automatischer Datenabgleich und Token-Erneuerung tun das nicht. Einmalige Übernahme bestehender Tab-Anmeldungen; ein Abmelden verhindert die erneute Übernahme älterer Tab-Kopien. Die Abnehmen-Freigabeliste und die serverseitigen Zugriffskontrollen bleiben davon unabhängig.
+
+„Passwort vergessen?“ fordert auf Benutzeraktion einen Supabase-Link an. Der PKCE-Link führt in dieselbe App zurück. Ein neues Passwort muss zweimal übereinstimmend mit mindestens zwölf Zeichen eingegeben werden. Danach werden die Kontositzungen abgemeldet und die Anmeldung in der ursprünglichen App angezeigt. Recovery-Zustand übersteht ein Neuladen; ein abgelaufener oder in einem anderen Browser geöffneter Link führt zur erneuten Link-Anforderung. Rückkehrziele sind fest auf die drei App-Pfade begrenzt.
+
+Quelle des gemeinsamen Moduls ist `src/shared-auth.mjs`; Rezepte hält dieselbe Quellkopie, Garten lädt das daraus gebaute `shared-auth.js`. Keine Anbieter-Schlüssel werden übernommen oder verändert.

@@ -32,7 +32,21 @@
         <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
         <button type="submit">Anmelden</button>
       </form>
-      <p class="hint">Nur Marcel und Ramona haben Zugriff. Verwendet eure bestehenden Garten-Konten. Eine öffentliche Registrierung ist nicht möglich. Nach 10 Minuten ohne Bedienung meldet sich die App automatisch ab.</p>
+      <button id="forgot-password" type="button" class="quiet auth-back">Passwort vergessen?</button>
+      <p class="hint">Nur Marcel und Ramona haben Zugriff. Eure Anmeldung gilt gemeinsam für Garten, Rezepte und Abnehmen in diesem Browser. Eine öffentliche Registrierung ist nicht möglich. Nach 10 Minuten ohne Bedienung dieser Apps werdet ihr gemeinsam abgemeldet.</p>
+    </section>
+    <section id="reset-panel" class="login card" hidden>
+      <p class="eyebrow">Wieder Zugang finden</p><h1>Passwort vergessen?</h1>
+      <p>Fordere einen Link an. Er führt dich hierher zurück, damit du ein neues Passwort festlegen kannst.</p>
+      <form id="reset-form"><label>Deine E-Mail-Adresse<input name="email" type="email" autocomplete="email" required maxlength="254"></label><button type="submit">Passwort-Link anfordern</button></form>
+      <p class="hint">Den neuesten Link bitte im selben Browser auf diesem Gerät öffnen. Schau auch im Spamordner nach. Das neue Passwort gilt für alle drei Apps.</p>
+      <button id="cancel-reset" class="quiet auth-back" type="button">Zurück zur Anmeldung</button>
+    </section>
+    <section id="password-panel" class="login card" hidden>
+      <p class="eyebrow">Dein Zugang</p><h1>Ein neues Passwort.</h1>
+      <p>Lege dein neues Passwort für Garten, Rezepte und Abnehmen fest.</p>
+      <form id="password-form"><label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label><label>Neues Passwort wiederholen<input name="confirm_password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label><p class="hint">Mindestens 12 Zeichen. Eine lange Wortfolge ist eine gute Wahl.</p><button type="submit">Neues Passwort speichern</button></form>
+      <button id="cancel-password" class="quiet auth-back" type="button">Abbrechen und zur Anmeldung</button>
     </section>
     <section id="denied-panel" class="card" hidden>
       <h1>Dein Konto ist hier nicht freigeschaltet.</h1>
@@ -77,7 +91,7 @@
     </div>
     <noscript><p>Bitte aktiviere JavaScript, um dein Tagebuch zu verwenden.</p></noscript>
   </main>
-  <footer>Ramonas Fortschritt · Ein Platz für deinen Weg</footer>
+  <footer>Ramonas Fortschritt · Ein Platz für deinen Weg<nav aria-label="Weitere Apps"><a href="/garten/">Zum Garten</a> · <a href="/rezepte/">Zu den Rezepten</a></nav></footer>
   <dialog id="theme-dialog" class="theme-dialog"><button id="close-themes" type="button" class="quiet">Fertig</button><p class="eyebrow">Dein Tagebuch, dein Stil</p><h2>Drei Designs für dich.</h2><p>Gerade ausgewählt: <strong id="theme-name"></strong></p><div id="theme-choices" class="theme-choices"></div><p class="hint">Das Design wird nur auf diesem Gerät gemerkt. Deine privaten Einträge bleiben davon unabhängig.</p></dialog>
   <dialog id="photo-dialog"><button id="close-photo" class="quiet" type="button">Schließen</button><img id="large-photo" alt="Vergrößertes Fortschrittsfoto"></dialog>
   <aside id="ai-companion" class="ai-companion" hidden>

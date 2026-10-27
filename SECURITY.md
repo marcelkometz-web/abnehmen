@@ -16,3 +16,7 @@ Die Rollback-Tests unter `supabase/tests/` wurden gegen das geteilte Projekt aus
 Supabase meldet im geteilten Garten-Projekt **Leaked Password Protection Disabled**. Das ist eine bereits vor dieser Einrichtung vorhandene globale Auth-Einstellung. Sie wurde nicht für die anderen Apps verändert. Anleitung: [Password strength and leaked password protection](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
 
 Projektadministratoren und serverseitige Service-Schlüssel sind privilegiert. Gewollt exportierte Bilder verlassen den Zugriffsschutz dieser App. Weder dieser Stand noch die Tests sind eine Zusage absoluter Sicherheit oder Ende-zu-Ende-Verschlüsselung.
+
+## Gemeinsame Anmeldung
+
+Nur die Supabase-Anmeldung wird zwischen den drei Apps auf derselben Browser-Origin geteilt. Die Abnehmen-Freigabeliste bleibt unverändert. Gemeinsame Abmeldung löscht auch alte Anmeldekopien dieses Tabs; ein Marker verhindert deren spätere erneute Übernahme. Die Zehn-Minuten-Frist basiert auf Bedienung in einer der Apps, nicht auf Hintergrundabfragen. Passwort-Reset verwendet PKCE, doppelte Passwort-Eingabe und Rückkehr in die Ausgangs-App. Ungültige Links geben keine Tagebuchdaten frei. Die Browserabläufe verwenden ausschließlich simulierte Konten; echte E-Mails und Passwortänderungen wurden durch diese Tests nicht ausgelöst.

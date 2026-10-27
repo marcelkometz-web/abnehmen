@@ -7,17 +7,21 @@ import { shareContent, makeShareCard } from './share.mjs';
 import { DailyRecipes } from './daily-recipes.mjs';
 import { setupThemes } from './themes.mjs';
 import { setupDialogScrollLock } from './dialogs.mjs';
+import { createSharedAuth } from './shared-auth.mjs';
+import { recoveryLinkState, recoveryRedirect, newPassword, clearRecoveryURL } from './password-recovery.mjs';
 
 const $ = id => document.getElementById(id);
 const formatNumber = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 });
 const dateLabel = value => new Date(value + 'T12:00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 let client;
+let sharedAuth;
+let recoveryPending = false;
+let resetOpen = false;
 let user = null;
 let diaryId = null;
 let heightCm = null;
 let selectedDay = localDate();
 let visibleMonth = selectedDay.slice(0, 7);
-let lastActivity = Date.now();
 let refreshPending = false;
 let latestAnalysis = null;
 let assistant = null;
@@ -323,7 +327,7 @@ async function lockDiary(text = 'Nach 10 Minuten ohne Bedienung wurdest du abgem
  $('denied-panel').hidden = true;
   $('login-panel').hidden = false; $('logout').hidden = true;
   try { await client.auth.signOut({ scope: 'local' }); }
-  finally { sessionStorage.removeItem('abnehmen-auth'); message(text); }
+  finally { message(text); }
 }
 function bindAdditionalFeatures() {
   $('previous-month').addEventListener('click', () => { visibleMonth = shiftMonth(visibleMonth, -1); renderCalendar(); });
@@ -380,10 +384,9 @@ function bindAdditionalFeatures() {
     await loadSnapshot(generation);
     if (generation === epoch) message('Körpergröße und BMI aktualisiert.');
   });
-  for (const event of ['pointerdown','keydown','touchstart','wheel']) document.addEventListener(event, () => { lastActivity = Date.now(); }, { passive: true, capture: true });
   setInterval(async () => {
     if (!user || document.hidden || refreshPending) return;
-    if (Date.now() - lastActivity >= 10 * 60 * 1000) { await lockDiary().catch(() => {}); return; }
+    if (sharedAuth.isIdle()) { await sharedAuth.expire().catch(() => {}); return; }
     if (!diaryId) return;
     refreshPending = true;
     try { await loadSnapshot(); await assistant?.load().catch(() => {}); await dailyRecipes?.load(); }
@@ -394,8 +397,8 @@ function bindAdditionalFeatures() {
     if (!user) return;
     if (document.hidden) {
       ++epoch; clearPrivate();  resetForms();
-    } else if (Date.now() - lastActivity >= 10 * 60 * 1000) {
-      await lockDiary().catch(() => {});
+    } else if (sharedAuth.isIdle()) {
+      await sharedAuth.expire().catch(() => {});
     } else {
       const result = await client.auth.getSession();
       if (result.error) { await lockDiary('Bitte melde dich erneut an.').catch(() => {}); return; }
@@ -410,10 +413,14 @@ async function sessionChanged(session) {
   $('login-panel').hidden = Boolean(user);
   $('logout').hidden = !user;
   $('denied-panel').hidden = true;
-
-
+  $('reset-panel').hidden = true;
+  $('password-panel').hidden = true;
+  if (recoveryPending || sharedAuth?.isRecovering(session)) {
+    if (user) { recoveryPending = true; $('login-panel').hidden = true; $('password-panel').hidden = false; return; }
+    recoveryPending = false; resetOpen = true;
+  }
+  if (resetOpen) { $('login-panel').hidden = true; $('reset-panel').hidden = false; return; }
   if (!user) { resetForms(); return; }
-  lastActivity = Date.now();
   try {
     const access = await client.from('ab_access').select('enabled,diary_user_id').eq('user_id', user.id).maybeSingle();
     fail(access.error);
@@ -458,15 +465,22 @@ async function start() {
     if (!response.ok) throw new Error('Die App-Konfiguration konnte nicht geladen werden.');
     return response.json();
   });
+  sharedAuth = createSharedAuth({projectUrl:config.supabaseUrl,legacyKey:'abnehmen-auth'});
+  const linkState=recoveryLinkState(location.href,sharedAuth.storage.getItem(sharedAuth.storageKey+'-code-verifier'));
+  const hadAuthCode=new URL(location.href).searchParams.has('code');
+  recoveryPending=linkState.requested;
   client = createClient(config.supabaseUrl, config.supabasePublishableKey, {
-    auth: { storageKey: 'abnehmen-auth', storage: sessionStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+    auth: { storageKey: sharedAuth.storageKey, storage: sharedAuth.storage, flowType:'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
     global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }) }
   });
+  sharedAuth.bind(client);
   client.auth.onAuthStateChange((_event, session) => {
+    if(_event==='PASSWORD_RECOVERY')recoveryPending=true;
+    if(_event==='SIGNED_OUT')recoveryPending=false;
     // Leave the SDK's auth lock before making further API requests.
     setTimeout(() => {
       // A token refresh must preserve an in-progress check-in and its scroll.
-      if (session && user?.id === session.user.id && diaryId && !$('dashboard').hidden) {
+      if (session && user?.id === session.user.id && diaryId && !$('dashboard').hidden && !recoveryPending && !sharedAuth.isRecovering(session)) {
         user = session.user;
         return;
       }
@@ -478,6 +492,31 @@ async function start() {
     form.elements.password.value = '';
     if (result.error) throw new Error('Anmeldung fehlgeschlagen. Bitte prüfe E-Mail und Passwort oder versuche es später erneut.');
     $('message').hidden = true;
+  });
+  $('forgot-password').addEventListener('click',()=>{
+    resetOpen=true;$('login-panel').hidden=true;$('reset-panel').hidden=false;
+    $('reset-form').elements.email.value=$('login-form').elements.email.value;
+    $('reset-form').elements.email.focus();
+  });
+  $('cancel-reset').addEventListener('click',()=>{resetOpen=false;$('reset-panel').hidden=true;$('login-panel').hidden=false;$('message').hidden=true;});
+  $('cancel-password').addEventListener('click',()=>busy($('cancel-password'),async()=>{
+    recoveryPending=false;resetOpen=false;sharedAuth.finishRecovery();$('password-form').reset();
+    await lockDiary('Du kannst dich jetzt mit deinem Passwort anmelden.');
+  }));
+  bindForm('reset-form',async(data)=>{
+    const result=await client.auth.resetPasswordForEmail(String(data.get('email')).trim(),{redirectTo:recoveryRedirect(location.href)});
+    if(result.error)throw Error(result.error.status===429?'Es wurden kürzlich mehrere Links angefordert. Bitte etwas warten und nur den neuesten Link verwenden.':'Der Passwort-Link konnte gerade nicht angefordert werden. Bitte später erneut versuchen.');
+    message('Wenn diese E-Mail zu einem Konto gehört, erhältst du einen Passwort-Link. Öffne den neuesten Link im selben Browser; er führt dich zu dieser App zurück.');
+  });
+  bindForm('password-form',async(data,_generation,form)=>{
+    if(!user||!recoveryPending)throw Error('Bitte einen neuen Passwort-Link anfordern.');
+    const password=newPassword(data),updated=await client.auth.updateUser({password});
+    if(updated.error)throw Error('Das Passwort konnte nicht geändert werden. Prüfe die Passwortvorgaben oder fordere einen neuen Link an.');
+    form.reset();sharedAuth.finishRecovery();recoveryPending=false;resetOpen=false;
+    const signedOut=await client.auth.signOut({scope:'global'});fail(signedOut.error);
+    history.replaceState(null,'',clearRecoveryURL(location.href));
+    await sessionChanged(null);
+    message('Dein Passwort wurde geändert. Melde dich jetzt mit dem neuen Passwort an – die Anmeldung gilt dann für alle drei Apps.');
   });
   bindForm('checkin-form',async(data,generation,form)=>{
     const uid=diaryId;if(!uid)throw Error('Bitte melde dich erneut an.');
@@ -501,6 +540,15 @@ async function start() {
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer=setTimeout(() => { if(user&&!$('dashboard').hidden)renderChart(); },120); });
   assistant = new Assistant({ client, active: () => Boolean(user && diaryId && !$('dashboard').hidden), error: message });
   dailyRecipes = new DailyRecipes({client,container:$('daily-recipes')});
+  const initialized=await client.auth.initialize();
+  if(linkState.failed||(initialized.error&&(linkState.requested||hadAuthCode))){
+    recoveryPending=false;resetOpen=true;
+    await client.auth.signOut({scope:'local'});
+    history.replaceState(null,'',clearRecoveryURL(location.href));
+    await sessionChanged(null);
+    message('Dieser Link ist ungültig, abgelaufen oder gehört zu einem anderen Browser. Fordere hier einen neuen Link an und öffne ihn im selben Browser.',true);
+    return;
+  }
   const { data, error } = await client.auth.getSession();
   fail(error);
   await sessionChanged(data.session);

@@ -57,3 +57,4 @@ html.dialog-open .floating-summary,html.dialog-open .ai-companion{visibility:hid
   .ai-companion{width:min(230px,calc(100vw - 16px))}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.auth-back{margin-top:1rem}.login h1{overflow-wrap:anywhere;font-size:clamp(2rem,7vw,3rem)}
