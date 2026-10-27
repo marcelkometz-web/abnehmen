@@ -418,7 +418,7 @@ function bindAdditionalFeatures() {
     $('mfa-secret').textContent = ''; $('mfa-qr').removeAttribute('src'); $('mfa-qr-panel').hidden = true;
     if (generation === epoch) $('message').hidden = true;
   });
-  for (const event of ['pointerdown','keydown','touchstart','scroll']) document.addEventListener(event, () => { lastActivity = Date.now(); }, { passive: true, capture: true });
+  for (const event of ['pointerdown','keydown','touchstart','wheel']) document.addEventListener(event, () => { lastActivity = Date.now(); }, { passive: true, capture: true });
   setInterval(async () => {
     if (!user || document.hidden || refreshPending) return;
     if (Date.now() - lastActivity >= 10 * 60 * 1000) { await lockDiary().catch(() => {}); return; }
