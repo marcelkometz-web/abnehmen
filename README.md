@@ -6,7 +6,7 @@ Privates gemeinsames Tagebuch für Ramona und Marcel. Die App nutzt das vorhande
 
 - Ein gemeinsamer Wochen-Check-in direkt nach dem Anmelden: Datum, Gewicht, Körpergröße, alle fünf Körpermaße, bis zu drei Fotoansichten und Notiz. Ein Speichern übernimmt die Daten gemeinsam; leere Messfelder erhalten bestehende Werte. Keine Eingabe-Reiter. Bearbeitung und Löschen bleiben verfügbar.
 - Kalender direkt unter der laufenden Auswertung, mit Monatswahl und direktem Datumssprung. Vergangene Tage und mehrere Fotos je Tag lassen sich nachtragen.
-- Private Fortschrittsfotos; Verarbeitung im Browser als JPEG bis 1600 Pixel und maximal 1 MiB, ohne EXIF-/Standortmetadaten. Downloads verwenden die aktuelle Anmeldung, keine öffentlichen Foto-URLs.
+- Private Fotogalerie mit Tagesgruppen, „Neueste zuerst“ / „Älteste zuerst“, Filter für den ausgewählten Tag, Bildvergrößerung und seitenweisem Nachladen aller Fotos. Die Sortierung folgt dem Aufnahmedatum. Private Fortschrittsfotos; Verarbeitung im Browser als JPEG bis 1600 Pixel und maximal 1 MiB, ohne EXIF-/Standortmetadaten. Downloads verwenden die aktuelle Anmeldung, keine öffentlichen Foto-URLs.
 - Feste Gewichts-/BMI-Anzeige beim Scrollen und beim Wechsel der Bereiche. Körpergröße einmal in der Übersicht eintragen. Maßgeblich ist das Datum des jüngsten Gewichts bis heute, auch bei später hochgeladenen Nachträgen.
 - Laufende Auswertung aller Messwerte: Verlauf, Veränderung seit Beginn, Durchschnitt der letzten sieben Tage und Maßveränderungen. Eigene Änderungen aktualisieren sofort; während die App geöffnet ist, wird alle 15 Sekunden abgeglichen.
 - ChatGPT-Begleiter mit gemeinsamem App-Chat, einer knappen KI-Merkliste und einem festen Tipps-Fenster. Geänderte Daten lösen bei eingerichtetem Schlüssel einen neuen Tipp aus; unveränderte Kontexte werden serverseitig zwischengespeichert.
@@ -66,3 +66,5 @@ Alle drei Apps verwenden dasselbe Supabase-Konto und denselben Anmeldespeicher a
 „Passwort vergessen?“ fordert auf Benutzeraktion einen Supabase-Link an. Der PKCE-Link führt in dieselbe App zurück. Ein neues Passwort muss zweimal übereinstimmend mit mindestens zwölf Zeichen eingegeben werden. Danach werden die Kontositzungen abgemeldet und die Anmeldung in der ursprünglichen App angezeigt. Recovery-Zustand übersteht ein Neuladen; ein abgelaufener oder in einem anderen Browser geöffneter Link führt zur erneuten Link-Anforderung. Rückkehrziele sind fest auf die drei App-Pfade begrenzt.
 
 Quelle des gemeinsamen Moduls ist `src/shared-auth.mjs`; Rezepte hält dieselbe Quellkopie, Garten lädt das daraus gebaute `shared-auth.js`. Keine Anbieter-Schlüssel werden übernommen oder verändert.
+
+Die Startseite verlinkt direkt zu Garten und Rezepte in einem eigenen Tab. Die Fotos werden nur mit einer gültigen Tagebuchberechtigung heruntergeladen. Gewicht-/Maß-Aktualisierungen schließen einen geöffneten Fotobetrachter nicht.

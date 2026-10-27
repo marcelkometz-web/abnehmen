@@ -27,3 +27,9 @@ test('daily recipes are stable across apps, distinct and change the next day',()
   const list=Array.from({length:10},(_,i)=>({id:i+1,title:`Rezept ${i+1}`}));
   const a=selectDailyRecipes(list,'2026-10-27');assert.equal(a.length,2);assert.notEqual(a[0].id,a[1].id);assert.deepEqual(selectDailyRecipes([...list].reverse(),'2026-10-27'),a);assert.notDeepEqual(selectDailyRecipes(list,'2026-10-28'),a);assert.throws(()=>selectDailyRecipes(list,'2023-02-29'));
 });
+
+import {sortPhotos}from '../src/domain.mjs';
+test('gallery follows capture date rather than later upload times and keeps views together',()=>{
+ const photos=[{id:'late-upload',recorded_on:'2020-01-01',created_at:'2026-10-27T12:00:00Z',view:'front'},{id:'back',recorded_on:'2026-10-01',created_at:'2026-10-01T10:00:00Z',view:'back'},{id:'front',recorded_on:'2026-10-01',created_at:'2026-10-01T09:00:00Z',view:'front'}];
+ assert.deepEqual(sortPhotos(photos).map(p=>p.id),['front','back','late-upload']);assert.deepEqual(sortPhotos(photos,'asc').map(p=>p.id),['late-upload','front','back']);assert.equal(photos[0].id,'late-upload');
+});

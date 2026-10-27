@@ -76,3 +76,10 @@ export function analyze(data, height, today = localDate()) {
     weeklyAverage: recent.length ? recent.reduce((sum, row) => sum + Number(row.weight_kg), 0) / recent.length : null,
     recentCount: recent.length, circumferenceChanges, weightCount: weights.length, photoCount: data.photos.length };
 }
+export function sortPhotos(photos, order = 'desc') {
+  const direction = order === 'asc' ? 1 : -1, viewOrder = {front:0,side:1,back:2,other:3};
+  return [...photos].sort((a,b) => direction * a.recorded_on.localeCompare(b.recorded_on)
+    || (viewOrder[a.view]??3) - (viewOrder[b.view]??3)
+    || String(b.created_at||'').localeCompare(String(a.created_at||''))
+    || String(a.id).localeCompare(String(b.id)));
+}

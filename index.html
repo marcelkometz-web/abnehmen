@@ -56,6 +56,7 @@
       <span id="floating-weight">Gewicht: –</span><span id="floating-bmi">BMI: –</span><small id="floating-date"></small>
     </button>
     <div id="dashboard" hidden>
+      <nav class="app-switches" aria-label="App-Verknüpfungen"><a href="/rezepte/" target="_blank" rel="noopener noreferrer">🍲 Rezepte öffnen</a><a href="/garten/" target="_blank" rel="noopener noreferrer">🌿 Garten öffnen</a></nav>
       <section class="intro checkin-intro"><p class="eyebrow">Ein Moment für Ramona</p><h1>Dein Wochen-Check-in.</h1><p>Ein Datum. Alle Werte. Ganz in deinem Tempo.</p></section>
       <section class="card checkin-card" id="checkin-card">
         <div class="checkin-heading"><div><p class="eyebrow">Dein Fortschritt zum Eintragen</p><h2>Alles an einem Platz.</h2></div><button id="open-share" type="button" class="quiet">✧ Teilen</button></div>
@@ -70,7 +71,7 @@
             <label class="photo-pick"><span aria-hidden="true">＋</span><strong>Vorne</strong><small data-file-label="photo_front">Foto hinzufügen</small><input name="photo_front" type="file" accept="image/jpeg,image/png,image/webp"></label>
             <label class="photo-pick"><span aria-hidden="true">＋</span><strong>Seite</strong><small data-file-label="photo_side">Foto hinzufügen</small><input name="photo_side" type="file" accept="image/jpeg,image/png,image/webp"></label>
             <label class="photo-pick"><span aria-hidden="true">＋</span><strong>Hinten</strong><small data-file-label="photo_back">Foto hinzufügen</small><input name="photo_back" type="file" accept="image/jpeg,image/png,image/webp"></label>
-          </div><p class="hint">Privat für eure zwei Konten. Jedes Foto wird vor dem Upload verkleinert; Standort- und Kamerametadaten werden entfernt.</p></fieldset>
+          </div><p class="hint">Privat für eure zwei Konten. Jedes Foto wird vor dem Upload verkleinert; Standort- und Kamerametadaten werden entfernt.</p><button id="show-gallery" class="quiet" type="button">Alle Fotos in deiner Galerie ansehen</button></fieldset>
           <label>Deine Notiz <span class="optional">optional</span><textarea name="note" maxlength="1000" rows="2" placeholder="Wie ging es dir diese Woche?"></textarea></label>
           <button type="submit" class="checkin-save">Wochenstand speichern</button>
           <p class="hint">Es müssen nicht alle Felder ausgefüllt sein. Leere Messfelder verändern vorhandene Werte nicht. Das Datum gilt für alle Werte und Fotos dieses Check-ins – auch rückwirkend.</p>
@@ -87,7 +88,7 @@
         <section id="daily-recipes" class="daily-suggestions" hidden></section>
       </section>
       <section class="split history-section"><article class="card"><h2>Deine Gewichtseinträge</h2><div id="weight-history" class="history"></div></article><article class="card"><h2>Deine Körpermaße</h2><div id="measurements-history" class="history"></div></article></section>
-      <section id="photos" class="card photo-section"><h2>Deine Fortschrittsfotos</h2><label>Fotos anzeigen<select id="photo-filter"><option value="all">Alle Tage</option><option value="day">Ausgewählter Tag</option></select></label><p class="hint">Zum Vergrößern ein Foto auswählen. Neue Fotos fügst du oben im gemeinsamen Check-in hinzu.</p><div id="photo-gallery" class="gallery"></div><button id="more-photos" type="button" class="quiet" hidden>Weitere Fotos laden</button></section>
+      <section id="photos" class="card photo-section"><h2>Deine Fotogalerie</h2><p id="photo-count" class="hint"></p><div class="form-grid"><label>Fotos anzeigen<select id="photo-filter"><option value="all">Alle Tage</option><option value="day">Ausgewählter Tag</option></select></label><label>Nach Aufnahmedatum sortieren<select id="photo-order"><option value="desc">Neueste zuerst</option><option value="asc">Älteste zuerst</option></select></label></div><p class="hint">Nur für eure beiden Konten. Das Aufnahmedatum zählt, auch bei später hochgeladenen Fotos. Zum Vergrößern ein Bild auswählen.</p><div id="photo-gallery" class="photo-dates"></div><button id="more-photos" type="button" class="quiet" hidden>Weitere Fotos laden</button></section>
     </div>
     <noscript><p>Bitte aktiviere JavaScript, um dein Tagebuch zu verwenden.</p></noscript>
   </main>

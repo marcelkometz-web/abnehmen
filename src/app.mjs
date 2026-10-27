@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { localDate, dateValue, numberValue, measurements, views, monthGrid, shiftMonth, analyze } from './domain.mjs';
+import { localDate, dateValue, numberValue, measurements, views, monthGrid, shiftMonth, analyze, sortPhotos } from './domain.mjs';
 import { allRows, deletePhoto, fail, bucket } from './data.mjs';
 import { saveCheckin } from './checkin.mjs';
 import { Assistant } from './assistant.mjs';
@@ -33,6 +33,7 @@ let epoch = 0;
 let snapshot = { weights: [], measurements: [], photos: [] };
 let shownPhotos = 0;
 const photoUrls = new Set();
+const photoGroups = new Map();
 
 function node(tag, text, className) {
   const element = document.createElement(tag);
@@ -58,6 +59,8 @@ function clearPrivate() {
   snapshot = { weights: [], measurements: [], photos: [] };
   for (const url of photoUrls) URL.revokeObjectURL(url);
   photoUrls.clear();
+  photoGroups.clear();
+  $('photo-count').textContent = '';
   if ($('photo-dialog').open) $('photo-dialog').close();
   $('large-photo').removeAttribute('src');
   for (const id of ['weight-history', 'measurements-history', 'photo-gallery', 'chart']) $(id).replaceChildren();
@@ -101,9 +104,10 @@ async function loadSnapshot(generation = epoch) {
   fail(profile.error);
   if (generation !== epoch || !user) return false;
   const unchanged = JSON.stringify(snapshot) === JSON.stringify({ weights, measurements: body, photos }) && heightCm === (profile.data?.height_cm ?? null);
+  const photosChanged = JSON.stringify(snapshot.photos) !== JSON.stringify(photos);
   snapshot = { weights, measurements: body, photos };
   heightCm = profile.data?.height_cm ?? null;
-  if (!unchanged || !latestAnalysis) { render(); assistant?.schedule(); }
+  if (!unchanged || !latestAnalysis) { render({photosChanged}); assistant?.schedule(); }
   return true;
 }
 function renderChart() {
@@ -173,7 +177,7 @@ function renderHistory(table, container, rows, fields, formId) {
     container.append(entry);
   }
 }
-function render() {
+function render({photosChanged=true}={}) {
   latestAnalysis = analyze(snapshot, heightCm);
   const { latest, first } = latestAnalysis;
   $('first-weight').textContent = first ? `${formatNumber.format(first.weight_kg)} kg` : '–';
@@ -187,7 +191,7 @@ function render() {
   renderHistory('ab_measurements', $('measurements-history'), snapshot.measurements, measurements, 'checkin-form');
   renderAnalysis();
   renderCalendar();
-  renderPhotos();
+  if (photosChanged || !$('photo-gallery').childElementCount) renderPhotos();
 }
 function renderPhotos() {
   for (const url of photoUrls) URL.revokeObjectURL(url);
@@ -195,7 +199,10 @@ function renderPhotos() {
   if ($('photo-dialog').open) $('photo-dialog').close();
   $('large-photo').removeAttribute('src');
   $('photo-gallery').replaceChildren();
+  photoGroups.clear();
   shownPhotos = 0;
+  const count=filteredPhotos().length;
+  $('photo-count').textContent=count+' '+(count===1?'Foto':'Fotos')+($('photo-filter').value==='day'?' vom '+dateLabel(selectedDay):' in deiner privaten Galerie');
   if (!filteredPhotos().length) empty($('photo-gallery'), $('photo-filter').value === 'day' ? 'Für diesen Tag sind noch keine Fotos gespeichert.' : 'Hier ist Platz für deine ersten Fortschrittsfotos.');
   appendPhotos();
 }
@@ -206,6 +213,12 @@ function appendPhotos() {
   shownPhotos += batch.length;
   $('more-photos').hidden = shownPhotos >= photos.length;
   for (const photo of batch) {
+    let group=photoGroups.get(photo.recorded_on);
+    if(!group){
+      const section=node('section',undefined,'photo-date-group');section.dataset.date=photo.recorded_on;
+      section.append(node('h3',dateLabel(photo.recorded_on)));
+      group=node('div',undefined,'gallery');section.append(group);photoGroups.set(photo.recorded_on,group);$('photo-gallery').append(section);
+    }
     const card = node('article', undefined, 'photo-card');
     const open = node('button', 'Foto wird geladen …', 'photo-open');
     open.type = 'button'; open.disabled = true;
@@ -217,7 +230,7 @@ function appendPhotos() {
       await loadSnapshot(current);
       if (current === epoch) message('Foto gelöscht.');
     }, 'danger'));
-    $('photo-gallery').append(card);
+    group.append(card);
     const download = async () => {
       try {
         open.disabled = true;
@@ -241,7 +254,8 @@ function appendPhotos() {
   }
 }
 function filteredPhotos() {
-  return $('photo-filter').value === 'day' ? snapshot.photos.filter(photo => photo.recorded_on === selectedDay) : snapshot.photos;
+  const photos=$('photo-filter').value === 'day' ? snapshot.photos.filter(photo => photo.recorded_on === selectedDay) : snapshot.photos;
+  return sortPhotos(photos,$('photo-order').value);
 }
 function signed(value) {
   const rounded = Math.round(value * 100) / 100;
@@ -339,6 +353,10 @@ function bindAdditionalFeatures() {
   $('checkin-form').addEventListener('input',updateCheckinPreview);
   $('checkin-form').addEventListener('change',updateCheckinPreview);
   $('photo-filter').addEventListener('change', renderPhotos);
+  $('photo-order').addEventListener('change',renderPhotos);
+  $('show-gallery').addEventListener('click',()=>{
+    $('photo-filter').value='all';renderPhotos();$('photos').scrollIntoView({behavior:'smooth',block:'start'});
+  });
   $('floating-summary').addEventListener('click', () => document.querySelector('.analysis-card').scrollIntoView({ behavior: 'smooth' }));
   $('open-share').addEventListener('click', () => {
     $('share-form').reset(); clearSharePreview(); $('share-form').elements.asOf.value = selectedDay;
