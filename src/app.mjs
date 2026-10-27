@@ -5,6 +5,7 @@ import { compressPhoto } from './photos.mjs';
 import { Assistant } from './assistant.mjs';
 import { shareContent, makeShareCard } from './share.mjs';
 import { DailyRecipes } from './daily-recipes.mjs';
+import { qrImageSource } from './mfa.mjs';
 
 const $ = id => document.getElementById(id);
 const formatNumber = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 });
@@ -403,10 +404,10 @@ function bindAdditionalFeatures() {
     const enrolled = await client.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Abnehmen ${new Date().toISOString()}` }); fail(enrolled.error);
     if (generation !== epoch) return;
     enrollmentId = enrolled.data.id;
-    $('mfa-qr').src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(enrolled.data.totp.qr_code)}`;
+    $('mfa-qr').src = qrImageSource(enrolled.data.totp.qr_code);
     $('mfa-secret').textContent = enrolled.data.totp.secret;
     $('mfa-qr-panel').hidden = false; $('mfa-form').hidden = false; $('mfa-factor-label').hidden = true;
-    $('mfa-instructions').textContent = 'QR-Code mit deinem Authenticator scannen oder den Schlüssel manuell eintragen. Danach den sechsstelligen Code eingeben.';
+    $('mfa-instructions').textContent = 'Diesen aktuellen QR-Code in deiner Authenticator-App als neuen Eintrag hinzufügen. Alternativ den Einrichtungsschlüssel manuell übernehmen. Danach den gerade angezeigten sechsstelligen Code eingeben.';
   }));
   bindForm('mfa-form', async (data, generation, form) => {
     const factorId = enrollmentId || $('mfa-factor').value;

@@ -42,6 +42,7 @@
       <div id="mfa-enrollment" hidden>
         <p class="hint">Die erstmalige Einrichtung kann andere Garten- und Rezepte-Sitzungen abmelden. Dort könnt ihr euch anschließend erneut anmelden. Bewahre den Authenticator-Zugang sicher auf; bei Verlust muss der Kontoinhaber den Zugang über Supabase wiederherstellen.</p>
         <button id="enroll-mfa" type="button">Authenticator einrichten</button>
+        <p class="hint">Eine neue Einrichtung ersetzt frühere unbestätigte Versuche. Verwende anschließend den neuen Eintrag in deiner Authenticator-App. Bei abgelehnten Codes die automatische Uhrzeit am Handy aktivieren und einen frischen Code versuchen.</p>
         <div id="mfa-qr-panel" hidden><img id="mfa-qr" alt="QR-Code für deinen Authenticator" width="240" height="240"><details><summary>Manuell einrichten</summary><code id="mfa-secret"></code></details></div>
       </div>
       <form id="mfa-form" hidden>
