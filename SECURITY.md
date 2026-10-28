@@ -26,3 +26,7 @@ Nur die Supabase-Anmeldung wird zwischen den drei Apps auf derselben Browser-Ori
 Neue Profil-, Trainings-, Zyklus- und Speicherstandtabellen verwenden dieselbe Tagebuchfreigabe. Browser können weder den serverseitigen Speicherzeitpunkt bzw. die Revision ändern noch die ausschließlich serverseitig zugelassene atomare KI-Speicherung aufrufen. Check-in und Chat-Messwerte prüfen den gelesenen Datenstand vor der Änderung. Klare Chat-Angaben werden über begrenzte Funktionen mit aktuellen Benutzerrechten gespeichert; Modelltext erhält keinen freien Datenbankzugriff. Entwürfe bei Tabwechsel bleiben nur im Arbeitsspeicher und werden nach Abmeldung, Zeitablauf oder Benutzerwechsel verworfen.
 
 Der [Prüfbericht](docs/pruefung-2026-10-27.md) beschreibt die behobenen Fehler und verbleibenden Grenzen.
+
+## Erneute Prüfung am 28.10.2026
+
+Der [aktuelle Sicherheitsbericht](docs/sicherheitspruefung-2026-10-28.md) dokumentiert die erneuten Live-, Zugriffs- und Datenbanktests. Eine zusätzliche restriktive Storage-Policy sperrt für reguläre Clients signierte Foto-/Upload-Links und direkte Kopieroperationen aus dem privaten Fortschrittsfotobucket. Authentifizierte Downloads sowie das bewusst gewählte JPG-Teilen bleiben verfügbar. Die Operationstests unter `supabase/tests/photo-operations.sql` prüfen auch die unveränderten Rechte anderer Buckets.
