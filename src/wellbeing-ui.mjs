@@ -6,8 +6,15 @@ const $=id=>document.getElementById(id),el=(tag,text,cls)=>{const e=document.cre
 const dateLabel=date=>new Date(date+'T12:00:00').toLocaleDateString('de-DE'),fmt=n=>Number(n).toLocaleString('de-DE',{maximumFractionDigits:1});
 function exerciseMedia(ex,detail=false){
  if(ex.media===false){const tile=el('div',undefined,'tube-equipment-visual'),icon=el('span','💪');icon.setAttribute('aria-hidden','true');tile.append(icon,el('strong','Tube-Set'),el('small',ex.anchor==='feet'?'Mit Griffen · ohne Türanker':ex.anchor==='door-low'?'Mit Knöchelmanschette':'Mit Griffen & Türanker'));return tile;}
- const image=el('img');image.src='./assets/training/'+ex.id+(detail?'-1200.webp':'-720.webp');image.alt='KI-Demonstration: '+ex.name;image.width=1200;image.height=800;image.decoding='async';
- if(!detail){image.srcset=[360,720,1200].map(w=>'./assets/training/'+ex.id+'-'+w+'.webp '+w+'w').join(', ');image.sizes='(max-width: 600px) 108px, (max-width: 1100px) 45vw, 500px';image.loading='lazy';}return image;
+ const provided=ex.image,image=el('img'),widths=provided?.widths||[360,720,1200];
+ image.width=provided?.width||1200;image.height=provided?.height||800;image.decoding='async';
+ image.alt=(provided?'Bildpaar: ':'KI-Demonstration: ')+ex.name+(provided?' · links Ausgangsposition, rechts Bewegungsphase':'');
+ if(provided)image.className='exercise-image--portrait';
+ image.srcset=widths.map(w=>'./assets/training/'+ex.id+'-'+w+'.webp '+w+'w').join(', ');
+ image.sizes=detail?'(max-width: 700px) 85vw, 700px':'(max-width: 600px) 108px, (max-width: 1100px) 45vw, 500px';
+ if(!detail)image.loading='lazy';image.src='./assets/training/'+ex.id+'-'+(provided?(detail?714:360):(detail?1200:720))+'.webp';
+ if(provided&&detail){const figure=el('figure',undefined,'exercise-illustration'),toggle=el('button','Bild vergrößern','quiet exercise-image-toggle');toggle.type='button';toggle.setAttribute('aria-pressed','false');toggle.addEventListener('click',()=>{const expanded=image.classList.toggle('exercise-image--expanded');toggle.setAttribute('aria-pressed',String(expanded));toggle.textContent=expanded?'Bild einpassen':'Bild vergrößern';if(!expanded)$('exercise-dialog').scrollTo({top:0,behavior:'instant'});});figure.append(image,toggle);return figure;}
+ return image;
 }
 export class WellbeingUI{
  constructor({onDelete,onError}){
@@ -49,11 +56,12 @@ export class WellbeingUI{
  }
  openExercise(id){
   const ex=EXERCISES.find(e=>e.id===id);if(!ex)return;const box=$('exercise-detail');box.replaceChildren(el('h2',ex.name),el('p',ex.focus,'hint'),exerciseMedia(ex,true));
+  if(ex.image)box.append(el('p','Bildpaar: links Ausgangsposition, rechts Bewegungsphase. Die beschriebene kontrollierte Ausführung und die sichere Befestigung nach Herstelleranleitung haben Vorrang.','exercise-image-caption'));
   if(ex.equipment)box.append(el('p','Du brauchst: '+ex.equipment,'exercise-equipment'));
   box.append(el('p','Vorschlag: '+ex.dose));const list=el('ol');for(const step of ex.steps)list.append(el('li',step));box.append(list,el('p',ex.avoid,'hint'),el('p','Leichter: '+ex.easier));
   if(ex.type==='tubes')box.append(el('p',TUBE_SETUP[ex.anchor==='feet'?1:2],'hint'),el('p','Zunächst ein leichtes Tube verwenden. Ruhig weiteratmen und 2–3 saubere Wiederholungen als Reserve lassen. Die aufgedruckten lbs sind keine konstante oder genormte Last.'));
   else box.append(el('p','Das Bild ist eine ergänzende KI-Demonstration. Die beschriebene, kontrollierte und schmerzfreie Ausführung hat Vorrang.','hint'));
-  $('exercise-dialog').showModal();
+  $('exercise-dialog').showModal();$('exercise-dialog').scrollTop=0;
  }
  history(id,rows,table,title){const box=$(id);box.replaceChildren();if(!rows.length){box.append(el('p','Noch keine Einträge gespeichert.','hint'));return;}for(const r of rows.slice(0,30)){const item=el('article',undefined,'entry');item.append(el('small',dateLabel(r.recorded_on)),el('strong',title(r)));if(r.note)item.append(el('p',r.note,'note'));const button=el('button','Eintrag löschen','danger');button.type='button';button.addEventListener('click',async()=>{if(!confirm('Diesen Eintrag vom '+dateLabel(r.recorded_on)+' löschen?'))return;button.disabled=true;try{await this.onDelete(table,r.id);}catch(e){this.onError(e.message,true);}finally{button.disabled=false;}});item.append(button);box.append(item);}}
 }

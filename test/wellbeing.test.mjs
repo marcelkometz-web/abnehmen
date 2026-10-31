@@ -14,5 +14,5 @@ test('tube plans only reference exercises for the matching equipment, with uniqu
  assert.equal(TUBE_EXERCISES.length,10);assert.equal(new Set(EXERCISES.map(ex=>ex.id)).size,EXERCISES.length);
  for(const id of [...TUBE_STRENGTH_A,...TUBE_STRENGTH_B])assert.equal(EXERCISES.find(ex=>ex.id===id)?.type,'tubes');
  assert.ok(TUBE_EXERCISES.some(ex=>ex.anchor==='feet'));assert.ok(TUBE_EXERCISES.some(ex=>ex.anchor==='door-low'));assert.ok(TUBE_EXERCISES.some(ex=>ex.anchor==='door-chest'));
- for(const ex of TUBE_EXERCISES){assert.equal(ex.media,false);assert.ok(ex.equipment);}
+ for(const ex of TUBE_EXERCISES)assert.ok(ex.equipment);
 });
