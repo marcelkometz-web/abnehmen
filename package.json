@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node --test test/*.test.mjs",
+    "test": "node --test test/*.test.mjs zuhause/test/*.test.mjs",
     "start": "node scripts/serve.mjs"
   },
   "dependencies": {
@@ -14,5 +14,7 @@
   "devDependencies": {
     "esbuild": "0.28.2"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }

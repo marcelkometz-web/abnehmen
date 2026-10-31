@@ -30,3 +30,7 @@ Der [Prüfbericht](docs/pruefung-2026-10-27.md) beschreibt die behobenen Fehler 
 ## Erneute Prüfung am 28.10.2026
 
 Der [aktuelle Sicherheitsbericht](docs/sicherheitspruefung-2026-10-28.md) dokumentiert die erneuten Live-, Zugriffs- und Datenbanktests. Eine zusätzliche restriktive Storage-Policy sperrt für reguläre Clients signierte Foto-/Upload-Links und direkte Kopieroperationen aus dem privaten Fortschrittsfotobucket. Authentifizierte Downloads sowie das bewusst gewählte JPG-Teilen bleiben verfügbar. Die Operationstests unter `supabase/tests/photo-operations.sql` prüfen auch die unveränderten Rechte anderer Buckets.
+
+## Gemeinsame Oberfläche
+
+Die App kann in der obersten gemeinsamen Startseite derselben Origin angezeigt werden. Einbettung durch fremde Seiten, andere Pfade oder verschachtelte Frames bleibt gesperrt. Der Bridge-Code setzt die vertrauenswürdige Ansicht ausschließlich nach Prüfung des Elternfensters; Anmeldung, Freigabeliste, private Foto-Regeln und RLS bleiben unabhängig davon wirksam. Der Hub liest die Tagebuchdaten und Auth-Tokens nicht aus. Die Bridge- und Navigationsprüfungen liegen im Hub-Repository.

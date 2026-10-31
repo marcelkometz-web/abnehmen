@@ -1,0 +1,42 @@
+IMPRESSUM & DATENSCHUTZ
+Stand: 31. Oktober 2026
+
+BETREIBER UND KONTAKT
+Marcel Kometz
+Manfredstr. 15
+47178 Duisburg
+Deutschland
+Telefon: +49 152 03397547
+E-Mail: marcelkometz@icloud.com
+
+GELTUNGSBEREICH
+Dieses Impressum gilt für das private Familienprojekt „Unser Zuhause“ mit den Bereichen Ramonas Garten, Rezepte und Ramonas Fortschritt (Ramonas Weg) unter marcelkometz-web.github.io. Das Angebot wird privat und nicht kommerziell betrieben. Ein privater Zweck ersetzt keine Prüfung der im Einzelfall geltenden rechtlichen Pflichten. Es werden keine Unternehmens-, Register- oder Umsatzsteuerangaben behauptet.
+
+ZWECK UND ZUGRIFF
+Die Apps dienen der gemeinsamen Gartenplanung, Rezeptverwaltung und dem privaten Fortschrittstagebuch. Garten und Rezepte erfordern eine Familienfreigabe. Das Tagebuch einschließlich Gesundheitsangaben und Fortschrittsfotos ist unabhängig davon nur für die beiden dafür ausdrücklich freigeschalteten Konten erreichbar. Öffentliche Profile oder Kalenderabos geben ausschließlich die bewusst freigegebenen Inhalte heraus. Ein gewöhnlicher Link auf eine private Ansicht gewährt keine Zugriffsrechte.
+
+TECHNISCHE VERARBEITUNG
+GitHub Pages stellt den öffentlichen Programmcode und diese Informationen bereit. GitHub verarbeitet beim Abruf technische Verbindungsdaten, zum Beispiel die IP-Adresse. Supabase verarbeitet Anmeldung, Sitzungen, Datenbankinhalte und hochgeladene Bilder. Die gemeinsame Startoberfläche erzeugt keine zusätzliche Datenbank und liest selbst keine privaten Tagebuchdaten aus. Die Bereiche verwenden die bestehenden serverseitigen Zugriffsregeln. Technische Projektadministratoren bleiben privilegiert. Es besteht keine Ende-zu-Ende-Verschlüsselung.
+
+Die gemeinsame Anmeldung liegt im lokalen Browserspeicher dieses Geräts. Nach zehn Minuten ohne Bedienung in den Apps endet sie; Abmelden gilt für die drei Bereiche. Design, Favoriten und einige freiwillige Geräteeinstellungen werden ebenfalls lokal gemerkt. Die optionale Zyklusorientierung der Rezepte-App wird auf dem jeweiligen Gerät gespeichert; Zykluseinträge im Fortschrittstagebuch werden im privaten Tagebuch gespeichert. Private App-Inhalte und Fotos werden nicht als Offline-Datenkopie abgelegt. Keine Werbung und keine zusätzliche Besucheranalyse sind eingebunden. Browser und Hosting-Anbieter können technisch notwendige Verbindungsdaten verarbeiten.
+
+OPTIONALE DIENSTE UND KI
+Die Garten-Wetteranzeige nutzt Open-Meteo. Eine Geräteposition wird erst nach deiner Freigabe verwendet; sie dient der angefragten Wetteranzeige. Ausdrücklich freigegebene Kalenderabos sind über ihren Freigabelink lesbar und können widerrufen werden.
+
+Garten und Rezepte senden Fragen und bewusst ausgewählte, verkleinerte Bilder erst nach dem Absenden an den gewählten KI-Anbieter Google Gemini oder OpenAI. Im Fortschrittstagebuch verarbeitet der aktivierte OpenAI-Begleiter Messwert-Verläufe, Notizen, Auswertungen, freiwillige Profil-/Zyklusangaben, abgeschlossene Trainings sowie den relevanten App-Chat und seine Merkliste. Nach Dateneingaben können bei eingerichtetem Schlüssel automatisch Tipps angefordert werden. Fortschrittsfotos, Foto-URLs und Kontoadressen werden dabei nicht an OpenAI gesendet. Normale ChatGPT-Unterhaltungen außerhalb der App sind nicht automatisch bekannt.
+
+API-Schlüssel werden serverseitig verschlüsselt verwaltet und nicht wieder im Browser angezeigt. Der Tagebuch-Begleiter verwendet store:false; dies garantiert keine allgemeine Null-Aufbewahrung beim Anbieter. API-Nutzung unterliegt den Bedingungen, Datenschutzregeln und Kosten des jeweiligen Anbieters. Ohne gültigen Schlüssel sind keine KI-Anfragen möglich. Entfernen des Schlüssels stoppt weitere Anfragen. Durch bewusstes Teilen oder Öffnen externer Dienste gelten zusätzlich deren Datenschutzregeln.
+
+AUFBEWAHRUNG UND RECHTE
+Gespeicherte Inhalte bleiben bis zu ihrer Löschung bzw. der Kontoverwaltung verfügbar; bei Diensten können technische Protokolle, Sicherungen und gesetzliche Aufbewahrungspflichten hinzukommen. Eine sofortige Löschung aus sämtlichen Anbieter-Sicherungen wird nicht zugesichert. Daten können in der jeweiligen App berichtigt, vorgesehene Inhalte gelöscht und vorhandene Exportfunktionen genutzt werden. Für Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit oder einen anwendbaren Widerruf bitte den Betreiber kontaktieren. Soweit die Datenschutz-Grundverordnung auf die Verarbeitung anwendbar ist, gelten ihre Voraussetzungen und das Beschwerderecht bei einer zuständigen Datenschutzaufsicht. Die gesetzliche Anwendbarkeit, Rechtsgrundlagen und etwaige Anbietervereinbarungen sind vom Betreiber für den tatsächlichen Einsatz zu prüfen; dieser Text ersetzt keine Rechtsberatung.
+
+GESUNDHEITS- UND INHALTSHINWEISE
+BMI und Nährwerte sind Orientierung und ersetzen keine ärztliche oder qualifizierte ernährungsmedizinische Beratung. Ein berechneter BMI ist keine Körperfettmessung oder Diagnose. Rezeptwerte beruhen je nach Kennzeichnung auf übernommenen Angaben, Schätzungen oder dokumentierten Zutatenmengen. Produkte und Zubereitung können abweichen. Widersprüchliche Angaben werden nicht durch erfundene Werte ersetzt. Trainingsdarstellungen sind Demonstrationen, keine persönliche Technikprüfung. Beschwerden und besondere gesundheitliche Situationen fachlich abklären lassen. KI kann Fehler machen. Die Apps versprechen keine bestimmte Abnahmegeschwindigkeit.
+
+WEITERE INFORMATIONEN
+GitHub: https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement
+Supabase: https://supabase.com/privacy
+OpenAI: https://openai.com/policies/privacy-policy/
+Google: https://policies.google.com/privacy
+Open-Meteo: https://open-meteo.com/en/terms
+Ausführliche Bedienhinweise findest du unter „Hilfe“ in Unser Zuhause und in den einzelnen Apps.

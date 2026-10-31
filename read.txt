@@ -1,0 +1,71 @@
+RAMONAS WEG – BEDIENHILFE
+Stand: 31. Oktober 2026
+
+DEIN PRIVATES GEMEINSAMES TAGEBUCH
+Ramonas Fortschritt ist für die beiden ausdrücklich freigeschalteten Konten bestimmt. Es gibt in dieser App keine Selbstregistrierung. Andere Garten- oder Rezeptkonten erhalten damit keinen Tagebuchzugriff. Anmeldung mit E-Mail und Passwort; auf euren Wunsch ohne zusätzliche Authenticator-Abfrage. Ein Link allein öffnet keine privaten Daten.
+
+WOCHEN-CHECK-IN
+Direkt nach der Anmeldung stehen alle Eingaben zusammen bereit: Datum, Gewicht, bestätigte Körpergröße, fünf Körpermaße, Notiz und bis zu drei Fotoansichten. Du musst keine Eingabe-Reiter öffnen. Es ist nicht nötig, sich täglich zu wiegen. Wähle einen für dich passenden Rhythmus und möglichst vergleichbare Bedingungen. Leere Messfelder lassen vorhandene Werte dieses Tages bestehen. Ein Speichern übernimmt den Check-in gemeinsam. Währenddessen den Abschluss abwarten; Fehlermeldungen beachten.
+
+Über dem Speicherknopf steht der letzte serverbestätigte Speicherzeitpunkt mit Datum und Uhrzeit. Er bezeichnet den Speichervorgang; das Datum des Eintrags kann in der Vergangenheit liegen. Wenn ein anderer Nutzer zwischenzeitlich gespeichert hat, wird dein älterer Stand nicht still darübergeschrieben. Dann aktualisieren und die Eingaben prüfen.
+
+NACHTRÄGE UND KALENDER
+Ein Datum in der Vergangenheit im Check-in auswählen oder über den Kalender zu einem Tag springen. Für Fotos zählt das ausgewählte Aufnahmedatum, nicht der Uploadtag. Der Kalender steht im Kalenderbereich unter „Laufende Auswertung“. Monat wechseln oder direkt ein Datum wählen. Vorhandene Tagesdaten ansehen, bearbeiten oder gezielt löschen. Ein nachgetragenes altes Gewicht ersetzt nicht automatisch das jüngste aktuelle Gewicht.
+
+AUSWERTUNG UND BMI
+Gewichtsverlauf, Veränderungen, Durchschnitt der letzten sieben Tage mit vorhandenen Einträgen und Körpermaße werden aus gespeicherten Angaben berechnet. Fehlende Tage werden nicht erfunden. Das feste kleine Gewicht-/BMI-Feld begleitet dich innerhalb des Tagebuchs. Die bestätigte Körpergröße aus Check-in oder Profil wird verwendet; ohne Größe oder Gewicht bleibt der BMI offen. Formel: Gewicht in kg geteilt durch Körpergröße in Metern zum Quadrat. BMI ist ein grober Orientierungswert, keine Körperfettmessung oder Diagnose.
+
+GALERIE UND FOTOS
+Der eigene Menüpunkt Galerie zeigt alle Fortschrittsfotos nach Aufnahmedatum gruppiert. Neueste/älteste zuerst und Tagesfilter stehen zur Wahl. Weitere Bilder bei Bedarf nachladen und ein Bild zum Vergrößern öffnen. Die Bilder werden erst beim Galerieaufruf heruntergeladen. Uploads werden im Browser als JPEG auf höchstens 1600 Pixel und maximal 1 MiB verkleinert; Original-Metadaten werden nicht übernommen. Das Original auf deinem Gerät bleibt dadurch unverändert. Lade nur Bilder hoch, die ihr dafür verwenden möchtet.
+
+MENÜ UND DESIGN
+Check-in, Auswertung, Kalender/Einträge, Galerie, Training, Essen und Profil/Zyklus haben eigene Menüseiten. Rose Bloom, Lavendeltraum und Cherry Night lassen sich auswählen. Dialoge sperren den Seitenhintergrund. Ungespeicherte Eingaben werden beim Verlassen der privaten Ansicht nur vorübergehend im Arbeitsspeicher gehalten und nach erneut bestätigtem Zugriff desselben Kontos wiederhergestellt. Schließen, Neuladen oder Abmelden kann solche Entwürfe verwerfen; wichtige Eingaben speichern.
+
+TRAINING UND WOHLBEFINDEN
+Trainingspläne für Laufband, Körpergewicht und Widerstandsbänder sowie ein Trainingstagebuch stehen bereit. Die Darstellungen sind KI-Demonstrationen, keine persönliche Kontrolle deiner Bewegung. Bandfarben sind nicht genormt. Widerstand so wählen, dass saubere Technik und etwa zwei bis drei mögliche weitere Wiederholungen am Satzende bleiben. Neue Übungen zuerst leichter ausführen. Belastung schrittweise steigern, Erholung einplanen und bei Schmerzen abbrechen. Es wird keine gezielte örtliche Fettverbrennung oder bestimmte Abnahmegeschwindigkeit versprochen.
+
+Geburtsjahr, Aktivitätsniveau, Ziele und bestätigte Körpergröße stehen im Profil. Optionale Periodenbeginne helfen, Schwankungen einzuordnen. Sie ändern nicht die BMI-Formel und liefern keine erfundene Wasser- oder Körperfettkorrektur. Aufmunterungen sind optional und bewerten deinen persönlichen Wert nicht nach einer Zahl. Nach großer Gewichtsabnahme und bei Beschwerden ärztliche bzw. qualifizierte ernährungsmedizinische Begleitung nutzen. Keine extremen Diäten oder eigenständig erfundenen Kalorienziele.
+
+ESSEN UND TEILEN
+„Essen“ zeigt täglich zwei Ideen aus eurer Rezepte-App. Die ausgewählten Gerichte öffnen auf euren Wunsch in einem eigenen Tab. Über Teilen Werte einzeln auswählen, bei Bedarf ein Foto ergänzen und die fertige Vorschau prüfen. Erst danach als JPG exportieren oder das Geräte-Teilen-Menü verwenden. Die App postet nicht eigenständig bei Instagram oder TikTok. Veröffentliche nur Inhalte, die du wirklich teilen möchtest.
+
+CHATGPT-BEGLEITER
+Ein eigener OpenAI-API-Schlüssel wird ausschließlich in „OpenAI-Schlüssel verwalten“ eingerichtet und verschlüsselt in Supabase Vault gespeichert. Er wird nicht wieder an den Browser ausgegeben. Ein ChatGPT-Abo enthält kein API-Guthaben. Das kostenbewusste Modell gpt-6-luna arbeitet mit den tatsächlich gespeicherten Daten, dem App-Chat und einer knappen Merkliste. Bei geändertem Kontext kann ein neuer Tipp entstehen. Ohne gültigen Schlüssel funktionieren BMI und grundlegende Auswertungen weiterhin.
+
+OpenAI erhält bei Nutzung Messwert-Verläufe, Notizen, Auswertungen, freiwillige Profil-/Zyklusangaben, absolvierte Trainings und relevanten App-Chat. Keine Fortschrittsfotos, Foto-URLs oder Kontoadressen. Responses-Aufrufe verwenden store:false; dies garantiert keine allgemeine Null-Aufbewahrung beim Anbieter. Klare Messwerte, abgeschlossene Trainings und Periodenbeginne können mit Datum kontrolliert gespeichert werden. Unklare Zuordnungen erfordern Rückfragen. Andere ChatGPT-Chats außerhalb der App sind nicht automatisch zugänglich. KI kann sich irren; wichtige Angaben nachsehen. Schlüssel entfernen deaktiviert weitere Anfragen; Chat und Merkliste können gemeinsam gelöscht werden. Anbieterbudget zusätzlich begrenzen.
+
+ANMELDUNG UND PASSWORT VERGESSEN
+Die Anmeldung wird im selben Browser mit Garten und Rezepte geteilt. Nach zehn Minuten ohne Bedienung endet sie; Abmelden gilt für alle drei Apps. Auf fremden Geräten ausdrücklich abmelden. „Passwort vergessen?“ sendet einen Link für die eingegebene E-Mail. Den neuesten Link im selben Browser öffnen, zweimal ein neues Passwort mit mindestens zwölf Zeichen eingeben und erneut anmelden. Die Rückführung erfolgt zur App, die den Link angefordert hat. Ein abgelaufener Link kann neu angefordert werden. Bestehende Passwörter werden nicht angezeigt.
+
+DATENSCHUTZ UND GRENZEN
+Datenbankregeln und private Fotoablage prüfen den freigeschalteten Nutzer und seine gültige Sitzung. Private Daten und Fotos werden nicht als Offlinekopie abgelegt. Projektadministratoren mit privilegiertem Backendzugang bleiben technisch berechtigt; keine Ende-zu-Ende-Verschlüsselung. Ein berechtigter Nutzer kann exportieren oder Bildschirmaufnahmen erstellen. Bereits herausgegebene Kopien können nicht zurückgeholt werden. Für Speichern, Fotos und KI ist Internet erforderlich.
+
+INSTALLIEREN UND HILFE
+Die gemeinsame Oberfläche mit Hilfe und Impressum:
+https://marcelkometz-web.github.io/abnehmen/zuhause/
+Installation: iPhone/iPad über Safari → Teilen → Zum Home-Bildschirm; Android über das Browsermenü; Windows/ChromeOS mit Chrome oder Edge; Mac über Safari → Ablage → Zum Dock hinzufügen oder Chrome/Edge. Bezeichnungen variieren. Nach Installation kann eine erste eigene Anmeldung erforderlich sein.
+
+Betreiber: Marcel Kometz, Manfredstr. 15, 47178 Duisburg, Deutschland.
+Telefon: +49 152 03397547
+E-Mail: marcelkometz@icloud.com
+Impressum: https://marcelkometz-web.github.io/abnehmen/impressum.html
+Keine Passwörter, API-Schlüssel oder privaten Fotos an öffentliche Fehlerberichte anhängen.
+
+
+DEIN TUBE-SET: ZEHN PASSENDE ÜBUNGEN
+Im Trainingsmenü ist „Dein Tube-Set · 10 Übungen“ direkt auswählbar. Lange Tubes mit Griffen und Knöchelmanschetten sind von den vorhandenen Mini-/Flachbandübungen getrennt. Jede Übung erklärt Zubehör, drei Bewegungsschritte, Wiederholungen, häufige Fehler und eine leichtere Variante.
+
+- Kniebeuge mit Tube-Griffen
+- Hüftbeuge mit Tube-Griffen
+- Vorgebeugtes Rudern mit Tubes
+- Brustpresse mit Griffen
+- Bizepsbeugen mit Tube-Griffen
+- Seitliches Schulterheben mit Tubes
+- Trizeps-Kickbacks mit Griffen
+- Pallof-Presse gegen Drehung
+- Gesäß-Kickback mit Knöchelmanschette
+- Seitliches Beinheben mit Manschette
+
+„Krafttraining mit“ stellt den Wochenplan auf dein Tube-Set oder Körpergewicht mit Mini-/Flachbändern um. Der Plan lässt sich aufklappen und verteilt Krafttage mit Erholung dazwischen. Die zehn Übungen sind eine Auswahl, kein Pflichtprogramm für eine Einheit. Ein sicheres Tube-Set und bei Türübungen eine geeignete verriegelte Tür sind Voraussetzung; bei unsicherer Befestigung die Variante ohne Türanker wählen. Der Abschnitt „Dein Tube-Set sicher vorbereiten“ erklärt Prüfung, Befestigung und Belastungswahl. Farben und aufgedruckte lbs sind keine konstante oder genormte Trainingslast.
+
+Neue KI-Bilder sind derzeit pausiert. Für jede Tube-Übung gibt es unter „Passende Bilder über eine Bild-API vorbereiten“ eine fertige Bildvorlage mit Dateinamen und zwei Bewegungspositionen. Die App löst dadurch keine bezahlte Bildanfrage aus. Bilder müssen anschließend zur Beschreibung passen und geprüft werden, bevor sie eingebaut werden.

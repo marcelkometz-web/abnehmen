@@ -1,0 +1,50 @@
+UNSER ZUHAUSE – ALLGEMEINE BEDIENHILFE
+Stand: 31. Oktober 2026
+
+EIN ZUHAUSE FÜR EURE DREI APPS
+Garten, Rezepte und Ramonas Weg öffnen sich in derselben Oberfläche. Unten wechselst du zwischen Zuhause, Garten, Rezepte und Dein Weg. Ein bereits geöffneter Bereich bleibt beim Wechsel erhalten. Speichere wichtige Eingaben trotzdem, bevor du das Fenster schließt oder neu lädst. Während ein Wochen-Check-in gespeichert wird, wartet der Bereichswechsel auf den Abschluss.
+
+Gemeinsame App: https://marcelkometz-web.github.io/abnehmen/zuhause/
+Die einzelnen Apps bleiben zusätzlich unter /garten/, /rezepte/ und /abnehmen/ erreichbar. Rezeptideen unter „Wie wäre es heute mit …?“ öffnen sich auf euren Wunsch in einem eigenen Tab. Externe Dienste wie Instagram werden im Browser geöffnet.
+
+ANMELDEN UND SICHER WECHSELN
+Melde dich mit deinem persönlichen Konto an. Die Anmeldung wird im selben Browser für die drei Bereiche gemeinsam verwendet. Andere Browser, private Fenster und getrennt installierte Web-Apps können eine eigene Anmeldung verlangen. Der gemeinsame Rahmen vergibt keine zusätzlichen Datenrechte: Ramonas Tagebuch einschließlich Fotos bleibt ausschließlich den beiden dafür freigeschalteten Konten zugänglich. Eine Garten- oder Rezeptfreigabe reicht dafür nicht.
+
+Nach zehn Minuten ohne Bedienung in den Apps endet die Anmeldung. Abmelden gilt für alle drei Bereiche. Auf einem gemeinsam genutzten Gerät immer ausdrücklich abmelden. Die Anmeldung liegt im lokalen Browserspeicher; Passwörter, private Fotos und Tagebuchdaten werden dafür nicht offline gespeichert. Geräte mit Bildschirmsperre und aktuellem Browser verwenden.
+
+PASSWORT VERGESSEN
+Im Anmeldeformular die eigene E-Mail eintragen und „Passwort vergessen?“ wählen. Den neuesten E-Mail-Link im selben Browser öffnen. Er führt zum Passwortformular der App zurück, die ihn angefordert hat. Ein neues Passwort mit mindestens zwölf Zeichen zweimal eingeben. Danach erneut anmelden; das neue Passwort gilt für alle drei Apps. Bei einem abgelaufenen oder bereits verwendeten Link einen neuen anfordern. Die App kann bestehende Passwörter nicht anzeigen. Falls keine E-Mail ankommt, Spamordner und Adresse prüfen und den Betreiber kontaktieren.
+
+GARTEN
+Pflanzen und Sorten suchen, Favoriten merken, Beete und Anbau planen, Notizen und Gartentermine führen. Freiwillige öffentliche Profile und Kalenderfreigaben veröffentlichen die jeweils beschriebenen Inhalte. Private Daten gehören nicht in solche Freigaben. Die ausführliche Garten-Hilfe ist hier über „Garten“ erreichbar.
+
+REZEPTE
+Nach Zutaten, Mahlzeiten, High-Protein, Low-Carb oder Salaten filtern. „Heute“ zeigt zwei Rezeptideen und den Küchen-Assistenten für ein Tagesmenü. Portionsgröße und Beilagen im Rezept einstellen. Einkaufsliste und Familienforum sind gemeinsame Inhalte. Favoriten und die optionale grobe Zyklusorientierung der Rezepte-App liegen nur auf dem jeweiligen Gerät.
+
+Nährwerte sind je nach Rezept übernommen, geschätzt oder aus dokumentierten Zutaten berechnet. Bei Zutatenberechnungen lassen sich Gramm und Markenwerte prüfen. Widersprüchliche Angaben erhalten einen Hinweis; die betroffenen Werte werden in der Auswertung als unbekannt behandelt. Keine Werte aus einem Rezept als medizinisch genaue Messung verstehen.
+
+RAMONAS WEG
+Der Wochen-Check-in zeigt Datum, Gewicht, bestätigte Körpergröße, Körpermaße, Notiz und Fotos direkt zusammen. Vergangene Tage lassen sich nachtragen. Über dem Speicherknopf steht der letzte vom Server bestätigte Speicherzeitpunkt. Die Auswertung, der Kalender unterhalb der Auswertung, die Galerie, Training, Essen und Profil/Zyklus sind über das Menü erreichbar. In der Galerie nach dem Aufnahmedatum sortieren oder einen Tag auswählen.
+
+BMI wird direkt aus tatsächlichem Gewicht und eingetragener Körpergröße berechnet. Fehlende Angaben bleiben offen. Der BMI misst weder Körperfett noch Gesundheit. Verlauf, Wohlbefinden, Kraft und ein längerfristig tragfähiger Alltag sind ebenfalls wichtig. Zyklusschwankungen können Wassergewicht verändern; die App erfindet dafür keine Korrekturwerte. Training an Belastbarkeit und Beschwerden anpassen. Bei Schwindel, Schmerzen, starker Erschöpfung oder ungewöhnlich schnellem Gewichtsverlust ärztlich abklären lassen. Nach bereits großer Gewichtsabnahme ist eine ärztliche bzw. qualifizierte ernährungsmedizinische Begleitung sinnvoll. Keine extremen Defizite oder schnellen Abnahmeversprechen.
+
+CHATGPT UND ANDERE KI
+BMI und grundlegende Diagramme funktionieren ohne KI. Der Begleiter in Ramonas Weg kann nach Einrichtung eines eigenen OpenAI-API-Schlüssels aktuelle App-Daten für Tipps und den App-Chat verarbeiten. Eindeutige Datums- und Messangaben können kontrolliert gespeichert werden; fehlende wichtige Angaben werden erfragt. Fortschrittsfotos werden nicht an OpenAI gesendet. Andere normale ChatGPT-Unterhaltungen sind der App nicht automatisch bekannt.
+
+Garten und Rezepte verwenden getrennt verwaltete Familienzugänge zu OpenAI oder Google Gemini. Dort werden Fragen bzw. ausgewählte verkleinerte Bilder erst nach dem Absenden an den gewählten Anbieter übermittelt. Schlüssel gehören ausschließlich in die geschützten Einstellungen, niemals in Chat, GitHub oder eine öffentliche Datei. Die API kostet separat vom ChatGPT-Abo. Eine Verbindung und ein gültiger Zugang mit ausreichendem Anbieterbudget sind erforderlich. KI kann sich irren; wichtige Ratschläge und gespeicherte Angaben prüfen.
+
+INSTALLIEREN UND GERÄTE
+„Aufs Handy holen“ zeigt die passende Anleitung. iPhone/iPad: Safari, Teilen, Zum Home-Bildschirm. Android: im Browsermenü App installieren oder Zum Startbildschirm. Windows/ChromeOS: Chrome oder Edge, App-Installation im Browsermenü. Mac: Safari, Ablage, Zum Dock hinzufügen; alternativ Chrome/Edge. Bezeichnungen hängen von Gerät und Browser ab. Ein fehlendes Installationsangebot verhindert die Nutzung im Browser nicht.
+
+Die Oberfläche passt sich an Handy, Tablet und Computer an, einschließlich Querformat, Touchbedienung, Bildschirmtastatur und reduzierter Bewegung. Die Prüfung erfolgte mit Chromium und WebKit in verschiedenen Bildschirmgrößen. Echte Geräte mit jeder einzelnen iOS-, Android-, Windows- und macOS-Version wurden nicht getestet. Aktuelle stabile Browser verwenden. Private Daten, Speichern und KI benötigen Internet. Es gibt keine private Offline-Fotokopie und keine eigenständige APK/IPA.
+
+FOTOS UND TEILEN
+Private Fortschrittsfotos werden als verkleinerte JPEGs ohne übernommene Kamera- und Standortmetadaten gespeichert. Die Galerie lädt sie erst beim Öffnen. Ein Foto-Link allein gewährt keinen Zugriff. Beim Teilen entscheidest du einzeln über Daten und Foto und siehst eine Vorschau. Ein gespeichertes oder veröffentlichtes Exportbild kann die App anschließend nicht zurückholen. Auch berechtigte Personen können Bildschirmaufnahmen erstellen. Technische Projektadministratoren bleiben privilegiert; es besteht keine Ende-zu-Ende-Verschlüsselung.
+
+HILFE, IMPRESSUM UND KONTAKT
+Das Fragezeichen oben ist in allen Bereichen erreichbar. Hier öffnen sich die allgemeine Hilfe, die drei vollständigen Bedienhilfen und das Impressum, ohne eure Eingaben zu verlassen. Die Hilfe scrollt innerhalb ihres Fensters; die Seite dahinter bleibt gesperrt. „Text herunterladen“ sichert nur die öffentliche Hilfe, keine privaten App-Daten.
+
+Betreiber: Marcel Kometz, Manfredstr. 15, 47178 Duisburg, Deutschland.
+Telefon: +49 152 03397547
+E-Mail: marcelkometz@icloud.com
+Bei Fehlern App-Bereich, Gerät/Browser und Fehlermeldung nennen. Keine Passwörter, Schlüssel oder privaten Fotos ungeschützt versenden. Für Auskunft, Berichtigung oder Löschung personenbezogener Daten den Betreiber kontaktieren. Datenschutzangaben und Anbietergrenzen stehen im Impressum.

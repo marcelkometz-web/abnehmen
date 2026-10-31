@@ -44,8 +44,10 @@ let shareRevision = 0;
 let epoch = 0;
 let snapshot = { weights: [], measurements: [], photos: [], training: [], cycles: [] };
 let shownPhotos = 0;
+let galleryNeedsRender = true;
 const photoUrls = new Set();
 const photoGroups = new Map();
+const pendingCheckins = new WeakMap();
 
 function node(tag, text, className) {
   const element = document.createElement(tag);
@@ -74,7 +76,7 @@ function clearPrivate() {
   $('save-state').textContent='Speicherstand wird geprüft …';
   for (const url of photoUrls) URL.revokeObjectURL(url);
   photoUrls.clear();
-  photoGroups.clear();
+  photoGroups.clear();galleryNeedsRender=true;
   $('photo-count').textContent = '';
   if ($('photo-dialog').open) $('photo-dialog').close();
   $('large-photo').removeAttribute('src');
@@ -86,7 +88,7 @@ function clearPrivate() {
   for (const id of ['day-summary', 'calendar-grid', 'analysis']) $(id).replaceChildren();
   for (const id of ['floating-weight','floating-bmi','floating-date']) $(id).textContent = '';
   heightCm = null; latestAnalysis = null; diaryId = null;
-  for (const id of ['checkin-form','height-form','training-form','cycle-form','profile-form','import-chat-form']) {$(id).reset();delete $(id).dataset.dirty;}
+  for (const id of ['checkin-form','height-form','training-form','cycle-form','profile-form','import-chat-form']) {pendingCheckins.delete($(id));$(id).reset();delete $(id).dataset.dirty;}
   $('selected-date-label').textContent = ''; $('jump-date').value = ''; $('calendar-month').value = '';
   assistant?.clear();
   dailyRecipes?.clear();
@@ -219,6 +221,8 @@ function render({photosChanged=true}={}) {
   wellbeing?.render({snapshot,preferences,height:heightCm});
 }
 function renderPhotos() {
+  if(currentPage!=='gallery'){galleryNeedsRender=true;return;}
+  galleryNeedsRender=false;
   for (const url of photoUrls) URL.revokeObjectURL(url);
   photoUrls.clear();
   if ($('photo-dialog').open) $('photo-dialog').close();
@@ -432,7 +436,7 @@ function bindAdditionalFeatures() {
     if (generation === epoch) message('Körpergröße und BMI aktualisiert.');
   });
   setInterval(async () => {
-    if (!user || document.hidden || refreshPending) return;
+    if (!user || (document.hidden||window.unserZuhauseHidden===true) || refreshPending) return;
     if (sharedAuth.isIdle()) { await sharedAuth.expire().catch(() => {}); return; }
     if (!diaryId) return;
     refreshPending = true;
@@ -442,8 +446,8 @@ function bindAdditionalFeatures() {
   }, 15000);
   document.addEventListener('visibilitychange', async () => {
     if (!user) return;
-    if (document.hidden) {
-      pausedDraft=captureDraft();++epoch;clearPrivate();resetForms();
+    if ((document.hidden||window.unserZuhauseHidden===true)) {
+      const draft=captureDraft();if(draft)pausedDraft=draft;++epoch;clearPrivate();resetForms();
     } else if (sharedAuth.isIdle()) {
       await sharedAuth.expire().catch(() => {});
     } else {
@@ -454,6 +458,8 @@ function bindAdditionalFeatures() {
   });
 }
 async function sessionChanged(session) {
+  // Auth broadcasts from another area must not consume a paused private draft.
+  if(pausedDraft&&user?.id===session?.user?.id&&(document.hidden||window.unserZuhauseHidden===true)&&!recoveryPending&&!sharedAuth?.isRecovering(session)){user=session.user;return;}
   const generation = ++epoch;
   clearPrivate();
   user = session?.user || null;
@@ -468,6 +474,7 @@ async function sessionChanged(session) {
   }
   if (resetOpen) { $('login-panel').hidden = true; $('reset-panel').hidden = false; return; }
   if (!user) { pausedDraft=null;resetForms();return; }
+  if(document.hidden||window.unserZuhauseHidden===true){if(pausedDraft?.actor!==user.id)pausedDraft=null;return;}
   try {
     const access = await client.from('ab_access').select('enabled,diary_user_id').eq('user_id', user.id).maybeSingle();
     fail(access.error);
@@ -494,7 +501,7 @@ function bindForm(id, callback) {
   form.addEventListener('submit', event => {
     event.preventDefault();
     if(form.dataset.busy)return;form.dataset.busy='true';
-    busy(form.querySelector('[type=submit]'),async generation=>{try{const data=new FormData(form);await callback(data,generation,form);}finally{delete form.dataset.busy;}});
+    busy(form.querySelector('[type=submit]'),async generation=>{try{const data=new FormData(form);if(id==='checkin-form')pendingCheckins.set(form,[...data]);await callback(data,generation,form);}finally{pendingCheckins.delete(form);delete form.dataset.busy;}});
   });
 }
 function showPage(name,updateURL=true){
@@ -505,6 +512,7 @@ function showPage(name,updateURL=true){
   if(updateURL&&!$('dashboard').hidden){history.pushState(null,'','#'+name);$('main').scrollTo({top:0,behavior:'instant'});}
   if($('menu-dialog').open)$('menu-dialog').close();
   if(name==='progress')requestAnimationFrame(renderChart);
+  if(name==='gallery'&&(galleryNeedsRender||!$('photo-gallery').childElementCount))renderPhotos();
 }
 function setupNavigation(){
   for(const [id,label]of Object.entries(pages)){const b=node('button',label,'quiet');b.type='button';b.dataset.destination=id;b.addEventListener('click',()=>showPage(id));$('menu-choices').append(b);}
@@ -521,7 +529,7 @@ function updateSaveState(){
 function captureDraft(){
  if(!user||!diaryId)return null;const forms={};
  for(const id of ['checkin-form','height-form','training-form','cycle-form','profile-form','import-chat-form','ai-form']){
-  const form=$(id);forms[id]={data:[...new FormData(form)],dirty:form.dataset.dirty||'',busy:Boolean(form.dataset.busy)};
+  const form=$(id);forms[id]={data:[...(pendingCheckins.get(form)||new FormData(form))],dirty:form.dataset.dirty||'',busy:Boolean(form.dataset.busy)};
  }
  return{actor:user.id,diary:diaryId,forms,day:selectedDay,page:currentPage,scroll:$('main').scrollTop,revision:formRevision};
 }
@@ -529,12 +537,13 @@ function restoreDraft(){
  const draft=pausedDraft;pausedDraft=null;if(!draft||draft.actor!==user?.id||draft.diary!==diaryId||sharedAuth.isIdle())return;
  selectedDay=draft.day;visibleMonth=selectedDay.slice(0,7);formRevision=draft.revision;
  for(const [id,record]of Object.entries(draft.forms)){
-  const form=$(id);if(record.busy)continue;
+  const form=$(id);if(record.busy&&id!=='checkin-form')continue;
   form.reset();for(const control of form.elements)if(control.type==='checkbox')control.checked=false;for(const [name,value]of record.data){const control=form.elements[name];if(!control)continue;
    if(value instanceof File){if(value.size){try{const transfer=new DataTransfer();transfer.items.add(value);control.files=transfer.files;}catch{message('Bitte das Foto erneut auswählen. Deine übrigen Eingaben sind wieder da.',true);}}}
    else if(control.type==='checkbox')control.checked=true;else control.value=value;
   }
-  if(record.dirty)form.dataset.dirty='true';
+  if(record.dirty||record.busy)form.dataset.dirty='true';
+  if(record.busy&&id==='checkin-form')message('Deine Eingaben sind wieder da. Bitte prüfe den angezeigten Speicherstand, bevor du erneut speicherst.');
  }
  showPage(draft.page,false);renderCalendar();updateCheckinPreview();updateSaveState();requestAnimationFrame(()=>$('main').scrollTop=draft.scroll);
 }
@@ -546,7 +555,7 @@ function bindWellbeingForms(){
  bindForm('import-chat-form',async(data,generation,form)=>{const sourceDate=String(data.get('source_date')||'').trim();await assistant.run('chat',String(data.get('message')).trim(),{source:'import',sourceDate:sourceDate||null});if(generation===epoch){form.reset();$('ai-dialog').showModal();}});
 }
 async function start() {
-  if (window.self !== window.top) {
+  if (window.self!==window.top&&window.unserZuhauseFrame!==true) {
     const link = node('a','Tagebuch direkt öffnen'); link.href = './'; link.target = '_blank'; link.rel = 'noopener noreferrer';
     document.body.replaceChildren(node('p','Der private Bereich wird in eingebetteten Fenstern nicht geöffnet.'),link);
     return;

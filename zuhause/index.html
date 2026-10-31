@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="de" data-app-shell="unser-zuhause-v1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'self'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f7f5ef">
+  <meta name="description" content="Garten, Rezepte und dein persönlicher Weg. Eure drei Lieblingsplätze, gemeinsam an einem Ort.">
+  <meta name="application-name" content="Unser Zuhause">
+  <meta name="apple-mobile-web-app-title" content="Zuhause">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Unser Zuhause · Eure Apps</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="icon" href="./assets/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" sizes="180x180">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./documents.css">
+  <link rel="stylesheet" href="./platform.css">
+  <script src="./app.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt</a>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#home" data-open="home" aria-label="Unser Zuhause – Startseite">
+        <img src="./icon.svg" alt="" width="42" height="42">
+        <span>Unser Zuhause<span class="brand-subtitle">Ein guter Platz für euren Alltag.</span></span>
+      </a>
+      <span class="shell-title" id="shell-title" hidden></span><button class="info-button" type="button" data-info="general" aria-label="Hilfe und Impressum öffnen" title="Hilfe & Impressum">?</button><button class="install-button" id="install-app" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 16v4h14v-4"/></svg><span>Aufs Handy holen</span></button>
+      <span class="installed-label" id="installed-label" hidden>Als App geöffnet <span aria-hidden="true">✓</span></span>
+    </header>
+
+    <main id="main">
+      <section class="welcome" aria-labelledby="welcome-title">
+        <div class="welcome-copy">
+          <p class="eyebrow"><span class="greeting-dot" aria-hidden="true"></span><span id="greeting">Schön, dass du da bist.</span><span class="date-label" id="today"></span></p>
+          <h1 id="welcome-title">Ein Zuhause.<br><em>Drei Lieblingsplätze.</em></h1>
+          <p class="intro">Raus ins Grüne. Etwas Gutes kochen. Zeit für dich.<br class="desktop-break"> Such dir aus, wonach dir heute ist.</p>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+          <span class="orbit orbit-one"></span><span class="orbit orbit-two"></span>
+          <span class="art-spark">✧</span>
+          <div class="mini-app mini-garden"><img src="./assets/garten.png" alt="" width="74" height="74"></div>
+          <div class="mini-app mini-recipes"><img src="./assets/rezepte.svg" alt="" width="74" height="74"></div>
+          <div class="mini-app mini-progress"><img src="./assets/fortschritt.png" alt="" width="74" height="74"></div>
+          <p>Alles, was euch guttut.</p>
+        </div>
+      </section>
+
+      <section class="apps" aria-label="Deine drei Apps">
+        <a class="app-card garden" href="#garten" data-open="garten" aria-labelledby="garden-title garden-open">
+          <div class="card-top"><span class="card-category">Wachsen & genießen</span><span class="card-number" aria-hidden="true">01</span></div>
+          <div class="card-visual"><div class="icon-halo"></div><img src="./assets/garten.png" alt="" width="94" height="94"><svg class="card-ornament" viewBox="0 0 150 140" aria-hidden="true"><path d="M67 132V59M67 83C25 83 16 56 21 27c34-1 53 18 46 56M67 59c-1-29 20-44 49-41 4 27-14 43-49 41"/></svg></div>
+          <div class="card-copy"><h2 id="garden-title">Garten</h2><p>Mehr Grün. Mehr draußen.<br>Pflanzen, Beete und eure Gartenideen.</p><div class="card-tags" aria-hidden="true"><span>Pflanzen</span><span>Beete</span><span>Gartenleben</span></div></div>
+          <div class="card-bottom"><span id="garden-open">Garten öffnen</span><span class="card-arrow" aria-hidden="true">→</span></div>
+        </a>
+
+        <a class="app-card recipes" href="#rezepte" data-open="rezepte" aria-labelledby="recipes-title recipes-open">
+          <div class="card-top"><span class="card-category">Kochen & entdecken</span><span class="card-number" aria-hidden="true">02</span></div>
+          <div class="card-visual"><div class="icon-halo"></div><img src="./assets/rezepte.svg" alt="" width="94" height="94"><svg class="card-ornament" viewBox="0 0 150 140" aria-hidden="true"><path d="M20 68h111c-3 33-23 48-56 48S24 101 20 68Zm27 54h56M49 15c-16 18 14 20 0 37M75 10c-17 19 14 22 0 39M101 15c-16 18 14 20 0 37"/></svg></div>
+          <div class="card-copy"><h2 id="recipes-title">Rezepte</h2><p>Etwas Gutes auf dem Teller.<br>Lieblingsgerichte und frische Ideen.</p><div class="card-tags" aria-hidden="true"><span>Entdecken</span><span>Menüideen</span><span>Genießen</span></div></div>
+          <div class="card-bottom"><span id="recipes-open">Rezepte öffnen</span><span class="card-arrow" aria-hidden="true">→</span></div>
+        </a>
+
+        <a class="app-card progress" href="#abnehmen" data-open="abnehmen" aria-labelledby="progress-title progress-open">
+          <div class="card-top"><span class="card-category">Dein persönlicher Weg</span><span class="card-number" aria-hidden="true">03</span></div>
+          <div class="card-visual"><div class="icon-halo"></div><img src="./assets/fortschritt.png" alt="" width="94" height="94"><svg class="card-ornament" viewBox="0 0 150 140" aria-hidden="true"><path d="M76 119C9 80 16 31 48 31c16 0 23 9 28 19 5-10 12-19 28-19 32 0 39 49-28 88ZM124 8v22m-11-11h22"/></svg></div>
+          <div class="card-copy"><h2 id="progress-title">Ramonas Weg</h2><p>Schritt für Schritt zu dir.<br>Fortschritt, Training und Wohlbefinden.</p><div class="card-tags" aria-hidden="true"><span>Dein Tagebuch</span><span>Training</span><span>Für dich</span></div></div>
+          <div class="card-bottom"><span id="progress-open">Fortschritt öffnen</span><span class="card-arrow" aria-hidden="true">→</span></div>
+        </a>
+      </section>
+
+      <div class="home-note"><span class="note-symbol" aria-hidden="true">⌂</span><p><strong>Einmal anmelden. Einfach weiterwechseln.</strong><span>Deine Anmeldung begleitet dich durch die drei Apps in diesem Browser.</span></p><span class="note-flower" aria-hidden="true">✳</span></div>
+    <footer><p>Drei Apps. Ein Zuhause.</p><span>Mit Liebe für euren Alltag.</span><button type="button" data-info="general">Hilfe · Allgemeines Read</button><button type="button" data-info="legal">Impressum & Datenschutz</button></footer>
+    </main>
+
+
+  </div>
+
+  <p class="navigation-status" id="navigation-status" role="status" aria-live="polite" hidden></p>
+  <section class="frame-region" id="frame-region" aria-label="App-Bereich" hidden><div class="frame-loading" id="frame-loading" role="status">Dein Bereich wird geöffnet …</div><div id="frame-host"></div></section>
+  <nav class="shell-nav" aria-label="App-Bereiche"><a href="#home" data-open="home" aria-current="page"><img src="./icon.svg" alt=""><span>Zuhause</span></a><a href="#garten" data-open="garten"><img src="./assets/garten.png" alt=""><span>Garten</span></a><a href="#rezepte" data-open="rezepte"><img src="./assets/rezepte.svg" alt=""><span>Rezepte</span></a><a href="#abnehmen" data-open="abnehmen"><img src="./assets/fortschritt.png" alt=""><span>Dein Weg</span></a></nav>
+
+  <dialog id="info-dialog" aria-labelledby="info-title">
+    <div class="info-toolbar"><div><p class="eyebrow">Gut zu wissen</p><h2 id="info-title">Hilfe & Impressum</h2></div><button class="close-button" id="close-info" type="button" aria-label="Hilfe schließen">✕</button></div>
+    <nav class="info-tabs" aria-label="Hilfethemen"><button type="button" data-info="general">Allgemein</button><button type="button" data-info="garden">Garten</button><button type="button" data-info="recipes">Rezepte</button><button type="button" data-info="progress">Dein Weg</button><button type="button" data-info="legal">Impressum</button></nav>
+    <div class="info-document" id="info-content" role="region" aria-labelledby="info-title" tabindex="0"></div>
+    <div class="info-footer"><a id="info-download" href="./read.txt" download>Text herunterladen</a><a href="mailto:marcelkometz@icloud.com">Kontakt</a><a href="tel:+4915203397547">Anrufen</a></div>
+  </dialog>
+  <dialog id="install-dialog" aria-labelledby="install-title">
+    <div class="dialog-toolbar"><button class="close-button" id="close-install" type="button" aria-label="Anleitung schließen">✕</button></div>
+    <div class="dialog-body"><img class="dialog-icon" src="./icon.svg" alt="" width="64" height="64"><p class="eyebrow">Immer einen Fingertipp entfernt</p><h2 id="install-title">Euer Zuhause auf<br>dem Home-Bildschirm.</h2><p>Ein Symbol öffnet eure Startseite. Von dort geht’s direkt in jede der drei Apps.</p><ol id="install-steps"></ol><p class="install-hint" id="install-hint"></p><button class="prompt-button" id="native-install" type="button" hidden>Jetzt installieren</button><p class="install-status" id="install-status" role="status" aria-live="polite"></p></div>
+  </dialog>
+</body>
+</html>

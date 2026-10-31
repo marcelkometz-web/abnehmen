@@ -1,0 +1,2 @@
+/* Only the explicitly trusted shared home receives this compact embedded view. */
+html[data-home-frame=true] .installation-top{display:none!important}

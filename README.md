@@ -1,4 +1,6 @@
-# Ramonas Fortschritt
+# Ramonas Fortschritt 🌸
+
+<img src="assets/icons/app-icon-192.png" width="80" height="80" alt="Ramonas Fortschritt">
 
 Privates gemeinsames Tagebuch für Ramona und Marcel. Die App nutzt das vorhandene Garten-Supabase-Projekt; ein drittes Projekt und Supabase Pro sind für diese Einrichtung nicht erforderlich. Speicher, Datenbank und Kontingente werden mit Garten geteilt.
 
@@ -74,10 +76,26 @@ Alle drei Apps verwenden dasselbe Supabase-Konto und denselben Anmeldespeicher a
 
 Quelle des gemeinsamen Moduls ist `src/shared-auth.mjs`; Rezepte hält dieselbe Quellkopie, Garten lädt das daraus gebaute `shared-auth.js`. Keine Anbieter-Schlüssel werden übernommen oder verändert.
 
-Die Startseite verlinkt direkt zu Garten und Rezepte in einem eigenen Tab. Die Fotos werden nur mit einer gültigen Tagebuchberechtigung heruntergeladen. Gewicht-/Maß-Aktualisierungen schließen einen geöffneten Fotobetrachter nicht.
+Die Navigation verbindet Garten und Rezepte mit dem Tagebuch; in Unser Zuhause bleibt der Wechsel im gemeinsamen App-Fenster. Die Fotos werden nur mit einer gültigen Tagebuchberechtigung heruntergeladen. Gewicht-/Maß-Aktualisierungen schließen einen geöffneten Fotobetrachter nicht.
 
 ## App-Symbol und Home-Bildschirm
 
 Das Beere-/Roségold-Symbol mit R-Monogramm ist als Browser-Favicon, Apple-Touch-Icon und Android-App-Icon eingebunden. Das Manifest verwendet ausschließlich lokale Symbole und den App-Pfad; ein Offline-Cache für private Inhalte wird dadurch nicht angelegt.
 
 Auf dem iPhone die App in Safari öffnen und über **Teilen → Zum Home-Bildschirm** hinzufügen. Bereits gespeicherte ältere Symbole gegebenenfalls vom Home-Bildschirm entfernen und die App neu hinzufügen.
+
+## Gemeinsame App und Geräteanpassung
+
+[Unser Zuhause öffnen](https://marcelkometz-web.github.io/abnehmen/zuhause/): Garten, Rezepte und Ramonas Fortschritt in einer gemeinsamen Oberfläche mit fester Navigation. Besuchte Bereiche bleiben für offene Eingaben erhalten. Die bestehenden Kontofreigaben gelten weiter. Der [Plattform- und Performancebericht](docs/plattformen-und-performance-2026-10-31.md) beschreibt die getesteten Bildschirmgrößen, WebKit-/Chromium-Prüfungen und die deutlich kleineren Übungsbilder.
+
+## Bedienhilfe und Impressum
+
+Die öffentliche [Bedienhilfe](read.html), ihre [Textfassung](read.txt) und das gemeinsame [Impressum mit Datenschutzhinweisen](impressum.html) sind ohne Anmeldung erreichbar. Das Fragezeichen in Unser Zuhause öffnet allgemeine Hilfe, alle drei App-Hilfen und das Impressum direkt in einem Dialog mit gesperrtem Hintergrund. Öffnen und Schließen der Hilfe erhalten bestehende App-Eingaben. Die Dokumente verwenden ausschließlich bestätigte Betreiberangaben.
+
+Die erneute [Datenbank- und Zugriffsprüfung](docs/datenbankpruefung-2026-10-31.md) dokumentiert Bestandsqualität, Rollback-Tests und verbleibende Hinweise.
+
+## Tube-Training und Bildvorlagen
+
+Zehn zusätzliche Übungen für lange Tubes mit Griffen, Türanker und Knöchelmanschetten sind in `src/tube-training.mjs` von Mini-/Flachbändern getrennt. Der Filter startet mit dem Tube-Set; die Wochenplan-Auswahl wechselt die Übungsreferenzen ohne neue Datenbankwerte. Trainingseinträge bleiben vom bestehenden Typ `bands`. Es werden keine Widerstandsgewichte oder Gerätespezifikationen aus Marketingangaben abgeleitet.
+
+[Zehn Bildvorlagen](docs/tube-bildvorlagen.txt) geben je Übung Zubehör, Kamerablick, zwei Bewegungspositionen und eindeutige Dateinamen vor. Ohne passende geprüfte Bilder zeigt die Bibliothek die Ausrüstung und vollständige Anleitung. Es werden keine fehlenden Bilddateien angefragt und keine neuen Bilder automatisch erzeugt.

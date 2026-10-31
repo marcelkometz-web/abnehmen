@@ -1,0 +1,79 @@
+BILDVORLAGEN FÜR DIE ZEHN TUBE-ÜBUNGEN
+Stand: 31. Oktober 2026
+
+SO BLEIBEN BILD UND ÜBUNG ZUSAMMEN
+1. Eine Übung auswählen. Den allgemeinen Fotostil zusammen mit der passenden Einzelvorlage an die Bild-API übergeben.
+2. Zunächst nur EIN Testbild erzeugen und kontrollieren. Erst danach die übrigen Bilder erstellen. Für eine gleichbleibende Modellperson das freigegebene erste Bild als Stil-/Personenreferenz verwenden, falls die gewählte API Referenzbilder unterstützt. Gleiche Textvorgaben allein garantieren keine identische Person.
+3. Die neue Grafik genau mit dem angegebenen Dateinamen speichern. So bleibt die Zuordnung zur Übung eindeutig. Keine privaten Fortschrittsfotos als Referenz verwenden; eine fiktive Modellperson genügt.
+4. Vor Veröffentlichung die untenstehende Checkliste prüfen. Fehlerhafte Bilder ersetzen oder weglassen. Ein realistisch wirkendes KI-Bild ist keine Garantie für eine korrekte Bewegung.
+
+Die App erzeugt über diese Datei keine kostenpflichtigen Anfragen. Eine Bild-API wird separat abgerechnet. Im Anbieterprojekt ein Kostenlimit setzen; Zugangsschlüssel ausschließlich in geschützten Einstellungen speichern und niemals in Prompts, Chat oder GitHub einfügen. Erst ein freigegebenes fertiges Bild wird tatsächlich an die Übung angehängt. Die Textanleitung bleibt maßgeblich.
+
+ALLGEMEINER FOTOSTIL – VOR JEDE EINZELVORLAGE SETZEN
+Realistische, sachliche Trainingsfotografie mit einer fiktiven erwachsenen Frau von etwa 40 Jahren. Bequeme, blickdichte Sportkleidung: gedecktes Sportshirt, lange Leggings, geschlossene rutschfeste Trainingsschuhe. Neutrale freundliche Trainingsumgebung zu Hause, aufgeräumter Boden, weiches Tageslicht. Anatomisch plausible Hände, Gelenke und Körperproportionen. Keine Schönheitsretusche, keine Abnahmeversprechen, keine Vorher-nachher-Körperbilder. Die Modellperson dient nur der Demonstration und stellt keine bestimmte reale Person dar.
+
+Ein übersichtliches Bild im Querformat 3:2 mit ZWEI gleich großen nebeneinanderstehenden Ansichten derselben Person und derselben Kamera: links Ausgangsposition, rechts zweite Bewegungsposition. Beide Male den ganzen Körper und die Befestigung zeigen. Genug Abstand zum Bildrand. Keine Schrift, Logos, Fantasiegewichte oder eingebrannten Pfeile; die App übernimmt die Beschriftung.
+
+Gerät: lange rosafarbene ELASTISCHE TUBES mit schwarzen Schaumstoffgriffen, sicheren Metallkarabinern und – nur wo angegeben – passender Knöchelmanschette oder einem geeigneten Türanker. Keine geschlossenen Minibänder, keine Stoffschlaufen, keine Hanteln und keine Kabelzugmaschine. Elastische Tube in beiden Ansichten vollständig und mit plausibler Zugrichtung zeigen, ohne durch Körper oder Möbel verlaufende Seile. Es darf keine ungesicherte lose Befestigung geben. Kein Zug nahe am Gesicht oder Hals. Keine übertriebene Dehnung. Die konkrete Bewegung ausschließlich nach der folgenden Einzelvorlage darstellen.
+
+1. KNIEBEUGE MIT TUBE-GRIFFEN
+Übungs-ID: tube-squat
+Dateiname: tube-squat.png
+Kein Türanker. Eine lange Tube liegt sicher unter der MITTE beider beschuhten Füße. Hüft- bis schulterbreiter Stand. Je ein Griff neben den Schultern, Tube seitlich vom Körper, frei vom Hals. Links aufrechter Stand mit weichen Knien. Rechts kontrollierte halbe Kniebeuge mit Hüfte nach hinten unten, Fersen flach, Knie über den Fußspitzen und ruhigem langem Rücken. Hände bleiben neben den Schultern. Keine stark eingeknickten Knie oder übertriebene Tiefe. Kamera schräg von vorn, sodass Schuhfixierung, Knie und Rücken sichtbar sind.
+
+2. HÜFTBEUGE MIT TUBE-GRIFFEN
+Übungs-ID: tube-hinge
+Dateiname: tube-hinge.png
+Kein Türanker. Tube sicher mittig unter beiden beschuhten Füßen, Griffe nahe an den Beinen. Links aufrechter Stand mit leicht gebeugten Knien und ruhigem Rumpf. Rechts Hüfte nach hinten, Oberkörper aus den Hüften nach vorn geneigt, Rücken neutral und lang, Knie nur sanft gebeugt. Griffe nahe an den Schienbeinen. Keine tiefe Kniebeuge, kein Rundrücken und kein Zurücklehnen. Kamera schräg seitlich, um die Hüftbewegung klar zu zeigen.
+
+3. VORGEBEUGTES RUDERN MIT TUBES
+Übungs-ID: tube-row
+Dateiname: tube-row.png
+Kein Türanker. Tube unter der Mitte beider Schuhe gesichert. Beide Ansichten zeigen dieselbe ruhige Hüftbeuge, leicht gebeugte Knie und langen Rücken. Links hängen die Arme kontrolliert nach unten, je ein Griff in jeder Hand. Rechts Ellenbogen eng am Körper nach hinten zu den Hüften geführt, Hände an den unteren Rippen, Schultern tief. Der Oberkörper verändert seine Lage nicht. Zuglinie von den Schuhen zu den Griffen plausibel. Kamera schräg seitlich, Hände und Schuhfixierung vollständig sichtbar.
+
+4. BRUSTPRESSE MIT GRIFFEN
+Übungs-ID: tube-chest-press
+Dateiname: tube-chest-press.png
+Geeigneter Türanker nach Herstellerprinzip auf Brusthöhe an einer stabilen geschlossenen Tür, die von der trainierenden Person weg öffnet. Keine offene Tür, kein freier Türgriff als Befestigung. Person steht mit dem Rücken zur Tür in stabilem Schrittstand. Links Griffe seitlich vor der Brust, Ellenbogen etwas unter Schulterhöhe und nicht weit hinter dem Rumpf. Rechts Hände kontrolliert nach vorn geführt, Ellenbogen noch weich, Rippen über Becken, kein Hohlkreuz. Beide Tube-Züge verlaufen seitlich an der Person vorbei. Perspektive schräg seitlich, sodass Befestigung und Armwinkel erkennbar bleiben.
+
+5. BIZEPSBEUGEN MIT TUBE-GRIFFEN
+Übungs-ID: tube-curl
+Dateiname: tube-curl.png
+Kein Türanker. Tube unter der Mitte beider beschuhten Füße gesichert. Person aufrecht, Knie weich, je ein Griff, Handflächen nach vorn. Links Arme fast gestreckt neben dem Körper. Rechts Unterarme angehoben, Ellenbogen unverändert neben dem Rumpf, Handgelenke neutral, Schultern entspannt. Kein Schwung, kein Hohlkreuz. Ganze Tube und Schuhfixierung zeigen. Kamera schräg von vorn.
+
+6. SEITLICHES SCHULTERHEBEN MIT TUBES
+Übungs-ID: tube-lateral-raise
+Dateiname: tube-lateral-raise.png
+Kein Türanker. Ein leichtes Tube ist mittig unter beiden beschuhten Füßen gesichert. Links Griffe neben den Oberschenkeln, Ellenbogen leicht gebeugt. Rechts Arme seitlich und etwas vor der Körperlinie bis deutlich unter bzw. höchstens auf Schulterhöhe angehoben; keine Bewegung über Schulterhöhe, keine nach innen eingedrehten Hände. Schultern bleiben tief und Oberkörper ruhig. Plausibel ausreichende Tube-Länge, keine extreme Überdehnung. Kamera schräg von vorn.
+
+7. TRIZEPS-KICKBACKS MIT GRIFFEN
+Übungs-ID: tube-triceps
+Dateiname: tube-triceps.png
+Kein Türanker. Leichtes Tube mittig unter beiden beschuhten Füßen gesichert. Beide Ansichten mit leichter Hüftbeuge, weichen Knien und langem Rücken. Oberarme liegen nahe am Rumpf und bleiben in beiden Ansichten gleich. Links Ellenbogen etwa rechtwinklig gebeugt. Rechts Unterarme nach hinten gestreckt, ohne die Ellenbogen hart zu verriegeln oder die Oberarme nach oben zu ziehen. Keine Überkopfbewegung, kein Rundrücken. Perspektive schräg seitlich, Griffe und Fußfixierung sichtbar.
+
+8. PALLOF-PRESSE GEGEN DREHUNG
+Übungs-ID: tube-pallof
+Dateiname: tube-pallof.png
+Leichtes Tube mit sicherem Türanker auf Brusthöhe an geeigneter geschlossener Tür. Person steht SEITLICH zur Tür, beide Füße stabil, Brust und Becken zeigen nach vorn. Ein Griff wird vor der Brust gehalten; die zweite Hand stabilisiert die greifende Hand. Links Hände nahe an der Brust. Rechts Hände gerade nach vorn ausgestreckt, Schultern und Becken unverändert, keine Rotation zur Tür. Die Tube zieht sichtbar seitlich zum Anker. Kein Ziehen der Hände seitwärts wie beim Rudern. Kamera schräg von vorn, sodass Türanker und Rumpfausrichtung erkennbar sind.
+
+9. GESÄSS-KICKBACK MIT KNÖCHELMANSCHETTE
+Übungs-ID: tube-kickback
+Dateiname: tube-kickback.png
+Leichtes Tube mit sicherem tiefem Türanker und passender geschlossener Manschette knapp oberhalb eines Knöchels. Person blickt zur Tür und hält eine feste kippsichere Stütze neben sich. Links aufrechter Stand mit weichem Standknie. Rechts das angekoppelte Bein nur wenig nach hinten geführt. Becken bleibt nach vorn, Rücken neutral; kein ausgeprägtes Hohlkreuz und kein hochgeworfenes Bein. Tube läuft frei vom tiefen Anker zur Manschette. Kamera seitlich, sodass kleiner Hüftweg, sichere Stütze und Befestigungen sichtbar sind.
+
+10. SEITLICHES BEINHEBEN MIT MANSCHETTE
+Übungs-ID: tube-abduction
+Dateiname: tube-abduction.png
+Leichtes Tube, sicherer tiefer Türanker und geschlossene Manschette am von der Tür weiter entfernten Bein. Person steht seitlich zur Tür und hält eine feste kippsichere Stütze. Der trainierende Fuß steht etwas VOR dem Standbein, damit die Tube frei am Standbein vorbeiverläuft. Links Fuß nahe an der Ausgangsposition, rechts nur etwas seitlich von der Tür weg geführt. Fußspitze nach vorn, Becken waagerecht, Oberkörper bleibt aufrecht. Keine seitliche Oberkörperneigung und kein verdrehtes Becken. Tube darf weder durch das Standbein laufen noch daran scheuern. Perspektive schräg von vorn, alle Befestigungen sichtbar.
+
+PRÜFEN, BEVOR EIN BILD IN DIE APP KOMMT
+✓ Richtige Übungs-ID und richtiger Dateiname.
+✓ Lange Tube mit Griffen bzw. Manschette; kein versehentliches Miniband.
+✓ Zwei nachvollziehbare Positionen derselben Bewegung.
+✓ Tube-Laufweg, Karabiner und Befestigung physikalisch plausibel und vollständig sichtbar.
+✓ Tür geschlossen und geeignete Ankerposition; Fußfixierung mittig unter den Schuhen.
+✓ Knie, Rücken, Schultern und Handgelenke entsprechen den Schritten in der App.
+✓ Keine zusätzlichen Gliedmaßen, falschen Gelenkwinkel, losen Griffe oder Seile durch den Körper.
+✓ Keine private reale Person oder privaten Fortschrittsfotos ohne bewusste Freigabe.
+
+Eine qualifizierte Trainerin kann die Übungstechnik zusätzlich prüfen. Wenn ein Bild nicht zur Beschreibung passt, verwenden wir es nicht. Die vorhandenen Textanleitungen bleiben bis dahin vollständig nutzbar.
