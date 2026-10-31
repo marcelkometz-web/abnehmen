@@ -75,3 +75,9 @@ Alle drei Apps verwenden dasselbe Supabase-Konto und denselben Anmeldespeicher a
 Quelle des gemeinsamen Moduls ist `src/shared-auth.mjs`; Rezepte hält dieselbe Quellkopie, Garten lädt das daraus gebaute `shared-auth.js`. Keine Anbieter-Schlüssel werden übernommen oder verändert.
 
 Die Startseite verlinkt direkt zu Garten und Rezepte in einem eigenen Tab. Die Fotos werden nur mit einer gültigen Tagebuchberechtigung heruntergeladen. Gewicht-/Maß-Aktualisierungen schließen einen geöffneten Fotobetrachter nicht.
+
+## App-Symbol und Home-Bildschirm
+
+Das Beere-/Roségold-Symbol mit R-Monogramm ist als Browser-Favicon, Apple-Touch-Icon und Android-App-Icon eingebunden. Das Manifest verwendet ausschließlich lokale Symbole und den App-Pfad; ein Offline-Cache für private Inhalte wird dadurch nicht angelegt.
+
+Auf dem iPhone die App in Safari öffnen und über **Teilen → Zum Home-Bildschirm** hinzufügen. Bereits gespeicherte ältere Symbole gegebenenfalls vom Home-Bildschirm entfernen und die App neu hinzufügen.

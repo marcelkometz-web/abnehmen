@@ -1,4 +1,6 @@
 :root{background:var(--theme-bg);--app-height:100dvh}
+.brand img.brand-icon{object-fit:cover;flex-shrink:0;border-radius:13px}
+@media(max-width:600px){.brand img.brand-icon{width:28px;height:28px;border-radius:9px}}
 body.app-signed-in{display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:var(--app-height);min-height:0;overflow:hidden}
 body.app-signed-in .topbar,body.app-signed-in:has(#floating-summary:not([hidden])) .topbar{width:100%;max-width:1100px;min-height:0;padding:.65rem 1rem;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.35rem 1rem;background:var(--theme-bg);z-index:20;margin:0 auto}
 body.app-signed-in .brand{grid-column:1;grid-row:1;min-width:0;line-height:1.35;font-size:.9rem}
