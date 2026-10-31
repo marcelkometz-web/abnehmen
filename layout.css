@@ -36,10 +36,10 @@ html.dialog-open body.app-signed-in main{overflow:hidden;touch-action:none}
 .tube-equipment-visual{display:grid;align-content:center;justify-items:center;gap:.35rem;min-height:138px;padding:1rem;border:1px solid var(--theme-line);border-radius:12px;background:var(--theme-soft);text-align:center;color:var(--theme-ink)}.tube-equipment-visual>span{font-size:2rem}.tube-equipment-visual strong{font-size:.95rem}.tube-equipment-visual small{font-size:.72rem;line-height:1.5;color:var(--theme-muted)}.exercise-equipment{font-weight:600;line-height:1.7}.tube-guide{margin:1rem 0;border:1px solid var(--theme-line);border-radius:14px;padding:.8rem 1rem}.tube-guide summary,.training-plan>summary{font-weight:600;cursor:pointer;min-height:44px;display:flex;align-items:center}.tube-guide li{margin:.8rem 0;font-size:.9rem;line-height:1.75}.training-plan{margin-top:1rem}.exercise-dialog .tube-equipment-visual{min-height:110px;margin-bottom:1rem}.exercise-card .tube-equipment-visual{margin-bottom:.6rem}@media(max-width:600px){.exercise-card .tube-equipment-visual{grid-column:1;grid-row:1/span 4;margin:0;min-height:108px;padding:.6rem .35rem}.tube-equipment-visual>span{font-size:1.5rem}.tube-equipment-visual strong{font-size:.75rem}.tube-equipment-visual small{font-size:.62rem}.tube-guide{padding:.6rem .8rem}.tube-guide li{font-size:.85rem}}
 
 /* Portrait demonstrations retain the complete start and movement panels. */
-.exercise-card img.exercise-image--portrait{aspect-ratio:auto;max-height:300px;object-fit:contain;background:var(--theme-soft)}
-.exercise-dialog img.exercise-image--portrait{display:block;aspect-ratio:auto;width:min(100%,714px);height:auto;margin:0 auto 1rem;object-fit:contain}
+.exercise-card img.exercise-image--paired{aspect-ratio:auto;max-height:300px;object-fit:contain;background:var(--theme-soft)}
+.exercise-dialog img.exercise-image--paired{display:block;aspect-ratio:auto;width:min(100%,714px);height:auto;margin:0 auto 1rem;object-fit:contain}
 .exercise-image-caption{font-size:.8rem;line-height:1.7;color:var(--theme-muted);margin:.2rem 0 1rem}
-@media(max-width:600px){.exercise-card img.exercise-image--portrait{max-height:none;height:auto;align-self:start}}
+@media(max-width:600px){.exercise-card img.exercise-image--paired{max-height:none;height:auto;align-self:start}}
 
 /* Keep controls reachable when the app is used in a short landscape viewport. */
 body.app-signed-in main{scroll-padding-top:80px}
@@ -62,6 +62,6 @@ body.app-signed-in main{scroll-padding-top:80px}
 }
 
 .exercise-illustration{margin:0 0 1rem;text-align:center}
-.exercise-dialog .exercise-illustration img.exercise-image--portrait{width:auto;max-width:100%;height:auto;max-height:65dvh}
+.exercise-dialog .exercise-illustration img.exercise-image--paired{width:auto;max-width:100%;height:auto;max-height:65dvh}
 .exercise-dialog .exercise-illustration img.exercise-image--expanded{width:min(100%,714px);max-height:none}
 .exercise-image-toggle{display:block;margin:.5rem auto 0;min-height:44px;font-size:.8rem}
