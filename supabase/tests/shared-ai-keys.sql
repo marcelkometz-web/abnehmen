@@ -19,6 +19,10 @@ begin
   if result->>'provider'<>provider or result->>'shared'<>'true'or result->>'configured'<>'true'then raise exception 'Shared selection did not resolve';end if;
   begin perform public.rg_get_ai_provider_key(provider,(result->>'family_id')::uuid,owner_uid);raise exception 'Browser was able to read a credential';exception when insufficient_privilege then null;end;
  end loop;
+ perform public.rg_set_ai_provider_key('gemini',null);
+ result:=public.ab_shared_ai_status();
+ if result->>'configured'<>'false'or result->>'shared'<>'true'or result->>'provider'<>'gemini'then raise exception 'Removed shared provider reactivated a legacy key';end if;
+ perform public.rg_hub_set_ai_key('gemini','dummy-gemini-rollback-only-123456789');
  begin perform public.rg_hub_select_ai('untrusted');raise exception 'Unknown provider accepted';exception when invalid_parameter_value then null;end;
  perform set_config('request.jwt.claims',jsonb_build_object('sub',other_uid,'role','authenticated','session_id',other_session,'aal','aal1','amr',jsonb_build_array(jsonb_build_object('method','password','timestamp',extract(epoch from now())::bigint)))::text,true);
  begin perform public.rg_hub_set_ai_key('gemini','dummy-gemini-rollback-only-123456789');raise exception 'Non-owner was able to replace a credential';exception when insufficient_privilege then null;end;

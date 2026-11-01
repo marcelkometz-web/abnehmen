@@ -85,6 +85,7 @@ export function createHandler({createClient,env,fetchImpl=fetch}){
    };
    if(clarification){if(!await recheck())return reply(403,{error:'Der private Zugriff ist abgelaufen.'});checked(await commit({p_reply:packAssistantContent(clarification,evidence),p_tip:oldTip?.content||'',p_memory:safeMemory,p_context_hash:oldTip?.context_hash||'',p_revision:Number(state.revision)}));return reply(200,{reply:clarification,evidence,clarification:true});}
    const settings=checked(await caller.rpc('ab_shared_ai_status'));
+   if(settings?.shared===true&&!settings.configured)return fallback('Der ausgewählte gemeinsame Anbieter ist nicht eingerichtet. Bitte unter Zuhause → KI-Zugänge prüfen.',409);
    const provider=settings?.shared===true?settings.provider:'openai';
    if(!['openai','gemini'].includes(provider))return fallback('Der ausgewählte KI-Anbieter ist nicht verfügbar.',409);
    const key=settings?.shared===true?checked(await admin.rpc('rg_get_ai_provider_key',{provider,requested_family:settings.family_id,requester_id:actor})):checked(await admin.rpc('ab_ai_server_key',{diary}));

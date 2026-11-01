@@ -1,6 +1,6 @@
 # 🔎 Funktionsprüfung der drei Apps und der gemeinsamen Oberfläche
 
-Stand: 1. November 2026. Dies ist das unabhängige Funktionsinventar eines zusätzlichen Prüflaufs. Es ergänzt die getrennten Prüfungen der neuen Wochenplanung, Sicherung/Wiederherstellung, Wochenauswertung, Trainingsentwicklung, Rezeptwerkzeuge, Ernteverknüpfung und Navigation. Ein nachgewiesener Test eines Bereichs ist keine Zusicherung, dass jede mögliche Kombination aller Eingaben, Geräte und externer Dienste fehlerfrei ist.
+Stand: 1. November 2026, abschließender Nachtrag. Die zusätzlichen Garten-/Rezept-/Tagebuchläufe sind inzwischen in Chromium und WebKit bestanden; die nachfolgenden Einzelnachweise grenzen weiterhin echte externe Wirkungen aus. Dies ist das unabhängige Funktionsinventar eines zusätzlichen Prüflaufs. Es ergänzt die getrennten Prüfungen der neuen Wochenplanung, Sicherung/Wiederherstellung, Wochenauswertung, Trainingsentwicklung, Rezeptwerkzeuge, Ernteverknüpfung und Navigation. Ein nachgewiesener Test eines Bereichs ist keine Zusicherung, dass jede mögliche Kombination aller Eingaben, Geräte und externer Dienste fehlerfrei ist.
 
 ## Prüfweise und Kennzeichnung
 
@@ -17,14 +17,14 @@ Alle Browser-Schreibtests verwenden ausschließlich künstliche Konten und simul
 | Bereich | Aktionen und Fehlerpfade im Inventar | Nachweis / Stand |
 |---|---|---|
 | Anmeldung | Anmeldung, gemeinsamer Sitzungsstatus, Abmelden, Kontosperre, Wartungsmodus | R; gemeinsame Auth-Tests P |
-| Passwort vergessen | Formular, E-Mail-Anforderung, Rückführungsadresse, Abbrechen | Offen; echte E-Mail-Zustellung X |
+| Passwort vergessen | Formular, E-Mail-Anforderung, Rückführungsadresse, Abbrechen | B: Anfrage mit exakter Rückführung in dieselbe App; echte E-Mail-Zustellung X |
 | Übersicht | Katalog-/Beet-/Notizstände, saisonale Einstiege, Aufgaben, tägliche Rezeptideen | B für Laden und Navigation; Rezept-/Erntebasis P |
 | Wetter | bewusste Standortwahl, Ausweichort, ausgeschaltete Anzeige, nicht erreichbarer Dienst | R; simulierter Ausfall sichtbar B; echte Ortung/Wetterdaten X |
 | Saison / Geräteoptionen | Jahreszeit, Haptik, Installation, persönliche Darstellung | R; Installationsbestätigung und tatsächliche Haptik X |
-| Pflanzenkatalog | Laden, Gruppierung nach Kultur und Sorte, Kategorien, Suche, Filter, Favoriten | B für Gruppen-/Sortenöffnung; weitere Filter Offen |
+| Pflanzenkatalog | Laden, Gruppierung nach Kultur und Sorte, Kategorien, Suche, Filter, Favoriten | B: Gruppen/Sorten, Suche, Kategorien und Favoriten; Filter zusätzlich in WebKit geprüft |
 | Eigene Pflanze anlegen | manuelle Eingabe, Pflichtfelder, Familienzuordnung, Speichern | B; POST mit erwarteter Familienkennung bestätigt |
 | Eigene Pflanze ändern | Sortennamen ändern, Versionsprüfung, Bestätigung | B; PATCH enthält die ursprüngliche Version |
-| Eigene Pflanze löschen | Bestätigung, gezieltes Löschen, Umgang mit Zuweisungen/Foto | R; zusätzlicher Löschtest Offen |
+| Eigene Pflanze löschen | Bestätigung, gezieltes Löschen, Umgang mit Zuweisungen/Foto | B: gezieltes Löschen mit Familien-/Versionsprüfung |
 | Gemeinsamer Sortenkatalog | gemeinsamer Referenzeintrag, Kopie/Änderung im eigenen Garten, Quellen | R; 200 neue belegte Identitäten separat geprüft |
 | Pflanzendetails | Anbau, Pflege, Lebensdauer, Schnitt, Fruchtfolge, Nachbarn, Datenquellen | R; Detailfenster und Unterbereiche B |
 | Sortennotiz | Entwurf, automatisches Speichern, Fehlererhalt, Verlassen mit Entwurf | R; Entwurfs-/Navigationsschutz P |
@@ -34,19 +34,19 @@ Alle Browser-Schreibtests verwenden ausschließlich künstliche Konten und simul
 | Beetliste | Laden, Gartenjahr, Fläche, Hinweise bei fehlenden Abständen | B für Liste/Fläche; Historienauswahl Offen |
 | Beet anlegen | Name, Beschreibung, Meter in Zentimeter, optionale Position | B; 2 × 1 m wurden als 200 × 100 cm gespeichert |
 | Beet ändern | Beschreibung, Versionsschutz, optionale Maße und Position | B |
-| Beet löschen | Bestätigung, Zuweisungen/Fotos, Erhalt des Pflanzenkatalogs | R; zusätzlicher Löschtest Offen |
+| Beet löschen | Bestätigung, Zuweisungen/Fotos, Erhalt des Pflanzenkatalogs | B: gezieltes Löschen mit Familien-/Versionsprüfung |
 | Pflanze zuweisen | Kategorie → Kultur → Sorte, Beet, Menge, Jahr, Status | B; zwei Pflanzen mit richtiger Zuordnung gespeichert |
 | Pflanzstatus ändern | geplant/gesät/gepflanzt/geerntet, Versionsschutz, Zurücksetzen bei Fehler | B für „gepflanzt“ und Backend-Zustand; Fehlerpfad R |
-| Zuweisung entfernen | Bestätigung, gezielte Löschung im gewählten Jahr | R; zusätzlicher Löschtest Offen |
+| Zuweisung entfernen | Bestätigung, gezielte Löschung im gewählten Jahr | R; zusätzlicher Löschtest nicht abgeschlossen |
 | 2D-Lageplan | Abmessungen, Beetpositionen, Zeichnen, Elemente, unbekannte Ausrichtung | R; zusätzliche Fenster-/Layoutprüfung Offen |
 | Plan aus Video/Fotos | Einwilligung, lokale Standbilder, sichtbarer ungeprüfter Entwurf, Übernahme | R; echte Medien-/KI-Verarbeitung X |
 | Persönliche Aufgaben | Erstellen, eigener Bereich, Fälligkeit, Status, Filter, Bearbeiten, Löschen | B für Erstellen/Anzeigen/Erledigen; weitere Aktionen Offen |
-| Familienforum | Thema, Kategorie, Beitrag, Antworten, Bearbeiten, Sperren, Löschen, Rechte | Offen; Codepfade R |
-| Erntetagebuch | Datum, Menge/Einheit, Sorte/Beet, Bewertung, Geschmack, optionales Foto, Ändern/Löschen | Offen; Codepfade R |
-| Gartennotizen | Erstellen, Ändern, Löschen, optionale Pflanzenverknüpfung, bewusstes Teilen | Offen; Codepfade R |
-| Gartentermine | manuelles Datum, Sorte/Beet, Ganztag/Uhrzeit, Erinnerung, Ändern/Löschen | Offen; Codepfade R |
+| Familienforum | Thema, Kategorie, Beitrag, Antworten, Bearbeiten, Sperren, Löschen, Rechte | B: Thema, Antwort, Bearbeiten, Eigentümer-Sperren/Entsperren; Löschen R |
+| Erntetagebuch | Datum, Menge/Einheit, Sorte/Beet, Bewertung, Geschmack, optionales Foto, Ändern/Löschen | B: Erstellen, Dezimalmenge und Bearbeiten; Foto/Löschen R |
+| Gartennotizen | Erstellen, Ändern, Löschen, optionale Pflanzenverknüpfung, bewusstes Teilen | B: Erstellen und Bearbeiten; Löschen/Teilen R |
+| Gartentermine | manuelles Datum, Sorte/Beet, Ganztag/Uhrzeit, Erinnerung, Ändern/Löschen | B: rückwirkendes Datum und ICS-Link; weitere Kalenderwirkungen X |
 | Kalenderdatei / Abo | ICS-Ausgabe, privater widerrufbarer Link, Einrichten/Widerrufen | R; tatsächlicher Abruf durch Apple/Google X |
-| Persönliches Profil | Name, Ort, Bild, private Voreinstellung, ausdrückliche Veröffentlichung | R; tatsächliche Veröffentlichung bleibt X |
+| Persönliches Profil | Name, Ort, Bild, private Voreinstellung, ausdrückliche Veröffentlichung | B: privates Profil speichern, private Sichtbarkeit bleibt erhalten; tatsächliche Veröffentlichung X |
 | Familie / Mitglieder | Rollen, Einladen/Hinzufügen/Entfernen, Berechtigungsgrenzen | R; kein Eingriff in reale Mitgliedschaften |
 | Admin / KI-Zugänge | gesonderte Freigabe, Kontosperren, Modelle, Schlüssel nicht auslesbar | R; Sicherheits-/RLS-Prüfungen P; keine echten Schlüsseländerungen |
 | Sicherungen | Garten, eigene Aufgaben, Forum/Ernte, Vorschau und additive Wiederherstellung | P; verschlüsselte Datei-/Dialogtests separat |
@@ -60,17 +60,17 @@ Alle Browser-Schreibtests verwenden ausschließlich künstliche Konten und simul
 | Bereich | Aktionen und Fehlerpfade im Inventar | Nachweis / Stand |
 |---|---|---|
 | Anmeldung / Passwort | gemeinsame Anmeldung, Rückführung nach Passwortwechsel, Abmelden | R; Auth-Tests P; zusätzliche Formularprüfung Offen |
-| Rezeptübersicht | Laden, Suche, Kategorien, Sortierung, weitere Ergebnisse, leere Auswahl | R; zusätzliche unabhängige Filterprüfung Offen |
+| Rezeptübersicht | Laden, Suche, Kategorien, Sortierung, weitere Ergebnisse, leere Auswahl | B: Kategorien, kombinierte Zutatensuche und Zurücksetzen |
 | Tagesideen | Auswahl aus vorhandenen Rezepten, Menüfrage, belegte Erntepassung | P |
-| Favoriten | hinzufügen/entfernen, Favoritenansicht, Kontobezug | R; zusätzlicher Browserlauf Offen |
+| Favoriten | hinzufügen/entfernen, Favoritenansicht, Kontobezug | B: eigenständiger Browserlauf in Chromium/WebKit; externe Wirkungen weiterhin X |
 | Rezeptdetail | Zutaten, Zubereitung, Nährwerte, sichtbare unbekannte Angaben | P für neue Werkzeuge; Grundansicht R |
 | Portionen / Varianten | Mengen, nachvollziehbare Austauschvorschläge, Reste, Vorkochen | P |
 | Beilagen | passende Auswahl, Nährwert-/Mengenbasis, keine erfundenen Vorräte | P |
-| Einkaufsliste | Zutaten übernehmen, Mengen, Erledigt, Bearbeiten/Entfernen, freier Eintrag | R; zusätzlicher CRUD-Lauf Offen |
-| Rezept anlegen | Titel, Kategorien, Zutaten, Zubereitung, Pflichtfelder und Rechte | R; zusätzlicher Schreibtest Offen |
-| Rezept ändern / löschen | Revision, Berechtigung, Bestätigung, Fehlererhalt | R; zusätzlicher Schreibtest Offen |
+| Einkaufsliste | Zutaten übernehmen, Mengen, Erledigt, Bearbeiten/Entfernen, freier Eintrag | B: Erstellen, Erledigt, Entfernen und tatsächliche simulierte API-Aktionen |
+| Rezept anlegen | Titel, Kategorien, Zutaten, Zubereitung, Pflichtfelder und Rechte | B: Erstellen/Bearbeiten/Löschen, Nährwert-Widerspruch bleibt ungespeichert, Revision geprüft |
+| Rezept ändern / löschen | Revision, Berechtigung, Bestätigung, Fehlererhalt | B: Erstellen/Bearbeiten/Löschen, Nährwert-Widerspruch bleibt ungespeichert, Revision geprüft |
 | Zutaten-Nährwertberechnung | reale Mengen, Packungsangaben/Referenzen, unbekannte Werte, Rundung | P und Domain-Tests |
-| Rezept-KI | Modellwahl, Text-/Fotoeingabe, Einwilligung, Fehler, keine eigenmächtige Veröffentlichung | R; zusätzlicher Fehler-/Rechtetest Offen |
+| Rezept-KI | Modellwahl, Text-/Fotoeingabe, Einwilligung, Fehler, keine eigenmächtige Veröffentlichung | B: Einwilligung, simulierter Anbieterfehler erhält Eingaben; echter Anbieterabruf X |
 | Küchen-Assistent | Anfrage, Gespräch, Löschen, abgesicherte Schlüsselverwaltung | R; echte kostenpflichtige Anfrage X |
 | Zyklus & Ernährung | freiwillige Angaben, lokaler Hinweis, Löschen, keine verfälschte BMI-Berechnung | R |
 | Vorlesen | Start/Stopp, Verhalten bei Seitenwechsel | R; tatsächliche Stimmen-/Audioausgabe X |
@@ -87,27 +87,27 @@ Alle Browser-Schreibtests verwenden ausschließlich künstliche Konten und simul
 | Bereich | Aktionen und Fehlerpfade im Inventar | Nachweis / Stand |
 |---|---|---|
 | Geschützter Zugang | ausschließlich zwei Freigaben, Login, Abmelden, inaktive/entzogene Sitzung | P: Auth-/RLS-Tests; keine Freigaben erweitert |
-| Passwort vergessen | E-Mail-Anforderung, passende Rückführung, Abbrechen, gültiges neues Passwort | R und Domain-Tests; zusätzlicher UI-Aufruf Offen |
+| Passwort vergessen | E-Mail-Anforderung, passende Rückführung, Abbrechen, gültiges neues Passwort | B: Formular, gleicher App-Rückweg, Abbrechen und Rate-Limit; echte Zustellung X |
 | Gemeinsamer Check-in | Datum, Gewicht, bestätigte Größe, Maße, Notiz, mehrere Fotos, letzter Speicherstand | P |
-| Rückwirkender Tag | Kalender-/Datumssprung, tatsächliches Beobachtungsdatum, spätere Uploadzeit | R und Domain-Tests; zusätzliche Datumsnavigation Offen |
+| Rückwirkender Tag | Kalender-/Datumssprung, tatsächliches Beobachtungsdatum, spätere Uploadzeit | B: rückwirkender Kalender füllt den richtigen Check-in; Zukunftsgewicht bleibt aus aktueller Anzeige ausgeschlossen |
 | Automatische Berechnung | BMI aus Gewicht/Größe, echte Einträge, keine angenommene Körpergröße | P und Domain-Tests |
 | Fortschritt / Wochenbericht | mehrere Wochen, ausgewiesene Datenbasis, dünne Daten, Zykluskontext | P |
-| Kalender | Monat wechseln, direktes Datum, Heute, Marker nach Eintragsart | R; zusätzlicher UI-Lauf Offen |
-| Galerie | Datumsreihenfolge, Tagesfilter, Nachladen, Privatabruf, Vergrößern | P für Upload/Backup; zusätzliche Reihenfolge-/Öffnungsprüfung Offen |
+| Kalender | Monat wechseln, direktes Datum, Heute, Marker nach Eintragsart | B: rückwirkender Datumssprung und Tagesauswahl |
+| Galerie | Datumsreihenfolge, Tagesfilter, Nachladen, Privatabruf, Vergrößern | B: auf-/absteigende Datumsgruppen, Tagesfilter, private Vergrößerung und Blob-Aufräumen; Upload/Backup P |
 | Foto löschen | Bestätigung, privater Speicher und Metadaten, saubere Fehlerbehandlung | R und frühere Fototests; reale Fotos nicht angefasst |
-| Teilen | explizite Daten-/Fotoauswahl, Vorschau, Änderung verwirft alte Vorschau, Download/Systemteilen | R; zusätzlicher Vorschau-/Abbruchtest Offen; tatsächliches Posten X |
+| Teilen | explizite Daten-/Fotoauswahl, Vorschau, Änderung verwirft alte Vorschau, Download/Systemteilen | B: nur ausgewählte Messwerte, geänderte Auswahl verwirft Vorschau, kein ungewählter Fotoabruf; tatsächliches Posten X |
 | Training | Laufband, Körpergewicht, Band-/Tube-Set, Übungen und sichere Bildzuordnung | P und Domain-Tests |
-| Trainingsprotokoll | echtes Datum, Einheit, Minuten, Anstrengung, Band, Notiz, Löschen | R; zusätzlicher Browserlauf Offen |
+| Trainingsprotokoll | echtes Datum, Einheit, Minuten, Anstrengung, Band, Notiz, Löschen | B: eigenständiger Browserlauf in Chromium/WebKit; externe Wirkungen weiterhin X |
 | Übungsfortschritt | Bandidentität, Wiederholungen, Technik/Symptome, vorsichtige Entwicklung, Wiederholschutz | P; unabhängiger isolierter UI-Test zusätzlich erfolgreich |
-| Profil / Ziele | bestätigte Größe, Geburtsjahr, aktive Stufe, Zielstart und Wünsche, unbekannte Angaben | R und Domain-Tests; zusätzlicher Browserlauf Offen |
-| Zyklus | freiwilliger Beginn/Ende/Befinden, keine erfundenen Phasen oder BMI-Korrektur | R und Domain-Tests; zusätzlicher Browserlauf Offen |
+| Profil / Ziele | bestätigte Größe, Geburtsjahr, aktive Stufe, Zielstart und Wünsche, unbekannte Angaben | B: bestätigte Größe/BMI und freiwillige Profil-/Zyklusdaten; ungültiger End-vor-Start-Eintrag wird blockiert |
+| Zyklus | freiwilliger Beginn/Ende/Befinden, keine erfundenen Phasen oder BMI-Korrektur | B: bestätigte Größe/BMI und freiwillige Profil-/Zyklusdaten; ungültiger End-vor-Start-Eintrag wird blockiert |
 | Motivation | Gewichtsveränderung, stagnierender/rückläufiger Verlauf, schnelle Abnahme nicht belohnen | P und Domain-Tests |
 | KI-Begleiter | begründete Vorschläge, Datenbasis, unbekannte Angaben, bestätigte Datenübernahme | P; keine echten privaten Chats an KI gesendet |
 | Chat-Import | ausdrücklich eingefügter Text und Datum, keine stillen Zugriffe auf andere ChatGPT-Chats | R |
 | Sozialprofile | bestätigte eigene Links, Plattformprüfung, kein Erraten fremder Konten | P und Domain-Tests |
 | Verschlüsselte Sicherung | Daten/Fotos, Passwort, Integritätsprüfung, additive Wiederherstellung, Konflikte | P und zusätzliche Mock-UI-Tests |
 | Inaktive App / Kontoänderung | private DOM-Inhalte leeren, zulässigen Entwurf nur für dasselbe Konto wiederherstellen | P; zusätzlicher isolierter Übungstest bestätigt keine späte Anzeige nach Logout |
-| Erscheinungsbild | drei Designs, mobile Lesbarkeit, zugängliche Bedienelemente | P; erweiterte Menü-/Viewport-Prüfung Offen |
+| Erscheinungsbild | drei Designs, mobile Lesbarkeit, zugängliche Bedienelemente | B/P: Menüs bei 320/390/844/1280 Pixeln, kein Dokumentüberlauf |
 | Gemeinsamer Wochenplan | bestätigte geplante Mahlzeiten/Training/Wiegen | P |
 | Hilfe / Impressum | Kontakt, verständliche Hinweise, eigene Dokumentfenster | P |
 
@@ -120,7 +120,7 @@ Alle Browser-Schreibtests verwenden ausschließlich künstliche Konten und simul
 | Verlaufsschutz | nur erlaubte Seiten, keine privaten Inhalte/URLs, Reset beim Abmelden | P: Absender-/Origin-/Route-Tests und Browserprüfungen |
 | Dialoge | Fokus, Schließen, Hintergrundscrollen, gleichzeitige Dialoge | P; zusätzliche neue Menüprüfung Offen |
 | Tastatur / Safe Areas | Bedienelemente bei Texteingabe, kleine Ansichten und Querformat | P; erweiterte Menüprüfung Offen |
-| 320 / 390 / 844 / 1280 Pixel | Hauptmenüs mit zusätzlichen Einträgen, lesbare Schaltflächen, keine Überdeckung | Offen für den erweiterten unabhängigen Lauf |
+| 320 / 390 / 844 / 1280 Pixel | Hauptmenüs mit zusätzlichen Einträgen, lesbare Schaltflächen, keine Überdeckung | B: alle vier Oberflächen bei allen vier Größen in WebKit |
 | Installieren / PWA | Manifest, Icons, Installationshilfe, öffentliche Programmdateien | R; tatsächliche OS-Installation/Updates X |
 | Externe Plattformen | Apple-/Google-Kalender, Betriebssystem-Teilen, Instagram/TikTok, E-Mail | X: ohne echten Anbieteraufruf keine erfolgreiche externe Wirkung behauptet |
 
@@ -137,3 +137,13 @@ Alle Browser-Schreibtests verwenden ausschließlich künstliche Konten und simul
 - Sortenkatalog: 200 belegte Sorten, 100 Obst/100 Gemüse; Datensatzprüfung und unabhängiger Abgleich mit dem tatsächlich geladenen RHS-PDF erfolgreich. Ein Produktionsimport wird hier nicht ohne dessen gesonderte Ausführung behauptet.
 
 Noch als „Offen“ markierte Felder sind ausdrücklich keine bestandenen Tests. Sie werden erst nach tatsächlichem Nachweis auf „B“ gesetzt; externe Grenzen bleiben auch danach bestehen.
+
+## 🔐 Zentrale KI-Zugänge: abschließender Nachweis
+
+- Chromium und WebKit: ohne Anmeldung gesperrt, falsches Passwort, kurzlebige separate Anmeldung, beide Schlüsselfelder, persönliche Anbieterauswahl, vier Bildschirmgrößen, Leeren/Abmelden beim Schließen und verspätete Passwortantwort nach Schließen geprüft. Kein echter Anbieterschlüssel wurde im Browserlauf verwendet.
+- Echte Datenbank, vollständiger Rollback: Passwortbestätigung erforderlich, nur tatsächliche Familienverwaltung darf Schlüssel ersetzen, beide Anbieter für beide freigeschalteten Konten wählbar, Browser darf Schlüssel nicht lesen, abgelaufene Bestätigung und anonyme Zugriffe abgewiesen. Ein ausdrücklich ausgewählter entfernter Anbieter reaktiviert keinen alten Tagebuchschlüssel.
+- Neue Transporte: ein einziger gewählter Anbieter, keine Schlüssel in URL/Inhalt, OpenAI `store:false`, Gemini strukturierte Antwort, kontrollierte Fehler ohne heimlichen Anbieterwechsel. Echte Abrechnung/Generierung bleibt X.
+
+## 🌱 Einordnung eines WebKit-Prüfhinweises
+
+Der isolierte strenge Saatgut-Test erreicht alle Funktions-/Layout-/Datenschutzassertionen, meldet jedoch unter automatisiertem WebKit eine einzelne CSP-Stilwarnung beim Erzeugen eines nativen Select-Elements. Derselbe Hinweis lässt sich auf einer Minimaldatei mit **null App-Skripten** reproduzieren; mit Instrumentierung verweist er auf `web-inspector://bootstrap.js`. Chromium besteht den gesamten Saatgutlauf einschließlich CSP-Prüfung. Die produktive CSP wurde deshalb nicht abgeschwächt; der Hinweis wird nicht als erfolgreicher vollständig warnungsfreier WebKit-CSP-Lauf ausgegeben.

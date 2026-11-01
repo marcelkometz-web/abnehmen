@@ -23,7 +23,7 @@ Privates gemeinsames Tagebuch für Ramona und Marcel. Die App nutzt das vorhande
 - Freiwilliges Zyklustagebuch, längere Verlaufseinordnung und abwechslungsreiche Aufmunterungen.
 - Klare Chat-Messwerte, abgeschlossene Trainings und Periodenbeginne werden mit Datum und eindeutiger Zuordnung kontrolliert übernommen; Unsicherheiten werden erfragt.
 
-Die vollständige Prüfung und bekannte Grenzen stehen im [Prüfbericht](docs/pruefung-2026-10-27.md).
+Die aktuellen Änderungen, Datenbestände, Prüfungen und Grenzen stehen im [Abschlussbericht vom 1. November](docs/abschluss-2026-11-01.md); der [frühere Prüfbericht](docs/pruefung-2026-10-27.md) bleibt als historischer Nachweis erhalten.
 
 ## Anmeldung und Datenschutz
 
@@ -42,7 +42,7 @@ Projektadministratoren mit Datenbank-/Service-Zugriff bleiben technisch privileg
 3. Die Familienverwaltung hinterlegt den OpenAI- und/oder Gemini-API-Schlüssel einmalig. Die Schlüssel liegen verschlüsselt in Supabase Vault; der Browser erhält danach nur den Einrichtungsstatus. Keine Schlüssel in Chat, GitHub oder Sicherungsdateien kopieren.
 4. Jede freigegebene Person wählt ihren Anbieter für alle drei Apps. Garten und Rezepte behalten ihre vorhandene Modellwahl; Ramonas Begleiter verwendet `gpt-6-luna` beziehungsweise `gemini-3.1-flash-lite`. Pro Anfrage wird nur ein Anbieter aufgerufen, ohne automatischen kostenpflichtigen Wechsel bei einem Fehler.
 
-Ein bisheriger separater OpenAI-Zugang bleibt im Tagebuch nutzbar, solange kein eingerichteter gemeinsamer Anbieter ausgewählt ist. Einen gemeinsamen Schlüssel entfernt man nicht über die alte lokale Tagebuchverwaltung. Die zentrale Einrichtung ersetzt nur den ausdrücklich eingegebenen Anbieterschlüssel; vorhandene Schlüsselwerte werden niemals gelesen oder exportiert.
+Ein bisheriger separater OpenAI-Zugang bleibt im Tagebuch nutzbar, solange keine eigene gemeinsame Anbieterauswahl gespeichert ist und der Familienstandard keinen nutzbaren gemeinsamen Zugang hat. Einen gemeinsamen Schlüssel entfernt man nicht über die alte lokale Tagebuchverwaltung. Die zentrale Einrichtung ersetzt nur den ausdrücklich eingegebenen Anbieterschlüssel; vorhandene Schlüsselwerte werden niemals gelesen oder exportiert.
 
 Der Abnehm-Begleiter übermittelt Messwert-Verläufe, berechnete Auswertungen, freiwillige Profil-/Zyklusangaben, absolvierte Trainings, jüngere Notizen und den relevanten App-Chat. **Keine Fortschrittsfotos, Foto-URLs, Kontoadressen oder Auth-IDs gehen an diesen Begleiter.** Andere ChatGPT-Unterhaltungen sind nicht verbunden. Der Anbieter verarbeitet die übermittelten Daten nach seinen API-Bedingungen; OpenAI `store:false` bedeutet keine allgemeine Null-Aufbewahrung. [Gemini-Nutzungsbedingungen](https://ai.google.dev/gemini-api/terms) unterscheiden Dienst-/Regionenbedingungen und beschreiben die Datenverarbeitung. Die App kann den Vertrag oder die Abrechnung eines API-Projekts nicht selbst prüfen.
 
@@ -59,7 +59,7 @@ npm start
 
 `npm start` öffnet einen lokalen Server auf `http://127.0.0.1:4173`. Der fertige Build liegt als `app.js` neben `index.html` und kann statisch ausgeliefert werden. `config.json` enthält ausschließlich öffentliche Projektinformationen. Keine Drittanbieter-Skripte, Fonts oder Besucheranalyse werden im Browser nachgeladen.
 
-Die SQL-Dateien unter `supabase/migrations/` dokumentieren ausschließlich additive Änderungen für Abnehmen. Sie wurden mit der Supabase-CLI benannt und über MCP am Garten-Projekt angewendet. Die einmalige Zuordnung der beiden realen Konten erfolgte separat und wird nicht mit privaten Identitäten eingecheckt. Von diesem separaten Repository aus **kein ungeprüftes `supabase db push`** auf das geteilte Projekt ausführen: dessen bereits bestehende Garten-Migrationshistorie muss berücksichtigt werden. Bestehende Kontofreigaben bleiben unverändert. Neue Planung, Übungsprotokolle, Sicherungsfunktionen und zentrale KI-Verwaltung sind separat dokumentiert; neue Schlüssel werden ausschließlich auf eine ausdrückliche Nutzereingabe hin gesetzt.
+Die SQL-Dateien unter `supabase/migrations/` dokumentieren ausschließlich additive Änderungen für Abnehmen. Ihre Namen entsprechen den tatsächlichen Produktionsmigrationen; die Änderungen wurden über MCP am Garten-Projekt angewendet. Die einmalige Zuordnung der beiden realen Konten erfolgte separat und wird nicht mit privaten Identitäten eingecheckt. Von diesem separaten Repository aus **kein ungeprüftes `supabase db push`** auf das geteilte Projekt ausführen: dessen bereits bestehende Garten-Migrationshistorie muss berücksichtigt werden. Bestehende Kontofreigaben bleiben unverändert. Neue Planung, Übungsprotokolle, Sicherungsfunktionen und zentrale KI-Verwaltung sind separat dokumentiert; neue Schlüssel werden ausschließlich auf eine ausdrückliche Nutzereingabe hin gesetzt.
 
 Unter `supabase/tests/` liegen echte PostgreSQL-Zugriffstests mit vollständigem Rollback. Sie prüfen gemeinsame Nutzung, gesperrte App-Freigaben, anonyme Zugriffe, ungültige/abgelaufene Sitzungen, fremde Fotoordner, Selbstfreigaben, API-Schlüsselrechte und Anfragegrenzen. Testbilder und Messwerte werden nicht dauerhaft angelegt.
 
