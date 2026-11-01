@@ -26,6 +26,7 @@ let formRevision=0;
 let analysisDay=null;
 let pausedDraft=null;
 let currentPage='checkin';
+let navigationReady=false;
 const pages={checkin:'Check-in',progress:'Auswertung',calendar:'Kalender & Einträge',gallery:'Fotogalerie',training:'Training',nutrition:'Essen & Rezepte',profile:'Profil & Zyklus'};
 let recoveryPending = false;
 let resetOpen = false;
@@ -70,6 +71,8 @@ function resetForms() {
   for(const input of document.querySelectorAll('input[type=date]'))input.value=['recorded_on','asOf'].includes(input.name)?localDate():'';
 }
 function clearPrivate() {
+  navigationReady=false;
+  window.appNavigation?.report({page:currentPage,ready:false,busy:false});
   for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
   snapshot = { weights: [], measurements: [], photos: [], training: [], cycles: [] };
   preferences={};saveState=null;analysisDay=null;document.body.classList.remove('app-signed-in');wellbeing?.clear();motivation?.clear();
@@ -367,6 +370,7 @@ function downloadShare() {
   document.body.append(link); link.click(); link.remove();
 }
 async function lockDiary(text = 'Nach 10 Minuten ohne Bedienung wurdest du abgemeldet.') {
+  window.appNavigation?.reset();
   ++epoch; pausedDraft=null;clearPrivate();resetForms();
   user = null;
  $('denied-panel').hidden = true;
@@ -458,6 +462,7 @@ function bindAdditionalFeatures() {
   });
 }
 async function sessionChanged(session) {
+  if(user&&user.id!==session?.user?.id)window.appNavigation?.reset();
   // Auth broadcasts from another area must not consume a paused private draft.
   if(pausedDraft&&user?.id===session?.user?.id&&(document.hidden||window.unserZuhauseHidden===true)&&!recoveryPending&&!sharedAuth?.isRecovering(session)){user=session.user;return;}
   const generation = ++epoch;
@@ -473,13 +478,13 @@ async function sessionChanged(session) {
     recoveryPending = false; resetOpen = true;
   }
   if (resetOpen) { $('login-panel').hidden = true; $('reset-panel').hidden = false; return; }
-  if (!user) { pausedDraft=null;resetForms();return; }
+  if (!user) { window.appNavigation?.reset();pausedDraft=null;resetForms();return; }
   if(document.hidden||window.unserZuhauseHidden===true){if(pausedDraft?.actor!==user.id)pausedDraft=null;return;}
   try {
     const access = await client.from('ab_access').select('enabled,diary_user_id').eq('user_id', user.id).maybeSingle();
     fail(access.error);
     if (generation !== epoch) return;
-    if (!access.data?.enabled) {pausedDraft=null;$('denied-panel').hidden=false;return;}
+    if (!access.data?.enabled) {window.appNavigation?.reset();pausedDraft=null;$('denied-panel').hidden=false;return;}
     diaryId = access.data.diary_user_id;
     await loadSnapshot(generation);
     if (generation !== epoch) return;
@@ -488,6 +493,7 @@ async function sessionChanged(session) {
     $('height-form').elements.height_cm.value = heightCm ?? '';
     for(const id of ['training-form','cycle-form'])$(id).elements.recorded_on.value=localDate();
     selectDay(selectedDay,false,true);restoreDraft();
+    navigationReady=true;window.appNavigation?.report({page:currentPage,ready:true,busy:Boolean(document.querySelector('form[data-busy]'))});
     await assistant?.load({ generate: true }).catch(() => {});
     await dailyRecipes?.load();
   } catch (error) {
@@ -513,8 +519,15 @@ function showPage(name,updateURL=true){
   if($('menu-dialog').open)$('menu-dialog').close();
   if(name==='progress')requestAnimationFrame(renderChart);
   if(name==='gallery'&&(galleryNeedsRender||!$('photo-gallery').childElementCount))renderPhotos();
+  window.appNavigation?.report({page:name,ready:Boolean(navigationReady&&user&&diaryId&&!$('dashboard').hidden),busy:Boolean(document.querySelector('form[data-busy]'))});
 }
 function setupNavigation(){
+  window.appNavigation?.register({app:'abnehmen',navigate:async route=>{
+    if(!(route.page in pages)||!navigationReady||!user||!diaryId||$('dashboard').hidden||recoveryPending||resetOpen)return false;
+    if(document.querySelector('form[data-busy],dialog[open]:not([data-app-navigation-dialog])'))return false;
+    // All seven diary pages stay mounted, preserving unfinished form controls.
+    showPage(route.page,false);history.replaceState(history.state,'','#'+route.page);$('main').scrollTo({top:0,behavior:'instant'});return true;
+  }});
   for(const [id,label]of Object.entries(pages)){const b=node('button',label,'quiet');b.type='button';b.dataset.destination=id;b.addEventListener('click',()=>showPage(id));$('menu-choices').append(b);}
   $('open-menu').addEventListener('click',()=>$('menu-dialog').showModal());$('close-menu').addEventListener('click',()=>$('menu-dialog').close());
   $('open-assistant-page').addEventListener('click',()=>$('open-ai').click());

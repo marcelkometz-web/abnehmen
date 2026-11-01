@@ -82,7 +82,7 @@ function openArea(key,{historyEntry=true}={}){
  if(key!=='home'&&!Object.hasOwn(areas,key))key='home';
  if(activeArea==='abnehmen'&&key!==activeArea){
   let saving=false;try{saving=Boolean(frames.get(activeArea)?.contentDocument?.querySelector('#checkin-form[data-busy]'));}catch{}
-  if(saving){pendingArea=key;byId('navigation-status').textContent='Einen Moment, dein Check-in wird noch gespeichert.';byId('navigation-status').hidden=false;clearTimeout(navigationTimer);navigationTimer=setTimeout(()=>openArea(pendingArea),180);return;}
+   if(saving){pendingArea=key;byId('navigation-status').textContent='Einen Moment, dein Check-in wird noch gespeichert.';byId('navigation-status').hidden=false;clearTimeout(navigationTimer);navigationTimer=setTimeout(()=>openArea(pendingArea),180);return false;}
  }
  pendingArea=null;clearTimeout(navigationTimer);byId('navigation-status').hidden=true;activeArea=key;
  const home=key==='home';document.body.classList.toggle('app-open',!home);byId('frame-region').hidden=home;byId('shell-title').hidden=home;byId('shell-title').textContent=home?'':areas[key].title;
@@ -102,6 +102,8 @@ function openArea(key,{historyEntry=true}={}){
  }
  if(historyEntry&&location.hash!=='#'+key)history.pushState(null,'','#'+key);
  if(home)window.scrollTo({top:0,behavior:'instant'});
+ window.appNavigation?.area(key);
+ return true;
 }
 document.addEventListener('click',event=>{const link=event.target.closest?.('[data-open]');if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();openArea(link.dataset.open);});
 window.addEventListener('popstate',()=>openArea(location.hash.slice(1)||'home',{historyEntry:false}));
@@ -111,6 +113,13 @@ window.addEventListener('message',event=>{
  if(event.data.type==='UNSER_ZUHAUSE_INFO'){if(Object.hasOwn(documents,event.data.document))openInfo(event.data.document);return;}
  const key=event.data.app;if(key==='home'||Object.hasOwn(areas,key))openArea(key);
 });
+window.appNavigation?.register({app:'hub',navigate:async route=>{
+ // A floating history jump must wait for active saves and app dialogs.
+ let blocked=false;try{blocked=Boolean(frames.get(activeArea)?.contentDocument?.querySelector('form[data-busy],dialog[open]:not([data-app-navigation-dialog])'));}catch{}
+ if(blocked||infoDialog.open||dialog.open)return false;
+ if(!openArea(route.app))return false;
+ return route.app==='home'?true:await window.appNavigation.requestPage(route.app,route.page);
+}});
 openArea(location.hash.slice(1)||'home',{historyEntry:false});
 
 }

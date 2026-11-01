@@ -1,5 +1,5 @@
 UNSER ZUHAUSE – ALLGEMEINE BEDIENHILFE
-Stand: 31. Oktober 2026
+Stand: 1. November 2026
 
 EIN ZUHAUSE FÜR EURE DREI APPS
 Garten, Rezepte und Ramonas Weg öffnen sich in derselben Oberfläche. Unten wechselst du zwischen Zuhause, Garten, Rezepte und Dein Weg. Ein bereits geöffneter Bereich bleibt beim Wechsel erhalten. Speichere wichtige Eingaben trotzdem, bevor du das Fenster schließt oder neu lädst. Während ein Wochen-Check-in gespeichert wird, wartet der Bereichswechsel auf den Abschluss.
@@ -48,3 +48,11 @@ Betreiber: Marcel Kometz, Manfredstr. 15, 47178 Duisburg, Deutschland.
 Telefon: +49 152 03397547
 E-Mail: marcelkometz@icloud.com
 Bei Fehlern App-Bereich, Gerät/Browser und Fehlermeldung nennen. Keine Passwörter, Schlüssel oder privaten Fotos ungeschützt versenden. Für Auskunft, Berichtigung oder Löschung personenbezogener Daten den Betreiber kontaktieren. Datenschutzangaben und Anbietergrenzen stehen im Impressum.
+
+
+STARTSEITE UND SEITENVERLAUF
+Die schwebende Leiste bietet „Start“, „Zurück“, „Vorwärts“ und „Verlauf“. Die Pfeile wechseln jeweils eine bereits besuchte Menüseite. „Verlauf“ öffnet eine Liste, mit der du auch mehrere Seiten gezielt überspringen kannst. Noch nicht verfügbare Pfeile sind ausgegraut. Wenn du nach einem Zurücksprung eine neue Seite aufrufst, beginnt von dort ein neuer Weg.
+
+In „Unser Zuhause“ führt „Start“ zur gemeinsamen Startseite; der Verlauf verbindet dort auch die Menüseiten der drei Apps. In einer einzeln geöffneten App führt „Start“ zu deren eigener Übersicht bzw. zum Check-in. Der Verlauf enthält nur feste App- und Seitennamen im Arbeitsspeicher dieses Fensters, keine Gewichte, Fotos, Rezepttitel, Suchtexte oder Kontodaten. Beim Abmelden bzw. Schließen des Fensters wird er verworfen. Er übernimmt nicht den allgemeinen Browserverlauf.
+
+Während einer Speicherung sind die Schaltflächen vorübergehend gesperrt. Offene App-Fenster und die Bildschirmtastatur werden bei der Anzeige berücksichtigt. Ungespeicherte Eingaben bleiben beim Seitenwechsel erhalten, sofern die jeweilige App sie dafür behalten kann. Andernfalls weist die App darauf hin, zuerst zu speichern; sie verwirft den Entwurf nicht still.
