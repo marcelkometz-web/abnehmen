@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://wwybkswpyoyowciumxda.supabase.co https://kzxzhpebugvzyqfjqedx.supabase.co; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'self'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#f7f5ef">
@@ -20,9 +20,15 @@
   <link rel="stylesheet" href="./style.css?v=20261031-landscape">
   <link rel="stylesheet" href="./documents.css">
   <link rel="stylesheet" href="./platform.css">
-  <link rel="stylesheet" href="./navigation.css?v=20261101">
-  <script src="./navigation.js?v=20261101" defer></script>
-  <script src="./app.js?v=20261101-navigation" type="module"></script>
+  <link rel="stylesheet" href="./navigation.css?v=20261101-refinement">
+  <script src="./navigation.js?v=20261101-refinement" defer></script>
+  <link rel="stylesheet" href="./planning.css?v=20261101">
+  <script src="./planning.js?v=20261101" defer></script>
+  <link rel="stylesheet" href="./hub-backup.css?v=20261101">
+  <script src="./hub-backup.js?v=20261101" type="module"></script><script src="./hub-ai.js?v=20261101" defer></script>
+  <link rel="stylesheet" href="./themes.css?v=20261101">
+  <script src="./themes.js?v=20261101" defer></script>
+  <script src="./app.js?v=20261101-refinement" type="module"></script>
 </head>
 <body>
   <a class="skip" href="#main">Zum Inhalt</a>
@@ -32,6 +38,7 @@
         <img src="./icon.svg" alt="" width="42" height="42">
         <span>Unser Zuhause<span class="brand-subtitle">Ein guter Platz für euren Alltag.</span></span>
       </a>
+      <button class="home-theme-button" id="choose-home-theme" type="button" aria-label="Design auswählen" aria-haspopup="dialog" title="Design auswählen"><span aria-hidden="true">✦</span></button>
       <span class="shell-title" id="shell-title" hidden></span><button class="info-button" type="button" data-info="general" aria-label="Hilfe und Impressum öffnen" title="Hilfe & Impressum">?</button><button class="install-button" id="install-app" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 16v4h14v-4"/></svg><span>Aufs Handy holen</span></button>
       <span class="installed-label" id="installed-label" hidden>Als App geöffnet <span aria-hidden="true">✓</span></span>
     </header>
@@ -76,6 +83,7 @@
         </a>
       </section>
 
+      <nav class="home-tools" aria-label="Gemeinsame Planung und Sicherung"><button class="home-tool-button" type="button" data-open-week-plan>📅 Euren Wochenplan öffnen</button><button class="home-tool-button" type="button" data-open-hub-backup>🔐 Alle Apps sichern &amp; wiederherstellen</button><button class="home-tool-button" type="button" data-open-hub-ai>🔐 KI-Zugänge verwalten</button></nav>
       <div class="home-note"><span class="note-symbol" aria-hidden="true">⌂</span><p><strong>Einmal anmelden. Einfach weiterwechseln.</strong><span>Deine Anmeldung begleitet dich durch die drei Apps in diesem Browser.</span></p><span class="note-flower" aria-hidden="true">✳</span></div>
     <footer><p>Drei Apps. Ein Zuhause.</p><span>Mit Liebe für euren Alltag.</span><button type="button" data-info="general">Hilfe · Allgemeines Read</button><button type="button" data-info="legal">Impressum & Datenschutz</button></footer>
     </main>
@@ -86,6 +94,20 @@
   <p class="navigation-status" id="navigation-status" role="status" aria-live="polite" hidden></p>
   <section class="frame-region" id="frame-region" aria-label="App-Bereich" hidden><div class="frame-loading" id="frame-loading" role="status">Dein Bereich wird geöffnet …</div><div id="frame-host"></div></section>
   <nav class="shell-nav" aria-label="App-Bereiche"><a href="#home" data-open="home" aria-current="page"><img src="./icon.svg" alt=""><span>Zuhause</span></a><a href="#garten" data-open="garten"><img src="./assets/garten.png" alt=""><span>Garten</span></a><a href="#rezepte" data-open="rezepte"><img src="./assets/rezepte.svg" alt=""><span>Rezepte</span></a><a href="#abnehmen" data-open="abnehmen"><img src="./assets/fortschritt.png" alt=""><span>Dein Weg</span></a></nav>
+
+  <dialog class="home-theme-dialog" id="home-theme-dialog" aria-labelledby="home-theme-title">
+    <div class="home-theme-toolbar"><h2 id="home-theme-title">Dein Zuhause, dein Stil.</h2><button class="home-theme-close" id="close-home-theme" type="button">Fertig</button></div>
+    <div class="home-theme-body">
+      <p class="home-theme-description">Vier Designs für eure gemeinsame Oberfläche. Wähle die Farben, mit denen du dich wohlfühlst.</p>
+      <fieldset class="home-theme-options"><legend>Dein Design auswählen</legend>
+        <label class="home-theme-choice" data-selected="true"><span class="home-theme-preview home-theme-preview--gartenruhe" aria-hidden="true">🌿 ✧</span><input type="radio" name="home_theme" value="gartenruhe" checked><strong>Gartenruhe</strong><small>Salbeigrün, Creme und ein ruhiger Start.</small></label>
+        <label class="home-theme-choice" data-selected="false"><span class="home-theme-preview home-theme-preview--rosengarten" aria-hidden="true">✿ ♡</span><input type="radio" name="home_theme" value="rosengarten"><strong>Rosengarten</strong><small>Rosé, warme Blüten und sanfte Farben.</small></label>
+        <label class="home-theme-choice" data-selected="false"><span class="home-theme-preview home-theme-preview--lavendelabend" aria-hidden="true">☾ ✧</span><input type="radio" name="home_theme" value="lavendelabend"><strong>Lavendelabend</strong><small>Flieder, helle Blautöne und kleine Sterne.</small></label>
+        <label class="home-theme-choice" data-selected="false"><span class="home-theme-preview home-theme-preview--abendlicht" aria-hidden="true">✦ ☾</span><input type="radio" name="home_theme" value="abendlicht"><strong>Abendlicht</strong><small>Dunkle Beere, warmes Gold und weiches Licht.</small></label>
+      </fieldset>
+      <p class="home-theme-status" id="home-theme-status" role="status" aria-live="polite"></p>
+    </div>
+  </dialog>
 
   <dialog id="info-dialog" aria-labelledby="info-title">
     <div class="info-toolbar"><div><p class="eyebrow">Gut zu wissen</p><h2 id="info-title">Hilfe & Impressum</h2></div><button class="close-button" id="close-info" type="button" aria-label="Hilfe schließen">✕</button></div>

@@ -77,3 +77,17 @@ Die schwebende Leiste bietet „Start“, „Zurück“, „Vorwärts“ und „
 In „Unser Zuhause“ führt „Start“ zur gemeinsamen Startseite; der Verlauf verbindet dort auch die Menüseiten der drei Apps. In einer einzeln geöffneten App führt „Start“ zu deren eigener Übersicht bzw. zum Check-in. Der Verlauf enthält nur feste App- und Seitennamen im Arbeitsspeicher dieses Fensters, keine Gewichte, Fotos, Rezepttitel, Suchtexte oder Kontodaten. Beim Abmelden bzw. Schließen des Fensters wird er verworfen. Er übernimmt nicht den allgemeinen Browserverlauf.
 
 Während einer Speicherung sind die Schaltflächen vorübergehend gesperrt. Offene App-Fenster und die Bildschirmtastatur werden bei der Anzeige berücksichtigt. Ungespeicherte Eingaben bleiben beim Seitenwechsel erhalten, sofern die jeweilige App sie dafür behalten kann. Andernfalls weist die App darauf hin, zuerst zu speichern; sie verwirft den Entwurf nicht still.
+
+WOCHENPLAN, BERICHT UND ÜBUNGSPROTOKOLL
+📅 Der gemeinsame Wochenplan ist im Menü erreichbar. Plane Mahlzeiten, Training und freiwillige Wiegetermine. Aus geplanten Rezeptzutaten entsteht eine Einkaufsliste; unbekannte Mengen bleiben offen. Nur die beiden freigeschalteten Tagebuchkonten sehen den Plan.
+💜 Der eigene Menüpunkt Wochenbericht vergleicht gespeicherte Beobachtungen und nennt Messdaten sowie Datenlücken. Der BMI verwendet die bestätigte Körpergröße. Wasser, Zyklus und einzelne Wiegetage werden nicht in erfundene Fettwerte umgerechnet.
+💪 Im Übungsprotokoll dokumentierst du Übung, Band, Sätze, Wiederholungen und Anstrengung. Aufbauvorschläge benötigen vergleichbare, als sauber und schmerzfrei bestätigte Einheiten. Die App erkennt deine Bewegungstechnik nicht automatisch.
+
+PRIVATE SICHERUNG UND WIEDERHERSTELLUNG
+🔐 Im Menü unter Sicherung & Wiederherstellung legst du eine verschlüsselte Datei mit deinen Tagebucheinträgen und privaten Fotos an. Verwende ein eigenes Sicherungspasswort und bewahre es sicher auf; es wird nicht gespeichert und kann nicht zurückgesetzt werden.
+Die Grenze beträgt 64 MiB pro Sicherungsdatei, 40 MiB Fotos und 300 Fotos. Bei Überschreitung bricht die Sicherung vollständig ab. Nach dem Download bitte prüfen, ob die Datei auf deinem Gerät gespeichert wurde.
+Vor einer Wiederherstellung wird lokal entschlüsselt und eine Vorschau angezeigt. Erst nach deiner Bestätigung werden fehlende Einträge ergänzt; vorhandene Angaben bleiben erhalten. Gesicherte KI-Texte bleiben Lesereferenz und werden nicht als bestätigte Gesundheitsangaben übernommen. Diese persönliche Sicherung ersetzt kein vollständiges Serverbackup.
+
+NACHVOLLZIEHBARE VORSCHLÄGE
+✨ Neue KI-Tipps und Antworten nennen ihre gespeicherte Datengrundlage. Ältere Texte bleiben lesbar und erhalten keine nachträglich erfundenen Belege. Eindeutige, von dir mitgeteilte Angaben werden geprüft; unklare oder vermutete Gesundheitsangaben müssen bestätigt werden.
+🌱 Rezeptideen können zu einer ausdrücklich eingetragenen Ernte der letzten sieben Tage passen. Bitte tatsächlichen Vorrat und Frische prüfen. Aus Jahreszeit oder Pflanzdatum wird keine Erntereife erfunden.

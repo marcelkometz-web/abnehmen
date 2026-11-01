@@ -103,3 +103,7 @@ Zehn zusätzliche Übungen für lange Tubes mit Griffen, Türanker und Knöchelm
 ## Schwebende Navigation
 
 Start, Zurück, Vorwärts und ein auswählbarer Verlauf sind in der gemeinsamen Oberfläche und allen drei Einzel-Apps verfügbar. Die gemeinsame Oberfläche verbindet die bekannten Menüseiten über validierte Frame-Nachrichten; die Einzel-Apps steuern ihre eigenen erlaubten Seiten. Ein neuer Weg nach einem Rücksprung entfernt den bisherigen Vorwärtszweig. Der begrenzte Verlauf bleibt ausschließlich im Arbeitsspeicher und enthält nur feste App-/Seitenkennungen; Authverlust löscht ihn. Offene Dialoge, laufende Speicherungen und ungespeicherte Formulare werden berücksichtigt. Die Leiste erhält reservierten Platz statt Inhalte zu überdecken.
+
+### 📅 Zusammen planen, sicher begleiten
+
+Gemeinsamer privater Wochenplan mit Einkaufsliste, nachvollziehbare Erntevorschläge und verschlüsselte Sicherungen ergänzen die Apps. Ramonas Weg bietet eigene Seiten für Wochenbericht und Übungsprotokoll. Garten und Rezepte erhalten den aufklappbaren Dörrautomaten mit belegten Richtwerten für den Arendo 306526. Umfang, Grenzen und Bedienung stehen in der jeweiligen Bedienhilfe.

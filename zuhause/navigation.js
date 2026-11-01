@@ -6,7 +6,7 @@
   home:{home:'Unser Zuhause'},
   garten:{overview:'Garten · Startseite',plants:'Garten · Pflanzen',beds:'Garten · Beete',notes:'Garten · Gartenleben',settings:'Garten · Familie & Konto'},
   rezepte:{overview:'Rezepte · Startseite',daily:'Rezepte · Heute',plants:'Rezepte · Favoriten',beds:'Rezepte · Einkauf',notes:'Rezepte · Forum',settings:'Rezepte · Konto'},
-  abnehmen:{checkin:'Ramonas Weg · Check-in',progress:'Ramonas Weg · Auswertung',calendar:'Ramonas Weg · Kalender',gallery:'Ramonas Weg · Galerie',training:'Ramonas Weg · Training',nutrition:'Ramonas Weg · Essen & Rezepte',profile:'Ramonas Weg · Profil & Zyklus'}
+  abnehmen:{checkin:'Ramonas Weg · Check-in',progress:'Ramonas Weg · Auswertung',weekly:'Ramonas Weg · Wochenbericht',exercise:'Ramonas Weg · Übungsprotokoll',backup:'Ramonas Weg · Sicherung',calendar:'Ramonas Weg · Kalender',gallery:'Ramonas Weg · Galerie',training:'Ramonas Weg · Training',nutrition:'Ramonas Weg · Essen & Rezepte',profile:'Ramonas Weg · Profil & Zyklus'}
  };
  const DEFAULTS={home:'home',garten:'overview',rezepte:'overview',abnehmen:'checkin'};
  const same=(a,b)=>Boolean(a&&b&&a.app===b.app&&a.page===b.page);

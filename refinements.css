@@ -1,0 +1,13 @@
+.wellbeing-metric{margin:16px 0;padding:14px 16px;border:1px solid var(--theme-line);border-radius:16px;overflow-wrap:anywhere}
+.wellbeing-metric h3{margin-top:0}.wellbeing-metric p:last-child{margin-bottom:0}
+#weekly-report details,#exercise-progress details,#backup-tools details{margin:16px 0}
+#weekly-report form{align-items:end}#weekly-report form button{width:auto}
+#exercise-progress .entry{display:grid;gap:6px;margin:12px 0;padding:14px;border:1px solid var(--theme-line);border-radius:14px}
+#exercise-progress .entry p{margin:0}#exercise-progress .entry button{justify-self:start}
+#backup-tools form{display:grid;gap:14px;margin:18px 0;padding:18px;border:1px solid var(--theme-line);border-radius:16px}
+#backup-tools input[type=file]{max-width:100%;min-width:0}
+#backup-tools .backup-counts{display:grid;gap:8px;grid-template-columns:minmax(0,1fr) auto}
+#backup-tools button,#exercise-progress button{white-space:normal;overflow-wrap:anywhere}
+.backup-reference-text{white-space:pre-wrap;overflow-wrap:anywhere}
+#page-training>.actions{margin:16px 0;display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:600px){#backup-tools form{padding:12px}.wellbeing-metric{padding:12px}#weekly-report form button{width:100%}}

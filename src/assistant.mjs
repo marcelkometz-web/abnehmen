@@ -1,5 +1,22 @@
+import {readAssistantContent} from '../supabase/functions/abnehmen-ai/domain.mjs';
 const $ = id => document.getElementById(id);
 const text = (tag, content, className) => { const item = document.createElement(tag); item.textContent = content; if (className) item.className = className; return item; };
+const evidenceDate=value=>value?new Date(value+'T12:00:00').toLocaleDateString('de-DE'):'kein Eintrag';
+export function evidencePanel(basis){
+  const details=text('details','', 'hint ai-evidence');
+  details.append(text('summary',basis?'Datenbasis dieser Empfehlung':'Datenbasis eines älteren Tipps'));
+  if(!basis){details.append(text('p','Für diesen älteren Text wurde noch keine genaue Datenbasis gespeichert. Ein neuer Tipp erhält sie automatisch.'));return details;}
+  details.append(text('p','Erstellt am '+new Date(basis.at).toLocaleString('de-DE')+' · berücksichtigt Einträge bis '+evidenceDate(basis.asOf)+'.'));
+  const list=text('ul','');
+  for(const[label,index]of[['Gewichtseinträge',0],['Messtage mit Körpermaßen',1],['Trainingseinheiten',2],['freiwillige Zykluseinträge',3]]){
+    const[count,last]=basis.sources[index];list.append(text('li',`${count} ${label} · letzter Eintrag: ${evidenceDate(last)}.`));
+  }
+  list.append(text('li',basis.height===null?'Eine bestätigte Körpergröße fehlt. Es wurde kein BMI berechnet.':`Bestätigte Körpergröße: ${Number(basis.height).toLocaleString('de-DE')} cm.`));
+  if(basis.bmi!==null&&Number.isFinite(basis.bmi))list.append(text('li',`BMI: ${basis.bmi.toLocaleString('de-DE',{maximumFractionDigits:1})} aus dem Gewicht vom ${evidenceDate(basis.weightDate)} und der bestätigten Größe (kg ÷ m²).`));
+  details.append(list,text('p','Zahlen und Datenbasis berechnet die App. Den Tipp formuliert die KI. Fotos und Foto-Links werden ihr nicht übermittelt. Andere ChatGPT-Chats sind nicht verbunden.'));
+  details.append(text('p','Fehlende Einträge bleiben unbekannt. Körperfett, tatsächliche Essensmengen und Krankheiten lassen sich daraus nicht zuverlässig bestimmen. Zyklusangaben verändern die BMI-Formel nicht.'));
+  return details;
+}
 export class Assistant {
   constructor({ client, active, error, onDataSaved }) {
     this.client = client; this.active = active; this.error = error; this.onDataSaved = onDataSaved; this.revision = 0; this.configured = false; this.pending = false; this.retry = null; this.queuedTip = false;
@@ -38,6 +55,7 @@ export class Assistant {
     ++this.revision; clearTimeout(this.timer); this.pending = false; this.configured = false; this.retry = null; this.queuedTip = false; this.historySignature = null;
     if ($('ai-dialog').open) $('ai-dialog').close();
     $('ai-companion').hidden = true; $('ai-history').replaceChildren();
+    $('ai-tip-evidence')?.remove();
     for (const id of ['ai-tip-preview','ai-current-tip','ai-error','ai-key-status']) $(id).textContent = '';
     $('ai-key-form').reset(); $('ai-form').reset();
   }
@@ -54,9 +72,13 @@ export class Assistant {
     this.configured = Boolean(config.data.configured);
     $('ai-key-status').textContent = this.configured ? `Schlüssel hinterlegt · ${config.data.model}` : 'Noch kein OpenAI-Schlüssel hinterlegt.';
     $('remove-ai-key').hidden = !this.configured;
-    const hint = tip.data?.content || (this.configured ? 'Ein neuer Tipp wird aus deinen Einträgen erstellt.' : 'Für persönliche KI-Tipps und Chat zuerst den OpenAI-Schlüssel in den Einstellungen hinterlegen.');
+    const currentTip=readAssistantContent(tip.data?.content);
+    const hint = currentTip.text || (this.configured ? 'Ein neuer Tipp wird aus deinen Einträgen erstellt.' : 'Für persönliche KI-Tipps und Chat zuerst den OpenAI-Schlüssel in den Einstellungen hinterlegen.');
     $('ai-tip-preview').textContent = hint;
-    $('ai-current-tip').textContent = tip.data?.content || '';
+    $('ai-tip-preview').title=currentTip.evidence?'Tipp vom '+new Date(currentTip.evidence.at).toLocaleString('de-DE')+' · Datenbasis im Chat öffnen':'Datenbasis im Chat öffnen';
+    $('ai-current-tip').textContent = currentTip.text;
+    $('ai-tip-evidence')?.remove();
+    if(currentTip.text){const panel=evidencePanel(currentTip.evidence);panel.id='ai-tip-evidence';$('ai-current-tip').after(panel);}
     $('ai-companion').hidden = false;
     const signature = JSON.stringify(messages.data);
     if (signature !== this.historySignature) {
@@ -64,7 +86,9 @@ export class Assistant {
       history.replaceChildren();
       for (const item of [...messages.data].reverse()) {
         const bubble = text('article', '', `chat-bubble ${item.role}`);
-        bubble.append(text('small', item.role === 'user' ? 'Ihr' : 'ChatGPT'), text('p', item.content)); history.append(bubble);
+        const value=item.role==='assistant'?readAssistantContent(item.content):{text:item.content,evidence:null};
+        bubble.append(text('small', item.role === 'user' ? 'Ihr' : 'ChatGPT'), text('p', value.text));
+        if(item.role==='assistant')bubble.append(evidencePanel(value.evidence));history.append(bubble);
       }
       history.scrollTop = atBottom ? history.scrollHeight : scroll; this.historySignature = signature;
     }
@@ -109,7 +133,7 @@ export class Assistant {
       if (result.data?.warning) status += ' ' + result.data.warning;
       // Keep the verified result visible even if the response arrived after a failed chat-history write.
       if (result.data?.reply && ![...$('ai-history').querySelectorAll('p')].some(p => p.textContent === result.data.reply)) {
-        const bubble = text('article', '', 'chat-bubble assistant'); bubble.append(text('small', 'ChatGPT'), text('p', result.data.reply)); $('ai-history').append(bubble);
+        const bubble = text('article', '', 'chat-bubble assistant'); bubble.append(text('small', 'ChatGPT'), text('p', result.data.reply),evidencePanel(result.data.evidence)); $('ai-history').append(bubble);
       }
       this.setError(status.trim()); $('ai-history').scrollTop = $('ai-history').scrollHeight;
       return result.data;

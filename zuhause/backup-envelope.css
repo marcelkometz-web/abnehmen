@@ -1,0 +1,9 @@
+.private-backup-dialog{box-sizing:border-box;width:min(92vw,500px);max-height:calc(100dvh - 24px);padding:22px;border:1px solid var(--theme-line,var(--line,#bfc8bc));border-radius:20px;background:var(--theme-paper,var(--paper,#fffefa));color:var(--theme-ink,var(--ink,#243c31));overflow:auto;overscroll-behavior:contain;box-shadow:0 20px 80px #142c2455;font:15px/1.6 system-ui}
+.private-backup-dialog::backdrop{background:#142c24b3}
+.private-backup-dialog h2{margin:0;font-size:22px;line-height:1.4}
+.private-backup-dialog label{display:block;margin:16px 0;font-weight:600}
+.private-backup-dialog input{box-sizing:border-box;width:100%;min-height:44px;margin-top:6px;padding:10px;border:1px solid var(--theme-line,var(--line,#bfc8bc));border-radius:10px;background:var(--theme-paper,var(--paper,#fff));color:var(--theme-ink,var(--ink,#243c31));font:inherit}
+.private-backup-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.private-backup-dialog button{min-height:44px;padding:10px 14px;border:1px solid var(--theme-line,var(--line,#bfc8bc));border-radius:12px;background:var(--theme-soft,var(--accent-soft,#e9efe5));color:var(--theme-ink,var(--ink,#243c31));font:600 14px/1.4 system-ui;cursor:pointer}
+html.private-backup-open body,html.private-backup-open main{overflow:hidden!important}
+@media(max-width:360px){.private-backup-dialog{padding:16px}.private-backup-actions button{width:100%}}

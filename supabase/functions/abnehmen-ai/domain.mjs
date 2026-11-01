@@ -76,3 +76,39 @@ export function analyze(data, height, today = localDate()) {
     weeklyAverage: recent.length ? recent.reduce((sum, row) => sum + Number(row.weight_kg), 0) / recent.length : null,
     recentCount: recent.length, circumferenceChanges, weightCount: weights.length, photoCount: data.photos.length };
 }
+
+// This provenance is calculated by the server, never authored by the model.
+// Keep it compact enough to accompany the existing bounded tip/message columns.
+export function assistantEvidence({today,revision,weights=[],measurements:body=[],training=[],cycles=[],height,analysis},capturedAt=new Date().toISOString()) {
+  dateValue(today);
+  const series=(rows,key)=>{const valid=rows.filter(row=>typeof row?.[key]==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(row[key])&&row[key]<=today);return[valid.length,valid.map(row=>row[key]).sort().at(-1)||null];};
+  const sources=[series(weights,'recorded_on'),series(body,'recorded_on'),series(training,'recorded_on'),series(cycles,'recorded_on')];
+  const confirmedHeight=Number.isFinite(Number(height))&&Number(height)>=50&&Number(height)<=260;
+  const missing=[];if(!confirmedHeight)missing.push('height');
+  for(const[key,index]of[['weights',0],['measurements',1],['training',2],['cycles',3]])if(!sources[index][0])missing.push(key);
+  return{asOf:today,at:new Date(capturedAt).toISOString(),revision:Number.isSafeInteger(Number(revision))?Number(revision):0,sources,height:confirmedHeight?Number(height):null,
+    bmi:confirmedHeight&&Number.isFinite(analysis?.bmi)?Math.round(analysis.bmi*1000)/1000:null,weightDate:analysis?.latest?.recorded_on||null,missing};
+}
+export function packAssistantContent(content,evidence,maxLength=8000){
+  let text=String(content||'').trim();
+  if(!evidence)return text.slice(0,maxLength);
+  const encode=value=>JSON.stringify({kind:'ab-evidence-v1',text:value,basis:evidence});
+  if(encode('').length>maxLength)throw new Error('Die Datenbasis überschreitet die erlaubte Länge.');
+  if(encode(text).length<=maxLength)return encode(text);
+  let low=0,high=text.length;
+  while(low<high){const middle=Math.ceil((low+high)/2);if(encode(text.slice(0,middle)).length<=maxLength)low=middle;else high=middle-1;}
+  return encode(text.slice(0,low));
+}
+export function readAssistantContent(content){
+  const raw=String(content||'');
+  if(raw.length<=8000&&raw.startsWith('{'))try{
+    const value=JSON.parse(raw),basis=value?.basis;
+    if(value?.kind==='ab-evidence-v1'&&typeof value.text==='string'&&basis&&/^\d{4}-\d{2}-\d{2}$/.test(basis.asOf)&&typeof basis.at==='string'&&Number.isFinite(Date.parse(basis.at))&&Array.isArray(basis.sources)&&basis.sources.length===4&&basis.sources.every(row=>Array.isArray(row)&&row.length===2&&Number.isSafeInteger(row[0])&&row[0]>=0&&(row[1]===null||/^\d{4}-\d{2}-\d{2}$/.test(row[1])))&&Array.isArray(basis.missing))return{text:value.text,evidence:basis};
+  }catch{}
+  return{text:raw,evidence:null};
+}
+export function confirmedAssistantMemory(preferences={}){
+  const allowed=['birth_year','activity_level','reported_loss_kg','reported_loss_approx','remaining_goal_min','remaining_goal_max','goal_baseline_weight_kg','goal_baseline_recorded_on','cycle_length_days'];
+  const facts=Object.fromEntries(allowed.filter(key=>Object.hasOwn(preferences||{},key)).map(key=>[key,preferences[key]]));
+  return'Bestätigte gespeicherte Profilangaben: '+JSON.stringify(facts)+'. Andere Chat-Aussagen sind Gesprächsmaterial, keine bestätigten Gesundheitsdaten. KI-Vermutungen werden nicht als neue persönliche Fakten gespeichert.';
+}

@@ -3,8 +3,8 @@ const endpoint = 'https://kzxzhpebugvzyqfjqedx.supabase.co/functions/v1/recipes-
 const key = 'sb_publishable_8-MkCdXRxN-GagE0g4GYrQ_TY3I6RmD';
 const element = (tag, text, className) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(className)n.className=className; return n; };
 export class DailyRecipes {
-  constructor({ client, container }) { this.client=client;this.container=container;this.revision=0;this.day=null;this.data=null;this.pending=false; }
-  clear() { ++this.revision;this.day=null;this.data=null;this.pending=false;this.container.replaceChildren();this.container.hidden=true; }
+  constructor({ client, container }) { this.client=client;this.container=container;this.revision=0;this.day=null;this.data=null;this.basis=null;this.pending=false; }
+  clear() { ++this.revision;this.day=null;this.data=null;this.basis=null;this.pending=false;this.container.replaceChildren();this.container.hidden=true; }
   async load() {
     const day=localDate(),revision=this.revision;
     if(this.day===day&&this.data){this.draw();return;}
@@ -15,7 +15,7 @@ export class DailyRecipes {
       const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json',apikey:key,Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({date:day}),cache:'no-store',signal:AbortSignal.timeout(20000)});
       if(!response.ok)throw new Error();const data=await response.json();
       if(revision!==this.revision)return;
-      this.day=day;this.data=data.recipes;this.draw();
+      this.day=day;this.data=data.recipes;this.basis=data.basis||null;this.draw();
     } catch {
       if(revision!==this.revision)return;
       this.container.hidden=false;this.container.replaceChildren(element('h2','Wie wäre es heute mit …?'),element('p','Die Rezeptideen sind gerade nicht erreichbar.','hint'));
@@ -27,8 +27,11 @@ export class DailyRecipes {
     this.container.replaceChildren(element('p','Aus eurer Rezeptsammlung','eyebrow'),element('h2','Wie wäre es heute mit …?'));
     const cards=element('div',undefined,'daily-recipe-grid');
     for(const recipe of this.data||[]){const link=element('a',undefined,'daily-recipe-card');link.href=`/rezepte/?recipe=${encodeURIComponent(recipe.id)}`;link.target='_blank';link.rel='noopener noreferrer';
-      link.append(element('span',recipe.emoji||'🍲','daily-recipe-icon'),element('strong',recipe.title),element('small',recipe.kcal==null?'Rezept öffnen':`${Number(recipe.kcal).toLocaleString('de-DE')} kcal pro Portion · Rezept öffnen`));cards.append(link);}
+      link.append(element('span',recipe.emoji||'🍲','daily-recipe-icon'),element('strong',recipe.title),element('small',recipe.kcal==null?'Rezept öffnen':`${Number(recipe.kcal).toLocaleString('de-DE')} kcal pro Portion · Rezept öffnen`));
+      if(Array.isArray(recipe.harvestMatches)&&recipe.harvestMatches.length)link.append(element('small','Passt zu eingetragener Ernte: '+recipe.harvestMatches.map(row=>String(row.ingredient||'')+' ('+String(row.harvested_on||'')+')').join(', ')));
+      cards.append(link);}
     if(!(this.data||[]).length)cards.append(element('p','In eurer Rezeptsammlung sind noch keine Gerichte vorhanden.'));
-    this.container.append(cards,element('p','Jeden Tag zwei neue Ideen. Eure gespeicherten Rezeptangaben bleiben unverändert.','hint'));
+    this.container.append(cards,element('p',this.basis?.note||'Jeden Tag zwei Ideen aus eurer Sammlung. Es werden keine Erntereife oder verfügbaren Vorräte angenommen.','hint'));
+    if(this.basis?.type==='recorded_harvest')this.container.append(element('p','Grundlage: ausdrücklich eingetragene Ernte, Stand '+String(this.basis.asOf||this.day)+'. Bitte Vorrat und Frische selbst prüfen.','hint'));
   }
 }

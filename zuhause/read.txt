@@ -56,3 +56,19 @@ Die schwebende Leiste bietet „Start“, „Zurück“, „Vorwärts“ und „
 In „Unser Zuhause“ führt „Start“ zur gemeinsamen Startseite; der Verlauf verbindet dort auch die Menüseiten der drei Apps. In einer einzeln geöffneten App führt „Start“ zu deren eigener Übersicht bzw. zum Check-in. Der Verlauf enthält nur feste App- und Seitennamen im Arbeitsspeicher dieses Fensters, keine Gewichte, Fotos, Rezepttitel, Suchtexte oder Kontodaten. Beim Abmelden bzw. Schließen des Fensters wird er verworfen. Er übernimmt nicht den allgemeinen Browserverlauf.
 
 Während einer Speicherung sind die Schaltflächen vorübergehend gesperrt. Offene App-Fenster und die Bildschirmtastatur werden bei der Anzeige berücksichtigt. Ungespeicherte Eingaben bleiben beim Seitenwechsel erhalten, sofern die jeweilige App sie dafür behalten kann. Andernfalls weist die App darauf hin, zuerst zu speichern; sie verwirft den Entwurf nicht still.
+
+GEMEINSAMER WOCHENPLAN UND NEUE ALLTAGSHILFEN
+📅 Auf der Startseite und in den App-Menüs öffnest du euren privaten Wochenplan. Mahlzeiten, Training und freiwillige Wiegetermine lassen sich über die drei Apps hinweg pflegen. Rezeptzutaten bilden die Einkaufsliste. Zugriff haben ausschließlich die beiden freigeschalteten Tagebuchkonten.
+💜 Ramonas Weg hat eigene Menüpunkte für Wochenbericht, Übungsprotokoll sowie verschlüsselte Sicherung und Wiederherstellung. Die neue Navigation führt auch zu diesen Bereichen.
+🌱 Garten und Rezepte verbinden ausdrücklich eingetragene Ernte mit passenden Gerichten; Vorräte und Frische werden nicht geraten.
+🌬 Der Dörrautomat in Garten und Rezepten zeigt aufklappbare Kategorien, Temperatur- und Zeitbereiche sowie Trockenproben. Euer Arendo 306526 ist anhand des bereitgestellten Angebots und seiner Anleitung zugeordnet.
+🔐 Neue persönliche Tagebuchsicherungen enthalten auch die privaten Fotos, während Garten- und Rezept-JSON-Sicherungen ihren jeweils beschriebenen Umfang behalten. Alle neuen Sicherungsdownloads werden mit eigenem Passwort verschlüsselt. Passwörter werden nicht gespeichert; eine Wiederherstellung erfordert das jeweilige Sicherungspasswort.
+
+VIER DESIGNS UND GEMEINSAME SICHERUNG
+✦ Der Knopf oben öffnet Gartenruhe, Rosengarten, Lavendelabend und Abendlicht. Nur die öffentliche Designkennung wird lokal gespeichert.
+🔐 Alle Apps sichern & wiederherstellen öffnet die zentrale Sicherung. Die ausgewählten Bereiche inklusive ihrer Bilddateien kommen in eine verschlüsselte Datei. Vorschau und Bestätigung gehen jeder Wiederherstellung voraus. Vorhandene Einträge bleiben erhalten; Verwaltungsrechte gelten weiter. Datei und Konto/Familie müssen zusammenpassen.
+Grenzen: 64 MiB Sicherungsdatei und 40 MiB Bilddaten. Fehlende Bilder oder zu große Daten brechen den Export vollständig ab. Die zwei Datenbanken werden schrittweise wiederhergestellt; erledigte, fehlgeschlagene und ausstehende Bereiche werden einzeln angezeigt. Garteneinstellungen bleiben lesbare Referenz. Passwort, Serverkonfiguration und API-Schlüssel sind nicht enthalten.
+🌱 Garten bietet außerdem Eigenes Saatgut gewinnen. Rezepte enthält neue Eintöpfe sowie Vorschläge für Vorspeisen und Desserts.
+
+ZENTRALE KI-ZUGÄNGE
+🔐 KI-Zugänge verwalten wird mit dem aktuellen App-Passwort entsperrt. Nur die vorhandene Familienverwaltung mit privater Tagebuchfreigabe darf Schlüssel ändern. Die zusätzliche Sitzung bleibt nur kurz im Arbeitsspeicher und wird beim Schließen beendet. OpenAI wird gemeinsam für alle drei Apps gespeichert; Gemini ist für Garten und Rezepte verfügbar. Ramonas Begleiter nutzt OpenAI. Die Schlüssel sind kein Bestandteil von Sicherungen.

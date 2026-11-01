@@ -12,6 +12,9 @@ import { profilePayload, trainingPayload, cyclePayload, savedStateLabel, weightT
 import { Motivation } from './motivation.mjs';
 import { createSharedAuth } from './shared-auth.mjs';
 import { recoveryLinkState, recoveryRedirect, newPassword, clearRecoveryURL } from './password-recovery.mjs';
+import { WeeklyReportUI } from './weekly-report-ui.mjs';
+import { TrainingProgressUI } from './training-progress-ui.mjs';
+import { BackupUI } from './backup-ui.mjs';
 
 const $ = id => document.getElementById(id);
 const formatNumber = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 });
@@ -20,6 +23,9 @@ let client;
 let sharedAuth;
 let wellbeing;
 let motivation;
+let weeklyReport;
+let exerciseProgress;
+let backupUI;
 let preferences={};
 let saveState=null;
 let formRevision=0;
@@ -27,7 +33,7 @@ let analysisDay=null;
 let pausedDraft=null;
 let currentPage='checkin';
 let navigationReady=false;
-const pages={checkin:'Check-in',progress:'Auswertung',calendar:'Kalender & Einträge',gallery:'Fotogalerie',training:'Training',nutrition:'Essen & Rezepte',profile:'Profil & Zyklus'};
+const pages={checkin:'Check-in',progress:'Auswertung',weekly:'Wochenbericht',calendar:'Kalender & Einträge',gallery:'Fotogalerie',training:'Training',exercise:'Übungsprotokoll',nutrition:'Essen & Rezepte',profile:'Profil & Zyklus',backup:'Sicherung & Wiederherstellung'};
 let recoveryPending = false;
 let resetOpen = false;
 let user = null;
@@ -75,7 +81,7 @@ function clearPrivate() {
   window.appNavigation?.report({page:currentPage,ready:false,busy:false});
   for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
   snapshot = { weights: [], measurements: [], photos: [], training: [], cycles: [] };
-  preferences={};saveState=null;analysisDay=null;document.body.classList.remove('app-signed-in');wellbeing?.clear();motivation?.clear();
+  preferences={};saveState=null;analysisDay=null;document.body.classList.remove('app-signed-in');wellbeing?.clear();motivation?.clear();weeklyReport?.clear();exerciseProgress?.clear();backupUI?.clear();
   $('save-state').textContent='Speicherstand wird geprüft …';
   for (const url of photoUrls) URL.revokeObjectURL(url);
   photoUrls.clear();
@@ -222,6 +228,7 @@ function render({photosChanged=true}={}) {
   renderCalendar();
   if (photosChanged || !$('photo-gallery').childElementCount) renderPhotos();
   wellbeing?.render({snapshot,preferences,height:heightCm});
+  weeklyReport?.render({snapshot,preferences,height:heightCm});
 }
 function renderPhotos() {
   if(currentPage!=='gallery'){galleryNeedsRender=true;return;}
@@ -435,7 +442,7 @@ function bindAdditionalFeatures() {
     const existing = await client.from('ab_profile').select('user_id').maybeSingle(); fail(existing.error);
     const query = existing.data ? client.from('ab_profile').update({ height_cm: height }).eq('user_id', existing.data.user_id) : client.from('ab_profile').insert({ height_cm: height });
     const result = await query.select('height_cm').single(); fail(result.error);
-    delete $('height-form').dataset.dirty;
+    if(generation!==epoch)return;delete $('height-form').dataset.dirty;
     await loadSnapshot(generation);
     if (generation === epoch) message('Körpergröße und BMI aktualisiert.');
   });
@@ -519,6 +526,7 @@ function showPage(name,updateURL=true){
   if($('menu-dialog').open)$('menu-dialog').close();
   if(name==='progress')requestAnimationFrame(renderChart);
   if(name==='gallery'&&(galleryNeedsRender||!$('photo-gallery').childElementCount))renderPhotos();
+  if(name==='exercise')exerciseProgress?.load().catch(error=>message(error.message,true));
   window.appNavigation?.report({page:name,ready:Boolean(navigationReady&&user&&diaryId&&!$('dashboard').hidden),busy:Boolean(document.querySelector('form[data-busy]'))});
 }
 function setupNavigation(){
@@ -529,6 +537,8 @@ function setupNavigation(){
     showPage(route.page,false);history.replaceState(history.state,'','#'+route.page);$('main').scrollTo({top:0,behavior:'instant'});return true;
   }});
   for(const [id,label]of Object.entries(pages)){const b=node('button',label,'quiet');b.type='button';b.dataset.destination=id;b.addEventListener('click',()=>showPage(id));$('menu-choices').append(b);}
+  const plan=node('button','📅 Gemeinsamer Wochenplan','quiet');plan.type='button';plan.dataset.openWeekPlan='';plan.addEventListener('click',()=>$('menu-dialog').close());$('menu-choices').append(plan);
+  document.addEventListener('click',event=>{const button=event.target.closest?.('[data-page-link]');if(button&&Object.hasOwn(pages,button.dataset.pageLink)&&user&&!$('dashboard').hidden)showPage(button.dataset.pageLink);});
   $('open-menu').addEventListener('click',()=>$('menu-dialog').showModal());$('close-menu').addEventListener('click',()=>$('menu-dialog').close());
   $('open-assistant-page').addEventListener('click',()=>$('open-ai').click());
   window.addEventListener('popstate',()=>{const name=location.hash.slice(1);if(name in pages&&!$('dashboard').hidden)showPage(name,false);});
@@ -541,8 +551,8 @@ function updateSaveState(){
 }
 function captureDraft(){
  if(!user||!diaryId)return null;const forms={};
- for(const id of ['checkin-form','height-form','training-form','cycle-form','profile-form','import-chat-form','ai-form']){
-  const form=$(id);forms[id]={data:[...(pendingCheckins.get(form)||new FormData(form))],dirty:form.dataset.dirty||'',busy:Boolean(form.dataset.busy)};
+ for(const id of ['checkin-form','height-form','training-form','exercise-progress-form','cycle-form','profile-form','import-chat-form','ai-form']){
+  const form=$(id);if(!form)continue;forms[id]={data:[...(pendingCheckins.get(form)||(id==='exercise-progress-form'&&exerciseProgress?.savingDraft)||new FormData(form))],dirty:form.dataset.dirty||'',busy:Boolean(form.dataset.busy)};
  }
  return{actor:user.id,diary:diaryId,forms,day:selectedDay,page:currentPage,scroll:$('main').scrollTop,revision:formRevision};
 }
@@ -550,19 +560,19 @@ function restoreDraft(){
  const draft=pausedDraft;pausedDraft=null;if(!draft||draft.actor!==user?.id||draft.diary!==diaryId||sharedAuth.isIdle())return;
  selectedDay=draft.day;visibleMonth=selectedDay.slice(0,7);formRevision=draft.revision;
  for(const [id,record]of Object.entries(draft.forms)){
-  const form=$(id);if(record.busy&&id!=='checkin-form')continue;
+  const form=$(id);if(!form)continue;
   form.reset();for(const control of form.elements)if(control.type==='checkbox')control.checked=false;for(const [name,value]of record.data){const control=form.elements[name];if(!control)continue;
    if(value instanceof File){if(value.size){try{const transfer=new DataTransfer();transfer.items.add(value);control.files=transfer.files;}catch{message('Bitte das Foto erneut auswählen. Deine übrigen Eingaben sind wieder da.',true);}}}
    else if(control.type==='checkbox')control.checked=true;else control.value=value;
   }
   if(record.dirty||record.busy)form.dataset.dirty='true';
-  if(record.busy&&id==='checkin-form')message('Deine Eingaben sind wieder da. Bitte prüfe den angezeigten Speicherstand, bevor du erneut speicherst.');
+  if(record.busy)message('Deine Eingaben sind wieder da. Der unterbrochene Vorgang kann bereits gespeichert worden sein. Bitte den Speicherstand und die Einträge prüfen, bevor du erneut speicherst.');
  }
  showPage(draft.page,false);renderCalendar();updateCheckinPreview();updateSaveState();requestAnimationFrame(()=>$('main').scrollTop=draft.scroll);
 }
 function bindWellbeingForms(){
  for(const id of ['profile-form','height-form'])$(id).addEventListener('input',()=>{$(id).dataset.dirty='true';});
- bindForm('profile-form',async(data,generation,form)=>{const payload=profilePayload(data),existing=await client.from('ab_preferences').select('user_id').maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_preferences').update(payload).eq('user_id',existing.data.user_id):await client.from('ab_preferences').insert(payload);fail(result.error);delete form.dataset.dirty;await loadSnapshot(generation);if(generation===epoch)message('Deine bestätigten Angaben wurden gespeichert.');});
+ bindForm('profile-form',async(data,generation,form)=>{const payload=profilePayload(data),existing=await client.from('ab_preferences').select('user_id').maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_preferences').update(payload).eq('user_id',existing.data.user_id):await client.from('ab_preferences').insert(payload);fail(result.error);if(generation!==epoch)return;delete form.dataset.dirty;await loadSnapshot(generation);if(generation===epoch)message('Deine bestätigten Angaben wurden gespeichert.');});
  bindForm('training-form',async(data,generation,form)=>{const result=await client.from('ab_training_sessions').insert(trainingPayload(data));fail(result.error);if(generation!==epoch)return;form.reset();form.elements.recorded_on.value=localDate();await loadSnapshot(generation);message('Dein Training ist gespeichert.');});
  bindForm('cycle-form',async(data,generation,form)=>{const payload=cyclePayload(data),existing=await client.from('ab_cycle_entries').select('id').eq('recorded_on',payload.recorded_on).maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_cycle_entries').update(payload).eq('id',existing.data.id):await client.from('ab_cycle_entries').insert(payload);fail(result.error);if(generation!==epoch)return;form.reset();form.elements.recorded_on.value=localDate();await loadSnapshot(generation);message('Dein Zykluseintrag ist gespeichert.');});
  bindForm('import-chat-form',async(data,generation,form)=>{const sourceDate=String(data.get('source_date')||'').trim();await assistant.run('chat',String(data.get('message')).trim(),{source:'import',sourceDate:sourceDate||null});if(generation===epoch){form.reset();$('ai-dialog').showModal();}});
@@ -658,6 +668,11 @@ async function start() {
   assistant = new Assistant({client,active:()=>Boolean(user&&diaryId&&!$('dashboard').hidden),error:message,onDataSaved:async saved=>{const before=latestAnalysis;await loadSnapshot();motivation?.show(before,latestAnalysis,{day:saved.recorded_on,enabled:preferences.motivation_enabled!==false,rapidLoss:weightTrend(snapshot.weights)?.rapidLoss});}});
   motivation=new Motivation({active:()=>Boolean(user&&diaryId&&!$('dashboard').hidden)});
   wellbeing=new WellbeingUI({onDelete:async(table,id)=>{const result=await client.from(table).delete().eq('id',id).select('id').single();fail(result.error);await loadSnapshot();},onError:message});
+  weeklyReport=new WeeklyReportUI({host:$('weekly-report'),onError:text=>message(text,true)});
+  const featureActive=()=>Boolean(user&&diaryId&&!$('dashboard').hidden&&!document.hidden&&window.unserZuhauseHidden!==true);
+  exerciseProgress=new TrainingProgressUI({client,host:$('exercise-progress'),isActive:featureActive,onSaved:()=>loadSnapshot(),onError:text=>message(typeof text==='string'?text:text.message,true)});
+  backupUI=new BackupUI({client,host:$('backup-tools'),isActive:featureActive,onSaved:()=>loadSnapshot(),onError:text=>message(typeof text==='string'?text:text.message,true)});
+  window.unserZuhausePlanning?.configure({getSession:async()=>{const result=await client.auth.getSession();return result.data?.session||null;}});
   bindWellbeingForms();
   dailyRecipes = new DailyRecipes({client,container:$('daily-recipes')});
   const initialized=await client.auth.initialize();

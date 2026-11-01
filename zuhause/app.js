@@ -80,9 +80,9 @@ const areas={garten:{path:'/garten/',title:'Garten'},rezepte:{path:'/rezepte/',t
 const frames=new Map();let activeArea='home',pendingArea=null,navigationTimer;
 function openArea(key,{historyEntry=true}={}){
  if(key!=='home'&&!Object.hasOwn(areas,key))key='home';
- if(activeArea==='abnehmen'&&key!==activeArea){
-  let saving=false;try{saving=Boolean(frames.get(activeArea)?.contentDocument?.querySelector('#checkin-form[data-busy]'));}catch{}
-   if(saving){pendingArea=key;byId('navigation-status').textContent='Einen Moment, dein Check-in wird noch gespeichert.';byId('navigation-status').hidden=false;clearTimeout(navigationTimer);navigationTimer=setTimeout(()=>openArea(pendingArea),180);return false;}
+ if(activeArea!=='home'&&key!==activeArea){
+  let saving=false;try{saving=Boolean(frames.get(activeArea)?.contentDocument?.querySelector('form[data-busy],form[aria-busy="true"],button[aria-busy="true"]'));}catch{}
+   if(saving){pendingArea=key;byId('navigation-status').textContent='Einen Moment, der laufende Vorgang wird noch abgeschlossen.';byId('navigation-status').hidden=false;clearTimeout(navigationTimer);navigationTimer=setTimeout(()=>openArea(pendingArea),180);return false;}
  }
  pendingArea=null;clearTimeout(navigationTimer);byId('navigation-status').hidden=true;activeArea=key;
  const home=key==='home';document.body.classList.toggle('app-open',!home);byId('frame-region').hidden=home;byId('shell-title').hidden=home;byId('shell-title').textContent=home?'':areas[key].title;
