@@ -1,41 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <defs>
-    <!-- Hintergrund Gradient (Dark Theme passend zur App) -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#292524" />
-      <stop offset="100%" stop-color="#1c1917" />
-    </linearGradient>
-    
-    <!-- Blatt Gradient (Leuchtendes GartenMutti-Grün) -->
-    <linearGradient id="leafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#238636" />
-      <stop offset="100%" stop-color="#3fb950" />
-    </linearGradient>
-    
-    <!-- Eleganter 3D-Schatten für Tiefe -->
-    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="4" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.45"/>
-    </filter>
-  </defs>
-
-  <!-- App-Hintergrund (Squircle / abgerundetes Viereck) -->
-  <rect width="512" height="512" rx="115" fill="url(#bgGrad)" />
-
-  <g filter="url(#dropShadow)">
-    <!-- Gabel (Modern, Silber/Weiß) -->
-    <!-- Zinken -->
-    <rect x="194" y="140" width="28" height="110" rx="14" fill="#f5f5f4" />
-    <rect x="242" y="130" width="28" height="140" rx="14" fill="#f5f5f4" />
-    <rect x="290" y="140" width="28" height="110" rx="14" fill="#f5f5f4" />
-    <!-- U-Bogen der Gabel -->
-    <path d="M 208 220 C 208 280, 304 280, 304 220" fill="none" stroke="#f5f5f4" stroke-width="28" stroke-linecap="round" />
-    <!-- Stiel der Gabel -->
-    <rect x="242" y="270" width="28" height="140" rx="14" fill="#f5f5f4" />
-
-    <!-- Blatt (Grün, rankt sich um den Stiel) -->
-    <!-- Dynamische Blattform -->
-    <path d="M 256 330 C 370 340, 440 250, 420 130 C 320 120, 240 200, 256 330 Z" fill="url(#leafGrad)" />
-    <!-- Blattader -->
-    <path d="M 256 330 Q 330 250, 400 150" fill="none" stroke="#1c1917" stroke-width="8" stroke-linecap="round" opacity="0.6" />
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Rezepte"><defs>
+<radialGradient id="berry" cx="42%" cy="30%" r="86%"><stop stop-color="#71143f"/><stop offset=".46" stop-color="#49072b"/><stop offset="1" stop-color="#210016"/></radialGradient>
+<radialGradient id="shine" cx="10%" cy="5%" r="90%"><stop stop-color="#e19ab6" stop-opacity=".16"/><stop offset=".7" stop-color="#e19ab6" stop-opacity="0"/></radialGradient>
+<linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="120" y1="100" x2="400" y2="420"><stop stop-color="#fff3d9"/><stop offset=".24" stop-color="#ffd9bb"/><stop offset=".5" stop-color="#d88f78"/><stop offset=".72" stop-color="#ffe2c5"/><stop offset="1" stop-color="#bb6c64"/></linearGradient>
+<linearGradient id="petal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff2dc"/><stop offset=".42" stop-color="#f9c6aa"/><stop offset="1" stop-color="#c9776f"/></linearGradient>
+<filter id="depth" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#16000c" flood-opacity=".65"/></filter>
+</defs><rect width="512" height="512" fill="url(#berry)"/><rect width="512" height="512" fill="url(#shine)"/><rect x="28" y="28" width="456" height="456" rx="105" fill="none" stroke="#d99b91" stroke-opacity=".2" stroke-width="2"/><g filter="url(#depth)"><ellipse cx="256" cy="271" rx="82" ry="102" fill="none" stroke="url(#gold)" stroke-width="14"/>
+<ellipse cx="256" cy="271" rx="57" ry="76" fill="none" stroke="#f6ccb0" stroke-width="2.5" opacity=".75"/>
+<path d="M132 166v65c0 20 9 31 24 31s24-11 24-31v-65m-24 0v216" fill="none" stroke="url(#gold)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M365 257v125" fill="none" stroke="url(#gold)" stroke-width="14" stroke-linecap="round"/>
+<ellipse cx="365" cy="210" rx="25" ry="48" fill="url(#gold)" stroke="#ffe0c3" stroke-width="2"/><g transform="translate(382 170) scale(.72)" fill="url(#petal)" stroke="#ffe4cd" stroke-width="1.6"><path d="M0 0C-22-22-24-43 0-65C24-43 22-22 0 0Z"/><path d="M0 0C22-22 43-24 65 0C43 24 22 22 0 0Z"/><path d="M0 0C22 22 24 43 0 65C-24 43-22 22 0 0Z"/><path d="M0 0C-22 22-43 24-65 0C-43-24-22-22 0 0Z"/><circle r="8" fill="url(#gold)"/></g><path d="M390 82c2 28 6 32 30 34-24 2-28 6-30 34-2-28-6-32-30-34 24-2 28-6 30-34Z" fill="url(#gold)"/></g></svg>

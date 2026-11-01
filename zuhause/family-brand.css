@@ -1,0 +1,2 @@
+.brand img.family-brand-icon{display:block;flex:0 0 36px;width:36px;height:36px;object-fit:cover;border-radius:10px;box-shadow:0 3px 10px #4b0b2825}
+@media(max-width:600px){.brand img.family-brand-icon{flex-basis:30px;width:30px;height:30px;border-radius:9px}}
