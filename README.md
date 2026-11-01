@@ -108,3 +108,8 @@ Start, Zurück, Vorwärts und ein auswählbarer Verlauf sind in der gemeinsamen 
 ### 📅 Zusammen planen, sicher begleiten
 
 Gemeinsamer privater Wochenplan mit Einkaufsliste, nachvollziehbare Erntevorschläge und verschlüsselte Sicherungen ergänzen die Apps. Ramonas Weg bietet eigene Seiten für Wochenbericht und Übungsprotokoll. Garten und Rezepte erhalten den aufklappbaren Dörrautomaten mit belegten Richtwerten für den Arendo 306526. Umfang, Grenzen und Bedienung stehen in der jeweiligen Bedienhilfe.
+
+
+## 🔗 Links und eure Profile
+
+READ und Impressum sind als Mint-/Pink-Neon-Schaltflächen hervorgehoben. Die bestätigten Instagram-, TikTok- und YouTube-Profile stehen in allen vier Oberflächen als neue Fenster bereit. Die [Link- und Teilprüfung](docs/links-und-teilen-2026-11-01.md) dokumentiert geprüfte Wege, behobene Fehler und die Grenzen externer Anbieter.

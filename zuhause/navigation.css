@@ -16,5 +16,8 @@ html.has-floating-navigation[data-navigation-host=hub].keyboard-open .frame-regi
 html.has-floating-navigation[data-navigation-host=standalone].navigation-has-bottom-menu .app-floating-navigation{bottom:calc(var(--app-navigation-dock) + 8px)}
 html.has-floating-navigation[data-navigation-host=standalone].navigation-has-bottom-menu .app-navigation-status{bottom:calc(var(--app-navigation-dock) + 76px)}
 html.has-floating-navigation[data-navigation-host=standalone] .floating-refresh{bottom:calc(var(--app-navigation-dock,0px) + 80px + env(safe-area-inset-bottom))}
+/* The dock and the floating row must both fit below the last footer controls. */
+html.has-floating-navigation[data-navigation-host=standalone]{scroll-padding-bottom:calc(var(--app-navigation-dock,0px) + 84px + env(safe-area-inset-bottom))}
+html.has-floating-navigation[data-navigation-host=standalone] .main-content{padding-bottom:max(155px,calc(var(--app-navigation-dock,0px) + 84px + env(safe-area-inset-bottom)));scroll-padding-bottom:calc(var(--app-navigation-dock,0px) + 84px + env(safe-area-inset-bottom))}
 html.has-floating-navigation[data-navigation-host=standalone] .notifications{bottom:calc(var(--app-navigation-dock,0px) + 76px + env(safe-area-inset-bottom))}
 @media(max-width:600px){html.has-floating-navigation[data-navigation-host=standalone].navigation-has-bottom-menu .floating-refresh{left:max(12px,env(safe-area-inset-left));right:auto;bottom:calc(var(--app-navigation-dock) + 12px)}}

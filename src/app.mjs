@@ -15,6 +15,7 @@ import { recoveryLinkState, recoveryRedirect, newPassword, clearRecoveryURL } fr
 import { WeeklyReportUI } from './weekly-report-ui.mjs';
 import { TrainingProgressUI } from './training-progress-ui.mjs';
 import { BackupUI } from './backup-ui.mjs';
+import { backupDownloadRealm } from './backup-download.mjs';
 
 const $ = id => document.getElementById(id);
 const formatNumber = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 });
@@ -371,10 +372,16 @@ function clearSharePreview() {
   if (shareUrl) URL.revokeObjectURL(shareUrl);
   shareUrl = null; $('share-preview').removeAttribute('src'); $('share-preview-panel').hidden = true;
 }
-function downloadShare() {
+async function downloadShare() {
   if (!shareBlob || !shareUrl) { message('Bitte zuerst eine Vorschau erstellen.', true); return; }
-  const link = node('a'); link.href = shareUrl; link.download = 'mein-fortschritt.jpg';
-  document.body.append(link); link.click(); link.remove();
+  const original = shareBlob, revision = shareRevision, generation = epoch;
+  const bytes = await original.arrayBuffer();
+  if (generation !== epoch || revision !== shareRevision || original !== shareBlob || !user || !$('share-dialog').open || window.unserZuhauseHidden === true) return;
+  const realm = backupDownloadRealm(), blob = new realm.Blob([bytes], { type: 'image/jpeg' });
+  const url = realm.URL.createObjectURL(blob), link = realm.document.createElement('a');
+  link.href = url; link.download = 'mein-fortschritt.jpg'; link.hidden = true;
+  try { realm.document.body.append(link); link.click(); }
+  finally { link.remove(); realm.setTimeout(() => realm.URL.revokeObjectURL(url), 30000); }
 }
 async function lockDiary(text = 'Nach 10 Minuten ohne Bedienung wurdest du abgemeldet.') {
   window.appNavigation?.reset();
@@ -428,13 +435,13 @@ function bindAdditionalFeatures() {
     shareBlob = blob; shareUrl = URL.createObjectURL(blob);
     $('share-preview').src = shareUrl; $('share-preview-panel').hidden = false;
   });
-  $('download-share').addEventListener('click', downloadShare);
+  $('download-share').addEventListener('click', () => busy($('download-share'), downloadShare));
   $('share-file').addEventListener('click', () => busy($('share-file'), async () => {
     if (!shareBlob) throw new Error('Bitte zuerst eine Vorschau erstellen.');
     const file = new File([shareBlob], 'mein-fortschritt.jpg', { type: 'image/jpeg' });
     if (navigator.canShare?.({ files: [file] })) {
       try { await navigator.share({ files: [file] }); } catch (error) { if (error.name !== 'AbortError') throw new Error('Das Teilen-Menü konnte nicht geöffnet werden. Bitte das Bild herunterladen.'); }
-    } else downloadShare();
+    } else await downloadShare();
   }));
   bindForm('height-form', async (data, generation) => {
     const height = numberValue(data.get('height_cm'), 260);

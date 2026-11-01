@@ -1,0 +1,14 @@
+/* A static neon sign: bright contrast without flashing or continuous repaint. */
+.legal-neon[data-neon-legal]{--legal-neon:#75ffbf!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-height:44px!important;max-width:100%!important;margin:5px 4px!important;padding:10px 13px!important;border:2px solid var(--legal-neon)!important;border-radius:12px!important;background:#111c22!important;color:#d1ffe6!important;box-shadow:0 0 0 1px #75ffbf38,0 0 13px #75ffbf42,inset 0 0 12px #75ffbf16!important;text-shadow:0 0 8px #75ffbf55!important;font-weight:800!important;line-height:1.35!important;letter-spacing:.025em!important;text-decoration:none!important;white-space:normal!important;overflow-wrap:anywhere!important;text-align:center!important;vertical-align:middle!important}
+.legal-neon[data-neon-legal="legal"]{--legal-neon:#ff8ce7!important;color:#ffe0f8!important;box-shadow:0 0 0 1px #ff8ce738,0 0 13px #ff8ce742,inset 0 0 12px #ff8ce716!important;text-shadow:0 0 8px #ff8ce755!important}
+.legal-neon[data-neon-legal="read"]::before{content:"READ";flex:0 0 auto;padding:3px 5px;border:1px solid currentColor;border-radius:5px;font:900 10px/1.2 system-ui;letter-spacing:.09em}
+.legal-neon[data-neon-legal]:hover{filter:brightness(1.13)}
+.legal-neon[data-neon-legal]:focus-visible{outline:3px solid #fff!important;outline-offset:4px!important}
+.legal-neon.legal-neon-compact[data-neon-legal]{flex-shrink:0!important;width:44px!important;min-width:44px!important;padding:7px!important;margin:0!important}
+.legal-neon.legal-neon-compact[data-neon-legal]::before{content:none}
+.legal-neon[hidden]{display:none!important}
+html[data-app-shell="unser-zuhause-v1"] .page-shell>main>footer{display:flex;flex-wrap:wrap;gap:10px}
+html[data-app-shell="unser-zuhause-v1"] .page-shell>main>footer>p{flex:1 0 100%}
+html[data-app-shell="unser-zuhause-v1"] .page-shell>main>footer>.legal-neon{flex:1 1 140px;word-break:normal!important;overflow-wrap:normal!important;margin:3px 0!important}
+@media(max-width:420px){.legal-neon[data-neon-legal]{padding:9px 10px!important;font-size:12px!important;gap:6px!important;margin:5px 3px!important}.legal-neon.legal-neon-compact[data-neon-legal]{padding:6px!important}}
+@media(forced-colors:active){.legal-neon[data-neon-legal]{border-color:ButtonText!important;background:Canvas!important;color:LinkText!important;box-shadow:none!important;text-shadow:none!important;forced-color-adjust:auto}}

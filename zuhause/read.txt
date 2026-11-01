@@ -29,7 +29,7 @@ Der Wochen-Check-in zeigt Datum, Gewicht, bestätigte Körpergröße, Körperma�
 BMI wird direkt aus tatsächlichem Gewicht und eingetragener Körpergröße berechnet. Fehlende Angaben bleiben offen. Der BMI misst weder Körperfett noch Gesundheit. Verlauf, Wohlbefinden, Kraft und ein längerfristig tragfähiger Alltag sind ebenfalls wichtig. Zyklusschwankungen können Wassergewicht verändern; die App erfindet dafür keine Korrekturwerte. Training an Belastbarkeit und Beschwerden anpassen. Bei Schwindel, Schmerzen, starker Erschöpfung oder ungewöhnlich schnellem Gewichtsverlust ärztlich abklären lassen. Nach bereits großer Gewichtsabnahme ist eine ärztliche bzw. qualifizierte ernährungsmedizinische Begleitung sinnvoll. Keine extremen Defizite oder schnellen Abnahmeversprechen.
 
 CHATGPT UND ANDERE KI
-BMI und grundlegende Diagramme funktionieren ohne KI. Der Begleiter in Ramonas Weg kann nach Einrichtung eines eigenen OpenAI-API-Schlüssels aktuelle App-Daten für Tipps und den App-Chat verarbeiten. Eindeutige Datums- und Messangaben können kontrolliert gespeichert werden; fehlende wichtige Angaben werden erfragt. Fortschrittsfotos werden nicht an OpenAI gesendet. Andere normale ChatGPT-Unterhaltungen sind der App nicht automatisch bekannt.
+BMI und grundlegende Diagramme funktionieren ohne KI. Der Begleiter in Ramonas Weg kann nach Einrichtung und Auswahl eines gemeinsamen OpenAI- oder Gemini-Zugangs aktuelle App-Daten für Tipps und den App-Chat verarbeiten. Eindeutige Datums- und Messangaben können kontrolliert gespeichert werden; fehlende wichtige Angaben werden erfragt. Fortschrittsfotos werden dem Abnehm-KI-Begleiter nicht übermittelt. Andere normale ChatGPT-Unterhaltungen sind der App nicht automatisch bekannt.
 
 Garten und Rezepte verwenden getrennt verwaltete Familienzugänge zu OpenAI oder Google Gemini. Dort werden Fragen bzw. ausgewählte verkleinerte Bilder erst nach dem Absenden an den gewählten Anbieter übermittelt. Schlüssel gehören ausschließlich in die geschützten Einstellungen, niemals in Chat, GitHub oder eine öffentliche Datei. Die API kostet separat vom ChatGPT-Abo. Eine Verbindung und ein gültiger Zugang mit ausreichendem Anbieterbudget sind erforderlich. KI kann sich irren; wichtige Ratschläge und gespeicherte Angaben prüfen.
 
@@ -71,4 +71,11 @@ Grenzen: 64 MiB Sicherungsdatei und 40 MiB Bilddaten. Fehlende Bilder oder zu gr
 🌱 Garten bietet außerdem Eigenes Saatgut gewinnen. Rezepte enthält neue Eintöpfe sowie Vorschläge für Vorspeisen und Desserts.
 
 ZENTRALE KI-ZUGÄNGE
-🔐 KI-Zugänge verwalten wird mit dem aktuellen App-Passwort entsperrt. Nur die vorhandene Familienverwaltung mit privater Tagebuchfreigabe darf Schlüssel ändern. Die zusätzliche Sitzung bleibt nur kurz im Arbeitsspeicher und wird beim Schließen beendet. OpenAI wird gemeinsam für alle drei Apps gespeichert; Gemini ist für Garten und Rezepte verfügbar. Ramonas Begleiter nutzt OpenAI. Die Schlüssel sind kein Bestandteil von Sicherungen.
+🔐 KI-Zugänge verwalten wird mit dem aktuellen App-Passwort entsperrt. Nur die vorhandene Familienverwaltung mit privater Tagebuchfreigabe darf Schlüssel ändern. Die zusätzliche Sitzung bleibt nur kurz im Arbeitsspeicher und wird beim Schließen beendet. OpenAI und Gemini sind in allen drei Apps gemeinsam verwendbar. Nach dem Hinterlegen wählt jede Person ihren Anbieter für alle drei Apps. Es wird pro Anfrage nur dieser Anbieter aufgerufen. Der ausgewählte Anbieter verarbeitet die benötigten App-Textdaten, einschließlich Messwerten, App-Chat und freiwilligen Zyklusangaben. Private Fortschrittsfotos erhält der Abnehm-Begleiter nicht. Datenschutz- und Budgeteinstellungen des API-Projekts bitte prüfen; die API wird getrennt vom ChatGPT-Abo abgerechnet. Die Schlüssel sind kein Bestandteil von Sicherungen.
+
+
+DEINE KANÄLE UND NEON-HILFE
+READ/Bedienhilfe leuchtet in Mint, Impressum in Pink. Die drei bestätigten Profil-Schaltflächen öffnen sich getrennt, ohne App-Daten oder den Seitenverweis zu übermitteln:
+Instagram: https://www.instagram.com/diegartenmutti86/
+TikTok: https://www.tiktok.com/@gartenmutti86
+YouTube: https://youtube.com/@diemutti86

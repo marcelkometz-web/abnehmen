@@ -1,0 +1,9 @@
+.confirmed-socials{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;min-width:0;flex:1 0 100%;margin:16px 0 4px!important;padding:0!important}
+.confirmed-socials>.social-profile{box-sizing:border-box;display:flex!important;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:46px;padding:11px 13px;border:1px solid #ffffff40;border-radius:13px;font:750 13px/1.4 system-ui;text-align:center;text-decoration:none!important;letter-spacing:.015em;white-space:normal;color:#fff!important;box-shadow:0 4px 12px #11182718;overflow-wrap:anywhere}
+.social-profile svg{width:23px;height:23px;flex:0 0 23px}
+.confirmed-socials>.social-profile-instagram{background:linear-gradient(115deg,#7c24ba,#bc215b 65%,#a63d15)}
+.confirmed-socials>.social-profile-tiktok{background:#121b20;border-color:#6df1e2;box-shadow:2px 2px 0 #ff66a74d,-2px -2px 0 #6df1e24d;color:#dffffb!important}
+.confirmed-socials>.social-profile-youtube{background:#b91c28}.social-profile-youtube svg{color:#ef2036}
+.confirmed-socials>.social-profile:hover{filter:brightness(1.12)}.confirmed-socials>.social-profile:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(max-width:520px){.confirmed-socials{grid-template-columns:minmax(0,1fr);gap:9px}.confirmed-socials>.social-profile{margin:0!important}}
+@media(forced-colors:active){.confirmed-socials>.social-profile{border:2px solid LinkText;background:Canvas;color:LinkText!important;box-shadow:none;forced-color-adjust:auto}}
