@@ -44,3 +44,8 @@ WhatsApp- und Social-Media-Ziele wurden abgefangen und kontrolliert; es wurde ke
 Statische Downloads wurden zusätzlich über einen echten HTTP-Testserver mit Dateibytes geprüft: Bei allein durch Playwright abgefangenen Hosts melden manche Chromium-Downloads künstlich „canceled“. WebKit und der echte HTTP-Test bestanden; veröffentlichte Textziele lieferten HTTP 200. Drei NHS-Referenzen lieferten HTTP 200. Ein WHO-Referenzziel meldete aus der Testumgebung HTTP 403; seine korrekte Verlinkung wurde geprüft, eine allgemeine Erreichbarkeit wird nicht behauptet. Die bestätigten Social-Profile können Login, Alters-/Regionalprüfung oder die native App verlangen.
 
 Diese Prüfung reduziert konkrete Fehler, garantiert aber weder jedes Betriebssystem noch 100 % Fehlerfreiheit bei jedem externen Anbieter und Gerät.
+
+
+## Nachtrag: eingebettete Ansicht mit sichtbarem KI-Tipp
+
+Die spätere [Prüfung der mobilen Tagebuch-Fußleiste](mobile-footer-2026-11-01.md) fand einen zusätzlichen Fehler im Zusammenspiel von angemeldetem Konto, langem KI-Tipp und den neuen Schaltflächen. Die feste Fußleiste wurde zu groß und verdrängte den Check-in. Hilfe und Profile sind jetzt im scrollbaren Inhalt; nur der kompakte KI-Bereich bleibt unten. Der gezielte Regressionslauf prüft die tatsächlich verfügbare Eingabefläche und die Körperbreite zusätzlich zu den einzelnen Links.
