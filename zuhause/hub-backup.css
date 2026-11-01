@@ -12,3 +12,5 @@ html.hub-backup-open body,html.hub-backup-open .page-shell>main{overflow:hidden!
 @media(prefers-reduced-motion:reduce){.hub-backup-dialog *{scroll-behavior:auto!important;transition:none!important}}
 
 .home-tools{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}.home-tool-button{flex:1 1 230px;min-height:48px;padding:12px 16px;border:1px solid var(--line,#d5ddd0);border-radius:15px;background:var(--paper,#fffefa);color:var(--green,#2f5643);font:600 13px/1.6 system-ui;text-align:left;cursor:pointer}.home-tool-button:hover{background:var(--home-soft,#e8eee1)}
+
+.hub-backup-body select{box-sizing:border-box;display:block;width:100%;min-width:0;min-height:46px;padding:11px 12px;border:1px solid var(--theme-line,var(--line,#d4ddce));border-radius:11px;background:var(--theme-paper,var(--paper,#fffefa));color:var(--theme-ink,var(--ink,#263c33));font:400 16px/1.45 system-ui}

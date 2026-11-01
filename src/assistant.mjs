@@ -63,17 +63,19 @@ export class Assistant {
     if (!this.active()) return;
     const revision = this.revision;
     const [config, messages, tip] = await Promise.all([
-      this.client.rpc('ab_ai_config', { action: 'status' }),
+      this.client.rpc('ab_shared_ai_status'),
       this.client.from('ab_ai_messages').select('role,content,created_at').order('created_at', { ascending: false }).order('sequence', { ascending: false }).limit(60),
       this.client.from('ab_ai_tips').select('content,created_at').maybeSingle()
     ]);
     if (revision !== this.revision || !this.active()) return;
     if (config.error || messages.error || tip.error) throw new Error('Der Begleiter konnte nicht geladen werden.');
     this.configured = Boolean(config.data.configured);
-    $('ai-key-status').textContent = this.configured ? `Schlüssel hinterlegt · ${config.data.model}` : 'Noch kein OpenAI-Schlüssel hinterlegt.';
-    $('remove-ai-key').hidden = !this.configured;
+    this.sharedProvider = config.data.shared === true;
+    $('ai-key-form').hidden = this.sharedProvider;
+    $('ai-key-status').textContent = this.configured ? `${this.sharedProvider ? 'Gemeinsamer Zugang' : 'Bisheriger OpenAI-Zugang'} · ${config.data.provider === 'gemini' ? 'Gemini' : 'OpenAI'} · ${config.data.model}` : 'Noch kein KI-Schlüssel hinterlegt. Zugang unter Zuhause → KI-Zugänge einrichten.';
+    $('remove-ai-key').hidden = !this.configured || this.sharedProvider;
     const currentTip=readAssistantContent(tip.data?.content);
-    const hint = currentTip.text || (this.configured ? 'Ein neuer Tipp wird aus deinen Einträgen erstellt.' : 'Für persönliche KI-Tipps und Chat zuerst den OpenAI-Schlüssel in den Einstellungen hinterlegen.');
+    const hint = currentTip.text || (this.configured ? 'Ein neuer Tipp wird aus deinen Einträgen erstellt.' : 'Für persönliche KI-Tipps und Chat zuerst den API-Schlüssel unter Zuhause → KI-Zugänge hinterlegen.');
     $('ai-tip-preview').textContent = hint;
     $('ai-tip-preview').title=currentTip.evidence?'Tipp vom '+new Date(currentTip.evidence.at).toLocaleString('de-DE')+' · Datenbasis im Chat öffnen':'Datenbasis im Chat öffnen';
     $('ai-current-tip').textContent = currentTip.text;
@@ -105,7 +107,7 @@ export class Assistant {
     if (this.pending) throw new Error('Bitte die laufende Antwort abwarten.');
     if (/\bsk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{16,}\b|\bAIza[A-Za-z0-9_-]{25,}\b/.test(message || '')) throw new Error('Bitte API-Schlüssel nur im geschützten Schlüsselfeld hinterlegen.');
     // Explicit entries can be saved without a provider key; the server validates them first.
-    if (!this.configured && action === 'tips') { $('ai-settings').open = true; throw new Error('Bitte zuerst den OpenAI-Schlüssel in den Einstellungen hinterlegen.'); }
+    if (!this.configured && action === 'tips') { $('ai-settings').open = true; throw new Error('Bitte zuerst den API-Schlüssel unter Zuhause → KI-Zugänge hinterlegen.'); }
     const revision = this.revision, signature = JSON.stringify({ action, message, extra });
     if (!this.retry || this.retry.signature !== signature) this.retry = { signature, operationId: crypto.randomUUID() };
     const operationId = this.retry.operationId;

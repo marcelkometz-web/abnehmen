@@ -35,17 +35,18 @@ Die Regeln werden serverseitig über RLS, eine administrativ verwaltete Freigabe
 
 Projektadministratoren mit Datenbank-/Service-Zugriff bleiben technisch privilegiert. Die Daten sind nicht Ende-zu-Ende verschlüsselt. Programmcode und öffentliche Publishable-Keys dürfen öffentlich sein; reale Messdaten, Fotos, Tokens, private Backups und Anbieter-Schlüssel gehören niemals ins Repository.
 
-## OpenAI einrichten
+## 🔐 Gemeinsame KI-Zugänge einrichten
 
-1. Mit einem der beiden freigegebenen Konten anmelden.
-2. Den ChatGPT-Begleiter öffnen, dann **OpenAI-Schlüssel verwalten**.
-3. Einen eigenen OpenAI-API-Schlüssel eingeben und verschlüsselt speichern. Keinen Schlüssel in Chat, Code oder GitHub einfügen.
+1. In einer App mit einem freigegebenen Konto anmelden und **Zuhause → KI-Zugänge verwalten** öffnen.
+2. Mit dem aktuellen App-Passwort erneut entsperren. Diese separate Sitzung bleibt nur im Arbeitsspeicher, gilt höchstens vier Minuten und wird beim Schließen beendet.
+3. Die Familienverwaltung hinterlegt den OpenAI- und/oder Gemini-API-Schlüssel einmalig. Die Schlüssel liegen verschlüsselt in Supabase Vault; der Browser erhält danach nur den Einrichtungsstatus. Keine Schlüssel in Chat, GitHub oder Sicherungsdateien kopieren.
+4. Jede freigegebene Person wählt ihren Anbieter für alle drei Apps. Garten und Rezepte behalten ihre vorhandene Modellwahl; Ramonas Begleiter verwendet `gpt-6-luna` beziehungsweise `gemini-3.1-flash-lite`. Pro Anfrage wird nur ein Anbieter aufgerufen, ohne automatischen kostenpflichtigen Wechsel bei einem Fehler.
 
-Der Schlüssel liegt verschlüsselt in Supabase Vault. Browser können ihn speichern/ersetzen oder entfernen, aber niemals wieder auslesen. Die Edge Function `abnehmen-ai` ruft OpenAI mit einem ausschließlich serverseitig geladenen Schlüssel auf. Die bestehenden Garten-/Rezepte-KI-Schlüssel werden nicht übernommen oder geändert.
+Ein bisheriger separater OpenAI-Zugang bleibt im Tagebuch nutzbar, solange kein eingerichteter gemeinsamer Anbieter ausgewählt ist. Einen gemeinsamen Schlüssel entfernt man nicht über die alte lokale Tagebuchverwaltung. Die zentrale Einrichtung ersetzt nur den ausdrücklich eingegebenen Anbieterschlüssel; vorhandene Schlüsselwerte werden niemals gelesen oder exportiert.
 
-Aktuelles Modell: `gpt-6-luna`, Responses API, `store: false`. Übermittelt werden Messwert-Verläufe, Auswertungen, freiwillige Profil-/Zyklusangaben, absolvierte Trainings, jüngere Notizen und der relevante App-Chat samt KI-Merkliste. **Keine Fotos, Foto-URLs, Kontoadressen oder Auth-IDs werden an OpenAI gesendet.** Andere ChatGPT-Unterhaltungen sind der App nicht automatisch bekannt. `store: false` ist keine Zusage einer allgemeinen Null-Aufbewahrung durch den Anbieter. Die API wird unabhängig von einem ChatGPT-Abo berechnet. Grenzen: fünf Anfragen pro Minute und hundert pro Tag für das gemeinsame Tagebuch; zusätzlich ein OpenAI-Projektbudget festlegen.
+Der Abnehm-Begleiter übermittelt Messwert-Verläufe, berechnete Auswertungen, freiwillige Profil-/Zyklusangaben, absolvierte Trainings, jüngere Notizen und den relevanten App-Chat. **Keine Fortschrittsfotos, Foto-URLs, Kontoadressen oder Auth-IDs gehen an diesen Begleiter.** Andere ChatGPT-Unterhaltungen sind nicht verbunden. Der Anbieter verarbeitet die übermittelten Daten nach seinen API-Bedingungen; OpenAI `store:false` bedeutet keine allgemeine Null-Aufbewahrung. [Gemini-Nutzungsbedingungen](https://ai.google.dev/gemini-api/terms) unterscheiden Dienst-/Regionenbedingungen und beschreiben die Datenverarbeitung. Die App kann den Vertrag oder die Abrechnung eines API-Projekts nicht selbst prüfen.
 
-Chat und KI-Merkliste lassen sich gemeinsam löschen; das Entfernen des Schlüssels deaktiviert weitere API-Aufrufe. BMI und grundlegende Auswertungen funktionieren auch ohne KI.
+API-Nutzung wird unabhängig vom ChatGPT-Abo abgerechnet. Die Tagebuchgrenzen bleiben fünf Anfragen pro Minute und hundert pro Tag; zusätzlich beim Anbieter Kosten und Budget kontrollieren. BMI, grundlegende Auswertungen und bestätigte Dateneingaben funktionieren auch ohne KI.
 
 ## Entwicklung
 
@@ -58,7 +59,7 @@ npm start
 
 `npm start` öffnet einen lokalen Server auf `http://127.0.0.1:4173`. Der fertige Build liegt als `app.js` neben `index.html` und kann statisch ausgeliefert werden. `config.json` enthält ausschließlich öffentliche Projektinformationen. Keine Drittanbieter-Skripte, Fonts oder Besucheranalyse werden im Browser nachgeladen.
 
-Die SQL-Dateien unter `supabase/migrations/` dokumentieren ausschließlich additive Änderungen für Abnehmen. Sie wurden mit der Supabase-CLI benannt und über MCP am Garten-Projekt angewendet. Die einmalige Zuordnung der beiden realen Konten erfolgte separat und wird nicht mit privaten Identitäten eingecheckt. Von diesem separaten Repository aus **kein ungeprüftes `supabase db push`** auf das geteilte Projekt ausführen: dessen bereits bestehende Garten-Migrationshistorie muss berücksichtigt werden. Bestehende Garten-/Rezept-Tabellen, Konten und Schlüssel wurden nicht geändert.
+Die SQL-Dateien unter `supabase/migrations/` dokumentieren ausschließlich additive Änderungen für Abnehmen. Sie wurden mit der Supabase-CLI benannt und über MCP am Garten-Projekt angewendet. Die einmalige Zuordnung der beiden realen Konten erfolgte separat und wird nicht mit privaten Identitäten eingecheckt. Von diesem separaten Repository aus **kein ungeprüftes `supabase db push`** auf das geteilte Projekt ausführen: dessen bereits bestehende Garten-Migrationshistorie muss berücksichtigt werden. Bestehende Kontofreigaben bleiben unverändert. Neue Planung, Übungsprotokolle, Sicherungsfunktionen und zentrale KI-Verwaltung sind separat dokumentiert; neue Schlüssel werden ausschließlich auf eine ausdrückliche Nutzereingabe hin gesetzt.
 
 Unter `supabase/tests/` liegen echte PostgreSQL-Zugriffstests mit vollständigem Rollback. Sie prüfen gemeinsame Nutzung, gesperrte App-Freigaben, anonyme Zugriffe, ungültige/abgelaufene Sitzungen, fremde Fotoordner, Selbstfreigaben, API-Schlüsselrechte und Anfragegrenzen. Testbilder und Messwerte werden nicht dauerhaft angelegt.
 
