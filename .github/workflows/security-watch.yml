@@ -1,0 +1,27 @@
+name: Private access check (24 hours)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,17,27,37,47,57 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-watch
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Check the configured observation window
+        env:
+          SUPABASE_MONITOR_TOKEN: ${{ secrets.SUPABASE_MONITOR_TOKEN }}
+          SECURITY_WATCH_STARTED_AT: ${{ vars.SECURITY_WATCH_STARTED_AT }}
+        run: python3 scripts/security-watch.py
