@@ -7,3 +7,6 @@ supabase/.branches/
 backups/
 test-results/
 playwright-report/
+
+__pycache__/
+*.pyc

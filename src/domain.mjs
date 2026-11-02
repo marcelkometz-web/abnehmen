@@ -7,7 +7,8 @@ export function localDate(now = new Date()) {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 export function dateValue(value) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || value < '2000-01-01' || value > '2100-12-31' || new Date(value + 'T12:00:00Z').toISOString().slice(0, 10) !== value) {
+  const date=new Date(value + 'T12:00:00Z');
+  if (typeof value!=='string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || value < '2000-01-01' || value > '2100-12-31' || !Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== value) {
     throw new Error('Bitte ein gültiges Datum eingeben.');
   }
   return value;

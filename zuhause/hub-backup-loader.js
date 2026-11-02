@@ -9,8 +9,8 @@
   event.preventDefault();if(pending)return;
   if(!status){status=document.createElement('p');status.className='hub-backup-load-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');(trigger.closest('.home-tools')||trigger).after(status);}
   const turn=epoch;status.hidden=false;status.textContent='Sicherung wird geöffnet …';trigger.disabled=true;trigger.setAttribute('aria-busy','true');
-  source.search='?v=20261101&load='+ ++attempt;
-  try{pending=import(source.href);await pending;if(turn===epoch&&!document.hidden&&!document.getElementById('main')?.hidden)await window.unserZuhauseBackup.open();status.hidden=true;}
+  source.search='?v=20261102-audit&load='+ ++attempt;
+  try{pending=import(source.href);await pending;if(turn===epoch&&!document.hidden&&!document.body.classList.contains('app-open')&&!document.querySelector('dialog[open]'))await window.unserZuhauseBackup.open();status.hidden=true;}
   catch{if(turn===epoch){status.hidden=false;status.textContent='Die Sicherung konnte gerade nicht geladen werden. Bitte die Verbindung prüfen und erneut auf die Schaltfläche tippen.';}}
   finally{pending=null;trigger.disabled=false;trigger.removeAttribute('aria-busy');}
  });

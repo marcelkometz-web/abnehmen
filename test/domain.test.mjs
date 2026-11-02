@@ -10,6 +10,9 @@ test('historical inputs, decimal commas and measurement validation',()=>{
   assert.throws(()=>measurementsPayload(new Map([['recorded_on','2020-01-01']])));
   assert.throws(()=>weightPayload(new Map([['recorded_on','2020-01-01'],['weight_kg','-4']])));
 });
+test('malformed dates always have a readable validation error',()=>{
+ for(const value of ['2026-13-01','2026-01-32','2026-00-12','2025-02-29','',null,undefined])assert.throws(()=>dateValue(value),/Bitte ein gültiges Datum eingeben/);
+});
 test('BMI and summaries use observation dates, including backfills and sparse measurements',()=>{
   const a=analyze(snapshot,200,'2025-02-15');assert.equal(a.bmi,20);assert.equal(a.latest.weight_kg,80);assert.equal(a.first.weight_kg,90);assert.equal(a.weeklyAverage,80.5);assert.equal(a.weightChange,-10);assert.equal(a.circumferenceChanges.find(x=>x.field==='waist_cm').change,-5);
   assert.equal(analyze(snapshot,null,'2025-02-15').bmi,null);

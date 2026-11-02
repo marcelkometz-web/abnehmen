@@ -26,10 +26,10 @@
 <link rel="stylesheet" href="/abnehmen/zuhause/navigation.css?v=20261101-links">
 <script src="/abnehmen/zuhause/navigation.js?v=20261101-refinement" defer></script>
 <link rel="stylesheet" href="/abnehmen/zuhause/planning.css?v=20261101">
-<script src="/abnehmen/zuhause/planning.js?v=20261101" defer></script>
+<script src="/abnehmen/zuhause/planning.js?v=20261102-audit" defer></script>
 <link rel="stylesheet" href="/abnehmen/zuhause/backup-envelope.css?v=20261101">
 <script src="/abnehmen/zuhause/backup-envelope.js?v=20261101" defer></script>
-<script src="./app.js?v=20261101-links" type="module"></script>
+<script src="./app.js?v=20261102-audit" type="module"></script>
 <link href="./layout.css?v=20261101-footer-fix" rel="stylesheet"/><link rel="stylesheet" href="./refinements.css?v=20261101"><link rel="stylesheet" href="/abnehmen/zuhause/legal-highlight.css?v=20261101"><script defer src="/abnehmen/zuhause/legal-highlight.js?v=20261101"></script>
 <link rel="stylesheet" href="/abnehmen/zuhause/social-links.css?v=20261101"><script defer src="/abnehmen/zuhause/social-links.js?v=20261101-profiles"></script>
 </head>
@@ -119,13 +119,13 @@
 <dialog class="ai-dialog" id="ai-dialog">
 <div class="dialog-toolbar"><button class="quiet" id="close-ai" type="button">Schließen</button></div><h2>Dein ChatGPT-Begleiter</h2>
 <p class="ai-current-tip" id="ai-current-tip"></p>
-<p class="hint">Der Begleiter erhält deine Messwerte, Notizen und den App-Chat über die OpenAI-API. Fotos werden nicht übertragen. Beide freigegebenen Konten können den gemeinsamen Chat lesen. KI-Tipps ersetzen keine medizinische Beratung.</p>
+<p class="hint">Der Begleiter erhält deine Messwerte, Notizen und den App-Chat über die API deines gewählten Anbieters (OpenAI oder Gemini). Fotos und Foto-Links werden nicht übertragen. Beide freigegebenen Konten können den gemeinsamen Chat lesen. KI-Tipps ersetzen keine medizinische Beratung.</p>
 <p class="hint">Eindeutige Messwerte, abgeschlossene Trainings und Periodenbeginn mit tatsächlichem Datum kann die App direkt speichern. Bei Unklarheiten fragt sie nach. Beispiel: „Ramona wiegt heute 82 kg.“ Der BMI wird aus den gespeicherten Werten berechnet.</p><div aria-live="polite" class="ai-history" id="ai-history"></div>
 <form id="ai-form"><label>Deine Nachricht<textarea maxlength="4000" name="message" placeholder="Was beschäftigt dich heute?" required="" rows="3"></textarea></label><button type="submit">Nachricht senden</button></form>
 <p class="hint" id="ai-error" role="status"></p>
 <div class="actions"><button class="quiet" id="refresh-tip" type="button">Tipp aktualisieren</button><button class="danger" id="clear-ai" type="button">Chat und KI-Merkliste löschen</button></div>
 <details id="ai-settings"><summary>KI-Zugang verwalten</summary><p class="hint" id="ai-key-status"></p><p class="hint">Die API wird unabhängig vom ChatGPT-Abo berechnet. App-Limit: 5 Anfragen pro Minute und 100 pro Tag. Zusätzlich beim gewählten Anbieter ein Budget festlegen. Der Schlüssel wird verschlüsselt gespeichert und nicht wieder angezeigt.</p>
-<p class="hint">Gemeinsame Gemini- und OpenAI-Zugänge verwaltet ihr unter <a href="./zuhause/" target="_top">Zuhause → KI-Zugänge</a>. Dort wählt ihr auch euren Anbieter für alle drei Apps. Ohne gemeinsamen Zugang bleibt ein bisheriger OpenAI-Zugang nutzbar.</p><form id="ai-key-form"><label>OpenAI-API-Schlüssel<input autocomplete="off" name="api_key" placeholder="sk-…" required="" spellcheck="false" type="password"/></label><button type="submit">Schlüssel verschlüsselt speichern</button></form><button class="danger" id="remove-ai-key" type="button">Schlüssel entfernen und KI deaktivieren</button>
+<p class="hint">Gemini- und OpenAI-Zugänge verwaltet ihr zentral unter <a href="./zuhause/" target="_top">Zuhause → KI-Zugänge</a>. Änderungen an Schlüsseln erfordern dort eine erneute Passwortbestätigung und die Familienverwaltung. Euren persönlichen Anbieter könnt ihr dort für alle drei Apps auswählen.</p>
 </details>
 </dialog>
 <dialog class="share-dialog" id="share-dialog">

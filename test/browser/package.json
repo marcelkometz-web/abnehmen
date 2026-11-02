@@ -1,0 +1,17 @@
+{
+  "name": "family-app-browser-audit",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "playwright": "1.64.1"
+  },
+  "scripts": {
+    "test:public": "node public-check.mjs",
+    "test:diary": "node diary-flow.mjs",
+    "test:garden": "node garden-audit.mjs",
+    "test:hub-ai": "node hub-ai-session-browser.mjs && node hub-ai-management-browser.mjs",
+    "test:hub-lazy": "node hub-lazy-regression.mjs",
+    "test:recipes": "node recipe-regression.mjs && node recipe-egg-regression.mjs",
+    "test:public-controls": "node public-controls.mjs"
+  }
+}

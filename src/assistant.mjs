@@ -23,32 +23,15 @@ export class Assistant {
     $('open-ai').addEventListener('click', () => { $('ai-dialog').showModal(); this.load().catch(() => this.setError('Der Begleiter konnte nicht geladen werden.')); });
     $('close-ai').addEventListener('click', () => $('ai-dialog').close());
     $('ai-form').addEventListener('submit', event => {
-      event.preventDefault(); const message = String(new FormData(event.target).get('message')).trim();
-      this.run('chat', message).then(() => { if (this.active()) event.target.reset(); }).catch(error => this.setError(error.message));
+      event.preventDefault(); const form=event.target, original=form.elements.message.value, revision=this.revision;
+      const message=original.trim();
+      this.run('chat', message).then(() => { if (revision===this.revision&&this.active()&&form.elements.message.value===original) form.reset(); }).catch(error => {if(revision===this.revision&&this.active())this.setError(error.message);});
     });
     $('refresh-tip').addEventListener('click', () => this.run('tips').catch(error => this.setError(error.message)));
     $('clear-ai').addEventListener('click', () => {
       if (confirm('Den gemeinsamen App-Chat, die KI-Merkliste und den gespeicherten Tipp für euch beide löschen?')) this.run('clear').catch(error => this.setError(error.message));
     });
-    $('ai-key-form').addEventListener('submit', async event => {
-      event.preventDefault(); const form = event.target, key = String(new FormData(form).get('api_key')).trim();
-      const revision = this.revision, button = form.querySelector('button'); button.disabled = true;
-      try {
-        const result = await this.client.rpc('ab_ai_config', { action: 'set', new_key: key });
-        if (result.error) throw new Error('Der Schlüssel konnte nicht gespeichert werden. Bitte Anmeldung und Schlüsselformat prüfen.');
-        if (revision !== this.revision || !this.active()) return;
-        await this.load(); this.setError('Schlüssel verschlüsselt gespeichert.'); this.schedule();
-      } catch (error) { if (revision === this.revision) this.setError(error.message); }
-      finally { form.reset(); button.disabled = false; }
-    });
-    $('remove-ai-key').addEventListener('click', async () => {
-      if (!confirm('Den gespeicherten OpenAI-Schlüssel entfernen und KI-Anfragen deaktivieren?')) return;
-      const revision = this.revision;
-      const result = await this.client.rpc('ab_ai_config', { action: 'remove' });
-      if (revision !== this.revision) return;
-      if (result.error) this.setError('Der Schlüssel konnte nicht entfernt werden.');
-      else { this.configured = false; clearTimeout(this.timer); await this.load().catch(() => {}); this.setError('KI deaktiviert und Schlüssel entfernt.'); }
-    });
+
   }
   setError(message) { $('ai-error').textContent = message; }
   clear() {
@@ -57,7 +40,8 @@ export class Assistant {
     $('ai-companion').hidden = true; $('ai-history').replaceChildren();
     $('ai-tip-evidence')?.remove();
     for (const id of ['ai-tip-preview','ai-current-tip','ai-error','ai-key-status']) $(id).textContent = '';
-    $('ai-key-form').reset(); $('ai-form').reset();
+    $('ai-form').reset();
+    for (const button of $('ai-form').querySelectorAll('button')) button.disabled=false;
   }
   async load({ generate = false } = {}) {
     if (!this.active()) return;
@@ -71,9 +55,7 @@ export class Assistant {
     if (config.error || messages.error || tip.error) throw new Error('Der Begleiter konnte nicht geladen werden.');
     this.configured = Boolean(config.data.configured);
     this.sharedProvider = config.data.shared === true;
-    $('ai-key-form').hidden = this.sharedProvider;
     $('ai-key-status').textContent = this.configured ? `${this.sharedProvider ? 'Gemeinsamer Zugang' : 'Bisheriger OpenAI-Zugang'} · ${config.data.provider === 'gemini' ? 'Gemini' : 'OpenAI'} · ${config.data.model}` : 'Noch kein KI-Schlüssel hinterlegt. Zugang unter Zuhause → KI-Zugänge einrichten.';
-    $('remove-ai-key').hidden = !this.configured || this.sharedProvider;
     const currentTip=readAssistantContent(tip.data?.content);
     const hint = currentTip.text || (this.configured ? 'Ein neuer Tipp wird aus deinen Einträgen erstellt.' : 'Für persönliche KI-Tipps und Chat zuerst den API-Schlüssel unter Zuhause → KI-Zugänge hinterlegen.');
     $('ai-tip-preview').textContent = hint;

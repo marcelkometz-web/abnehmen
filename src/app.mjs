@@ -16,6 +16,8 @@ import { WeeklyReportUI } from './weekly-report-ui.mjs';
 import { TrainingProgressUI } from './training-progress-ui.mjs';
 import { BackupUI } from './backup-ui.mjs';
 import { backupDownloadRealm } from './backup-download.mjs';
+import { saveTrainingSession } from './training-save.mjs';
+import { sameFormValues } from './form-state.mjs';
 
 const $ = id => document.getElementById(id);
 const formatNumber = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 });
@@ -32,6 +34,7 @@ let saveState=null;
 let formRevision=0;
 let analysisDay=null;
 let pausedDraft=null;
+let trainingOperationId=null;
 let currentPage='checkin';
 let navigationReady=false;
 const pages={checkin:'Check-in',progress:'Auswertung',weekly:'Wochenbericht',calendar:'Kalender & Einträge',gallery:'Fotogalerie',training:'Training',exercise:'Übungsprotokoll',nutrition:'Essen & Rezepte',profile:'Profil & Zyklus',backup:'Sicherung & Wiederherstellung'};
@@ -83,6 +86,7 @@ function clearPrivate() {
   for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
   snapshot = { weights: [], measurements: [], photos: [], training: [], cycles: [] };
   preferences={};saveState=null;analysisDay=null;document.body.classList.remove('app-signed-in');wellbeing?.clear();motivation?.clear();weeklyReport?.clear();exerciseProgress?.clear();backupUI?.clear();
+  trainingOperationId=null;
   $('save-state').textContent='Speicherstand wird geprüft …';
   for (const url of photoUrls) URL.revokeObjectURL(url);
   photoUrls.clear();
@@ -348,6 +352,11 @@ function renderCalendar() {
 }
 function selectDay(day, scrollToForm = false, force = false) {
   const next=dateValue(day);
+  if(next===selectedDay&&!force){
+    renderCalendar();
+    if(scrollToForm){showPage('checkin');$('checkin-card').scrollIntoView({behavior:'smooth',block:'start'});}
+    return;
+  }
   if(next!==selectedDay&&$('checkin-form').dataset.dirty&&!force&&!confirm('Du hast ungespeicherte Eingaben für '+dateLabel(selectedDay)+'. Zum anderen Tag wechseln und diese Eingaben verwerfen?')){renderCalendar();$('checkin-form').elements.recorded_on.value=selectedDay;return;}
   selectedDay = next; visibleMonth = selectedDay.slice(0, 7);
   const form=$('checkin-form'),weight=snapshot.weights.find(row=>row.recorded_on===selectedDay),body=snapshot.measurements.find(row=>row.recorded_on===selectedDay);
@@ -449,7 +458,7 @@ function bindAdditionalFeatures() {
     const existing = await client.from('ab_profile').select('user_id').maybeSingle(); fail(existing.error);
     const query = existing.data ? client.from('ab_profile').update({ height_cm: height }).eq('user_id', existing.data.user_id) : client.from('ab_profile').insert({ height_cm: height });
     const result = await query.select('height_cm').single(); fail(result.error);
-    if(generation!==epoch)return;delete $('height-form').dataset.dirty;
+    if(generation!==epoch)return;if(sameFormValues(data,new FormData($('height-form'))))delete $('height-form').dataset.dirty;
     await loadSnapshot(generation);
     if (generation === epoch) message('Körpergröße und BMI aktualisiert.');
   });
@@ -561,11 +570,12 @@ function captureDraft(){
  for(const id of ['checkin-form','height-form','training-form','exercise-progress-form','cycle-form','profile-form','import-chat-form','ai-form']){
   const form=$(id);if(!form)continue;forms[id]={data:[...(pendingCheckins.get(form)||(id==='exercise-progress-form'&&exerciseProgress?.savingDraft)||new FormData(form))],dirty:form.dataset.dirty||'',busy:Boolean(form.dataset.busy)};
  }
- return{actor:user.id,diary:diaryId,forms,day:selectedDay,page:currentPage,scroll:$('main').scrollTop,revision:formRevision};
+ return{actor:user.id,diary:diaryId,forms,day:selectedDay,page:currentPage,scroll:$('main').scrollTop,revision:formRevision,trainingOperationId};
 }
 function restoreDraft(){
  const draft=pausedDraft;pausedDraft=null;if(!draft||draft.actor!==user?.id||draft.diary!==diaryId||sharedAuth.isIdle())return;
  selectedDay=draft.day;visibleMonth=selectedDay.slice(0,7);formRevision=draft.revision;
+ trainingOperationId=draft.trainingOperationId??null;
  for(const [id,record]of Object.entries(draft.forms)){
   const form=$(id);if(!form)continue;
   form.reset();for(const control of form.elements)if(control.type==='checkbox')control.checked=false;for(const [name,value]of record.data){const control=form.elements[name];if(!control)continue;
@@ -579,10 +589,19 @@ function restoreDraft(){
 }
 function bindWellbeingForms(){
  for(const id of ['profile-form','height-form'])$(id).addEventListener('input',()=>{$(id).dataset.dirty='true';});
- bindForm('profile-form',async(data,generation,form)=>{const payload=profilePayload(data),existing=await client.from('ab_preferences').select('user_id').maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_preferences').update(payload).eq('user_id',existing.data.user_id):await client.from('ab_preferences').insert(payload);fail(result.error);if(generation!==epoch)return;delete form.dataset.dirty;await loadSnapshot(generation);if(generation===epoch)message('Deine bestätigten Angaben wurden gespeichert.');});
- bindForm('training-form',async(data,generation,form)=>{const result=await client.from('ab_training_sessions').insert(trainingPayload(data));fail(result.error);if(generation!==epoch)return;form.reset();form.elements.recorded_on.value=localDate();await loadSnapshot(generation);message('Dein Training ist gespeichert.');});
- bindForm('cycle-form',async(data,generation,form)=>{const payload=cyclePayload(data),existing=await client.from('ab_cycle_entries').select('id').eq('recorded_on',payload.recorded_on).maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_cycle_entries').update(payload).eq('id',existing.data.id):await client.from('ab_cycle_entries').insert(payload);fail(result.error);if(generation!==epoch)return;form.reset();form.elements.recorded_on.value=localDate();await loadSnapshot(generation);message('Dein Zykluseintrag ist gespeichert.');});
- bindForm('import-chat-form',async(data,generation,form)=>{const sourceDate=String(data.get('source_date')||'').trim();await assistant.run('chat',String(data.get('message')).trim(),{source:'import',sourceDate:sourceDate||null});if(generation===epoch){form.reset();$('ai-dialog').showModal();}});
+  bindForm('profile-form',async(data,generation,form)=>{const payload=profilePayload(data),existing=await client.from('ab_preferences').select('user_id').maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_preferences').update(payload).eq('user_id',existing.data.user_id):await client.from('ab_preferences').insert(payload);fail(result.error);if(generation!==epoch)return;if(sameFormValues(data,new FormData(form)))delete form.dataset.dirty;await loadSnapshot(generation);if(generation===epoch)message('Deine bestätigten Angaben wurden gespeichert.');});
+ bindForm('training-form',async(data,generation,form)=>{
+  const payload=trainingPayload(data);trainingOperationId??=crypto.randomUUID();
+  await saveTrainingSession(client,trainingOperationId,payload,{active:()=>generation===epoch&&Boolean(user&&diaryId)});
+  if(generation!==epoch)return;trainingOperationId=null;
+  const unchanged=sameFormValues(data,new FormData(form));
+  if(unchanged){form.reset();delete form.dataset.dirty;form.elements.recorded_on.value=localDate();}
+  else form.dataset.dirty='true';
+  await loadSnapshot(generation);
+  if(generation===epoch)message(unchanged?'Dein Training ist gespeichert.':'Dein Training ist gespeichert. Deine danach geänderten Eingaben sind noch nicht gespeichert.');
+ });
+ bindForm('cycle-form',async(data,generation,form)=>{const payload=cyclePayload(data),existing=await client.from('ab_cycle_entries').select('id').eq('recorded_on',payload.recorded_on).maybeSingle();fail(existing.error);const result=existing.data?await client.from('ab_cycle_entries').update(payload).eq('id',existing.data.id):await client.from('ab_cycle_entries').insert(payload);fail(result.error);if(generation!==epoch)return;const unchanged=sameFormValues(data,new FormData(form));if(unchanged){form.reset();form.elements.recorded_on.value=localDate();}else form.dataset.dirty='true';await loadSnapshot(generation);if(generation===epoch)message(unchanged?'Dein Zykluseintrag ist gespeichert.':'Dein Zykluseintrag ist gespeichert. Deine danach geänderten Eingaben sind noch nicht gespeichert.');});
+ bindForm('import-chat-form',async(data,generation,form)=>{const sourceDate=String(data.get('source_date')||'').trim();await assistant.run('chat',String(data.get('message')).trim(),{source:'import',sourceDate:sourceDate||null});if(generation===epoch){if(sameFormValues(data,new FormData(form)))form.reset();$('ai-dialog').showModal();}});
 }
 async function start() {
   if (window.self!==window.top&&window.unserZuhauseFrame!==true) {

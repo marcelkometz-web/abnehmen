@@ -1,0 +1,32 @@
+# Rezepte-App: genaue Nachprüfung vom 2. November 2026
+
+Geprüfter Ausgangsstand: `2cc9023`. Die Änderungen sind lokal umgesetzt und gebaut; Veröffentlichung und abschließende Online-Prüfung übernimmt der Hauptagent.
+
+## Gefundene und behobene Fehler
+
+1. **Fotos verschwanden nach erneutem Anzeigen.** Der Bildcache prüfte bei sofort verfügbaren Bildern, ob die gerade erst erzeugte Karte bereits im Dokument hing. Das war beim Aufbau von Karten und Rezeptdetails noch nicht der Fall. Cachezugriffe sind jetzt durchgehend asynchron. Fotos bleiben nach Öffnen, Portionsänderung und erneuter Listenanzeige sichtbar. Detailbilder nutzen außerdem die vorhandene Größenbegrenzung und werden sofort geladen; dadurch funktionieren sie auch nach einem Neuzeichnen in WebKit zuverlässig.
+2. **Mehrfachabrufe und verspätete private Bilder.** Parallel gezeichnete Ansichten konnten dasselbe Bild mehrfach abrufen. Bereits laufende Antworten konnten nach Abmeldung wieder Blob-URLs anlegen. Ein eigener speicherinterner Cache fasst Abrufe zusammen, verwirft alte Generationen und widerruft URLs beim Zurücksetzen. API-Anfragen prüfen die aktuelle Kontoidentität vor dem Senden und nach dem Empfang. Es werden keine Fotos lokal dauerhaft gespeichert.
+3. **Konkurrierendes Laden beim Kontowechsel.** Das `finally` einer alten Anfrage konnte den Ladezustand einer neuen Anmeldung zurücksetzen. Die Bereinigung ist nun an dieselbe Anmeldungsgeneration gebunden. Bei verweigertem Zugriff werden auch Bildcache und Bearbeitungsrechte verworfen.
+4. **Doppelte Einkaufseinträge bei schnellem Doppelklick.** „Auf die Einkaufsliste“ ist während der laufenden Anfrage gesperrt. Der Test bestätigt genau einen Schreibaufruf für zwei unmittelbar ausgelöste Klicks.
+5. **Falsches Erledigt-Häkchen nach Speicherfehler.** Eine abgelehnte oder fehlgeschlagene Notizänderung ließ das neue Häkchen stehen. Bei Fehlern kehrt die sichtbare Checkbox jetzt zum zuletzt gespeicherten Zustand zurück; eine erfolgreiche Anfrage bleibt gespeichert.
+6. **Tipps während laufendem Speichern änderbar.** Die Tipp-Speicherung verwendet jetzt die gemeinsame Formular-Sperre. Die Eingaben werden vor dem Deaktivieren erfasst, und weitere Änderungen sowie Doppelspeicherungen während des Vorgangs werden vermieden.
+7. **Alte Sicherungen bestanden die Vorschau, scheiterten aber an Zahlenformaten.** Nährwert-Zahlen als JSON-Text werden nun in echte Zahlen umgewandelt. Leere Angaben bleiben unbekannt, statt zu null Gramm zu werden. Ungeeignete Typen und Werte außerhalb der bestehenden Servergrenzen werden abgewiesen; doppelte Rezept-IDs werden schon in der Vorschau erkannt.
+8. **Eier-Timer verlor Zeit im Hintergrund.** Er zählte bisher Intervallaufrufe statt tatsächlich verstrichener Zeit. Ein Timer mit festem Endzeitpunkt berücksichtigt nun gedrosselte oder ausgesetzte Browserausführung. Pause, Fortsetzen und Zeitkorrektur bleiben möglich. Ein gesperrter Browser kann einen Signalton weiterhin verzögern; das wird in der Oberfläche ausdrücklich erklärt.
+9. **Ungenaue bzw. übernommene Timer-Oberfläche.** Entfernt wurden die unbelegten Aussagen „Laborgeprüft“ und „Immer perfekt“, eine nicht belegte Namenszuordnung und pauschale Haltbarkeitszusagen. Die Zeiten heißen Richtwerte; die Höhenanzeige folgt tatsächlich der gewählten Höhe. Deutsche Seitensprache, entfernte verwaiste Schriftquellen und entfernte alte Artefakt-Klick-/Fokus-Skripte bereinigen die eingebundene Seite. Die alten Klickskripte hätten externe Links abgefangen, ohne dass die Familien-App ihre Nachrichten auswertet.
+
+## Durchgeführte Prüfungen
+
+- **12 Node-Testdateien bestanden:** Suchnormalisierung, Kategorien, Frühstück/Mittag/Abend/Nachtisch/Salate/Eintöpfe, Portions- und Bruchmengen, unbekannte/widersprüchliche Nährwerte, Zutatenberechnung, Zyklusdatumsvalidierung, Wiederherstellungsgrenzen, Gateway-/Edge-Sicherheitsregressionen, Rezeptbestand, Paarungen, Ernteideen sowie neue Bildcache- und Countdown-Rennen.
+- **Chromium und WebKit:** echter Rezeptcontroller mit lokalen Originalmodulen, synthetischer Anmeldung, kontrollierten API-Antworten und einem künstlichen Testbild. Geprüft: Bildcache und Neuzeichnen; 1,5 Portionen einschließlich WhatsApp-Inhalt; Doppelklickschutz; Tipps speichern; fehlgeschlagene und erfolgreiche Einkaufsänderung; verspätete Fotoantwort nach Abmeldung; altes Laden während einer neuen Anmeldung; Rezeptdialog bei 320, 390, 844 und 1280 Pixeln Breite. Keine unbehandelten Browserfehler oder fehlenden lokalen Dateien in diesen Abläufen.
+- **Eier-Timer in Chromium und WebKit:** 60 Sekunden Zeitsprung ohne reguläre Tick-Aufrufe, zehn Minuten Pause, Fortsetzen, ±10 Sekunden, Zurücksetzen, korrekte Höhenanzeige, fehlende Artefakt-Klickabfangung und vier Ansichtsgrößen. Countdown-Logik zusätzlich unabhängig mit einer kontrollierten Uhr getestet.
+- `npm run build` erfolgreich; `git diff --check` sauber. App-Dateiversion und öffentlicher Service-Worker-Cache erhöht; das neue Countdown-Modul ist in der statischen Offline-Dateiliste enthalten.
+
+## Testgrenzen
+
+Die Browserabläufe verwenden absichtlich künstliche Daten. Sie belegen die dargestellten Bedienabläufe und Fehlerbehandlungen, ersetzen jedoch keine erneute Produktionsanmeldung mit Ramonas Passwort. Es wurden keine echten Fotos heruntergeladen, privaten Datensätze geändert, WhatsApp-Nachrichten verschickt, KI-Anfragen kostenpflichtig ausgelöst oder echte Sicherungen zurückgespielt. Datenbankrechte und anonyme Online-Zugriffe werden zusätzlich vom Hauptagenten bzw. dem Sicherheitsagenten geprüft. Firefox konnte in diesem Agentenlauf zunächst wegen der Browser-Testumgebung nicht starten; daraus folgt weder ein App-Fehler noch eine bestandene Firefox-Prüfung. Keine Aussage, dass damit jede Funktion auf jedem physischen Betriebssystem garantiert fehlerfrei ist.
+
+Dauerhafte Browserprüfungen: `abnehmen/test/browser/recipe-controller-harness.mjs`, `recipe-regression.mjs`, `recipe-egg-regression.mjs`. Rohresultate liegen unter `/workspace/reports/recipe-*-2026-11-02.json`.
+
+## Abschließender Firefox-Nachtrag der Hauptprüfung
+
+Nach Behebung des Testumgebungsproblems wurde der hier beschriebene private Browserflow mit Playwright 1.64.1 / Firefox 157 erneut vollständig ausgeführt und bestand. Pro Browserstart wurde ein eigenes temporäres XDG-Verzeichnis verwendet. Die früheren Startabbrüche waren keine Appfehler. Dieser Nachtrag bezieht sich auf den Tagebuch-, Garten- beziehungsweise Rezeptcontroller-Flow; ein vollständiger physischer Gerätetest bleibt ausgeschlossen.
